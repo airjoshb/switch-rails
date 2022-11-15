@@ -1,0 +1,21 @@
+<h1>  Hello world! </h1>
+<div id="open-cart-button">
+  Your Cart (<span id="cart-count-indicator"></span> items)
+</div>
+<div>
+  <button id="add-to-cart-button" data-product-id='prod_MkMcuyZelSpi1O'>
+    Add to cart
+  </button>
+</div>  
+<section>
+  <div class="product">
+    <img src="https://i.imgur.com/EHyR2nP.png" alt="The cover of Stubborn Attachments" />
+    <div class="description">
+      <h3>Stubborn Attachments</h3>
+      <h5>$20.00</h5>
+    </div>
+  </div>
+  <%= form_tag checkout_session_path,  method: :post, data: { turbo: false } do %>
+    <button type="submit" id="checkout-button">Checkout</button>
+  <% end %>
+</section>
