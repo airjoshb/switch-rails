@@ -1,0 +1,15 @@
+<div><%= product_form.label :name %></div>
+<div><%= product_form.text_field :name %></div>
+<div><%= product_form.label :description %></div>
+<div><%= product_form.text_field :description, size: 50 %></div>
+<div><%= product_form.label :content %></div>
+<div><%= product_form.rich_text_area :content %></div>
+<div><%= product_form.label :active %></div>
+<div><%= product_form.check_box :active %></div>
+<div><%= product_form.label :row_order %></div>
+<div><%= product_form.number_field :row_order %></div>
+<div><%= product_form.label :image %></div>
+<% if @product.image.attached? %>
+  <div><%= @product.image.filename %></div>
+<% end %>
+<div><%= product_form.file_field :image %></div>

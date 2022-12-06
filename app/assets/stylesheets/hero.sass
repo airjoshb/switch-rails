@@ -1,0 +1,154 @@
+@import 'variables'
+
+#hero
+  width: 100%
+  background-position: top center
+  background-repeat: no-repeat
+  background-size: 28%
+  min-height: 80vh
+  background-image: url('switch-bakery-gluten-free-bread.png')
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: flex-end
+  color:   $standard-black
+
+
+  .hero-content 
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    max-width: 1000px
+    gap: 40px
+
+
+  .title 
+    color:   $standard-black
+    font-size: 72px
+    line-height: 86px
+    font-weight: normal
+    text-align: center
+    white-space: pre-wrap
+
+
+  .subtitle 
+    color:   $standard-black
+    font-weight: 400
+    font-size: 16px
+    line-height: 19px
+    text-align: center
+
+
+  .ctaButton 
+    width: 180px
+    
+
+
+  .ctaLink 
+    
+    text-transform: uppercase
+    color: $standard-white
+    border-bottom: 1px solid $standard-white
+
+    font-weight: 500
+    font-size: 14px
+    line-height: 17px
+
+
+  .header 
+    font-weight: 500
+    font-size: 14px
+    line-height: 17px
+    text-transform: uppercase
+
+  .formField 
+    position: relative
+    /* background-color: var(--standard-white) */
+
+
+  .label 
+    font-weight: 500
+    font-size: 14px
+    line-height: 17px
+    margin-bottom: 8px
+    
+
+    span 
+      color: var(--sale)
+    
+    
+    .textarea 
+      min-height: 150px
+    
+    
+    .input 
+      font-family: var(--standard-font)
+      letter-spacing: 0.4px
+    
+    
+    .formField input::placeholder 
+      color: var(--grey-placeholder)
+      font-size: 14px
+    
+    
+    .input.fieldRequired 
+      border: 1px solid var(--error) !important
+    
+    
+    .textarea.fieldRequired 
+      border: 1px solid var(--error) !important
+    
+    
+    .note 
+      font-size: 0.75rem
+      color: var(--grey-close-icon)
+    
+
+    .iconContainer 
+        position: absolute
+        top: 50%
+        transform: translate(0%, -50%)
+        right: 18px
+        font-size: 24px
+    
+
+    .offsetIcon 
+      top: calc(50% + 16px)
+    
+
+    .conditionalIconPadding 
+        padding-right: 38px !important
+    
+  
+
+
+@media (max-width: 800px) 
+  .header 
+    min-height: 50vh
+  
+
+    .title 
+      font-size: 42px
+      line-height: 50px
+    
+
+    .subtitle 
+      font-size: 14px
+      line-height: 17px
+    
+    .newsLetterForm 
+      margin-bottom: 30px
+  
+
+
+@media (max-width: 500px) 
+  .header 
+    .content 
+      padding: 0px 32px
+    
+    .formField 
+      margin-bottom: 15px
+    
+  
+  

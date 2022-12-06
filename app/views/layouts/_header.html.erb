@@ -1,0 +1,31 @@
+<div id='header'>
+  <container size='large' spacing='min'>
+    <div class="header"">
+      <div class="linkContainer">
+        <nav role='presentation'>
+          <%= link_to "shop", shop_path, class: "navLink" %>
+          <a href="#" class="navLink">
+            special events
+          </a>
+          <a href="#" class="navLink">
+            about
+          </a>
+        </nav>
+      </div>
+      <div class="burgerIcon">
+        <icon symbol={`${mobileMenu === true ? 'cross' : 'burger'}`}></icon>
+      </div>
+      <%= render "layouts/brand" %>
+      <div class="actionContainers">
+        <h3 class="location">central coast, california </h3>
+        <button class="iconButton iconContainer bagIconContainer">
+          <%= link_to cart_path do %>
+            <%= render "layouts/basket_icon" %>
+            
+          <%= render "cart/icon", cart: @cart %>
+          <% end %>
+        </button>
+      </div>
+    </div>
+  </container>
+</div>

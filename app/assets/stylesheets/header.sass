@@ -1,0 +1,185 @@
+@import 'variables'
+
+#header 
+	width: 100% 
+	background-color: $standard-white
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2) 
+	z-index: 50 
+	.linkContainers 
+		display: flex 
+.brand
+	display: flex
+	justify-content: center
+	cursor: pointer
+	img 
+		width: 342.5px 
+		height: 60px
+.iconButton 
+	border: none 
+	background-color: unset 
+	overflow: visible 
+	text-transform: none 
+	font-family: inherit 
+	font-size: 100% 
+	line-height: 1.15 
+	margin: 0 
+	-webkit-appearance: button 
+.header 
+	display: grid 
+	grid-template-columns: repeat(3, 1fr) 
+	align-items: center 
+	padding: 24px 0 
+	margin: 0 auto 
+	padding: 24px 8px 24px 8px 
+	margin: 0px 8px 
+.headerMessageContainer 
+	background-color: $bg-grey 
+	padding: 8px 
+	display: flex 
+	align-items: center 
+	justify-content: center 
+	span 
+		font-weight: 500 
+		font-size: 12px 
+		line-height: 15px 
+		color: $grey-crumb 
+.navLink 
+	margin-right: 40px 
+	color: $standard-black 
+	font-family: $standard-header 
+	font-weight: 500 
+	padding-bottom: 10px 
+	text-transform: lowercase 
+	font-size: 17px 
+	line-height: 15px 
+	border-bottom: 2px solid transparent 
+	transition: border 0.3s ease-in-out 
+	width: 100% 
+.activeLink 
+	border-bottom: 2px solid $standard-black 
+.actionContainers 
+	display: flex 
+	flex-direction: row 
+	justify-content: end 
+	& > * 
+		margin-right: 32px 
+		cursor: pointer 
+		color: $standard-black 
+		margin-right: 16px 
+		cursor: pointer
+		align-self: center 
+	& > *:last-child 
+		margin-right: 0px 
+.iconContainer 
+	padding: 0 
+	svg 
+		width: 30px 
+		height: 30px 
+.menuContainer 
+	position: absolute 
+	background-color: $standard-white
+	width: 100% 
+	opacity: 0 
+	visibility: hidden 
+	transition: all 0.3s ease-in-out 
+	box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2) 
+.show 
+	opacity: 1 !important 
+	visibility: visible !important 
+	max-height: 500px !important 
+.hide 
+	opacity: 0 !important 
+	visibility: hidden !important 
+	max-height: 0px !important 
+	height: 0px 
+.searchContainer 
+	width: 500px 
+	margin: 0 auto 
+	text-align: center 
+	transition: all 0.3s ease-in-out 
+	z-index: 51 
+	width: auto 
+	padding: 0px 32px 
+	h4 
+		font-weight: normal 
+		font-size: 32px 
+		line-height: 38px 
+		font-size: 32px 
+		line-height: 42px 
+.searchForm 
+	margin-top: 40px 
+	margin-bottom: 40px 
+	input 
+		width: 95% !important 
+		border-bottom: 1px solid $standard-black !important 
+		border-left: 1px solid transparent !important 
+		border-right: 1px solid transparent !important 
+		border-top: 1px solid transparent !important 
+.suggestionContianer 
+	display: flex 
+	flex-wrap: wrap 
+	justify-content: center 
+	gap: 12px 
+	margin-bottom: 40px 
+.suggestion 
+	padding: 14px 20px 
+	font-weight: 500 
+	font-size: 14px 
+	line-height: 17px 
+	color: $standard-black 
+	border: 1px solid $bg-light-gray 
+	text-transform: capitalize 
+	transition: all 
+	cursor: pointer 
+	&:hover 
+		transition: all 0.3s ease-in-out 
+		color: $standard-white 
+		background-color: $standard-gold
+		border: 1px solid transparent 
+.backdrop 
+	position: fixed 
+	top: 0px 
+	left: 0px 
+	width: 100vw 
+	height: 100vh 
+	background-color: transparent 
+	z-index: -1 
+.notificationContainer 
+	position: relative 
+.burgerIcon 
+	display: none 
+	align-items: center 
+	svg 
+		width: 20px 
+		height: 20px 
+.mobileMenuContainer 
+	display: none 
+	display: block 
+.bagIconContainer 
+	position: relative 
+.bagNotification 
+	position: absolute 
+	bottom: -5px 
+	right: -5px 
+	width: 14px 
+	height: 14px 
+	background-color: $standard-gold 
+	border-radius: 50% 
+	display: flex 
+	align-items: center 
+	justify-content: center 
+	span 
+		color: $standard-white 
+		font-size: 9px 
+@media (max-width:800px) 
+	.header
+		display: grid 
+		grid-template-columns: minmax(100px, max-content) repeat(auto-fill, 400px) 20% 
+		align-items: center 
+	.linkContainer 
+		display: none 
+	.hideOnMobile 
+		display: none 
+	.brand svg
+		width: 240px
+		height: 42px

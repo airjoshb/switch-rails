@@ -1,0 +1,83 @@
+@import 'variables'
+
+#cart
+  .bannerContainer 
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: 50px 32px
+    background-color: $standard-light-grey
+    h1 
+      font-size: 52px
+      font-weight: 400
+      line-height: 62px
+    .subtitleStyle 
+      font-weight: normal 
+      font-size: 14px 
+      line-height: 17px 
+      margin-top: 32px 
+  .cartContainer
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-direction: column
+  .content
+    display: grid !important 
+    grid-template-columns: repeat(2, 1fr)
+    gap: 30px
+  .orderContainer
+    margin: 30px 0
+    padding: 30px
+    .orderContent
+      border: 3px double $grey-crumb
+      padding: 30px
+      .title
+        text-align: center
+      .total
+        text-align: right
+        font-size: 1.5em
+      .checkout
+        text-align: center
+        margin-top: 25px
+
+  .imageContainer
+    z-index: 100
+    width: 125px
+    height: 125px
+    overflow: hidden
+    border-right: 3px double $grey-crumb
+    img  
+      position: relative;
+      height: auto;
+      min-width: 100%;
+      top: 50%;
+      -moz-transform: translateY(-50%)
+      -ms-transform: translateY(-50%)
+      -webkit-transform: translateY(-50%)
+      transform: translateY(-50%)
+  .priceContainer
+    border: 3px double $grey-crumb
+    font-family: $brand-font
+    letter-spacing: 0.01em
+    display: grid !important 
+    grid-template-columns: repeat(4, 1fr)
+    gap: 20px
+    margin: 30px 0
+    align-items: center
+    .variation
+      font-weight: 600
+      font-size: 1.2em
+    .price
+      justify-self: end
+      font-weight: 600
+      font-size: 1.2em
+    .close 
+      justify-self: end
+      padding-right: 30px;
+      input[type="submit"]
+        border-radius: 20px
+        width: 20px
+        border: none
+        background: $standard-gold
+        color: $standard-white

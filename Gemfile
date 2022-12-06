@@ -43,16 +43,19 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 
 # Use Sass to process CSS
-# gem "sassc-rails"
+gem "sassc-rails"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
-#Ecommerce
+# Ecommerce
 gem 'stripe'
 
+# Product enhancements
+gem 'friendly_id', '~> 5.4.0'
+
 # Blog
-gem 'bloak', git: "https://github.com/kuyio/bloak.git"
+# gem 'bloak', git: "https://github.com/kuyio/bloak.git"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -76,3 +79,5 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "madmin", "~> 1.2"

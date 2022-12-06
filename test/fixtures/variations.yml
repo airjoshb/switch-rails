@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  product: one
+  image: MyString
+  price: 9.99
+  active: false
+  add_on: false
+  count_on_hand: 1
+  inventory_type: 
+  pieces: 1
+  row_order: 1
+  type: 
+
+two:
+  name: MyString
+  product: two
+  image: MyString
+  price: 9.99
+  active: false
+  add_on: false
+  count_on_hand: 1
+  inventory_type: 
+  pieces: 1
+  row_order: 1
+  type: 

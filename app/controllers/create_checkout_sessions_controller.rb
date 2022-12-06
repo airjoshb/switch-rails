@@ -10,18 +10,11 @@ class CreateCheckoutSessionsController < ApplicationController
   Stripe.api_version = '2015-04-07; cart_sessions_beta=v1;'
 
   def create
-    cart_session_cookie = cookies[:cart_session]
-
-    if !cart_session_cookie
-      return status 400
-    end
-
+    cart = Cart.find(params[:cart_id])
+    prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
+    line_items = prices.map{|e| {price:  e.first, quantity: e.last}}
     checkout_session = Stripe::Checkout::Session.create({
-      line_items: [{
-        # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
-        price: 'price_0M0rswllDkp2GQCBg6NMiyOG',
-        quantity: 1,
-      }],
+      line_items: line_items,
       mode: 'payment',
       success_url: 'http://localhost:3000/',
       cancel_url: 'http://localhost:3000/',

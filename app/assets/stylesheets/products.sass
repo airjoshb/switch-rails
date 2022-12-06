@@ -1,0 +1,302 @@
+@import 'variables'
+
+#product
+  .product-container
+    display: flex
+    justify-content: center
+    margin-top: 30px
+    .content
+      display: grid !important 
+      grid-template-columns: repeat(2, 1fr)
+      gap: 0px
+    .imageContainer
+      z-index: 100
+      border: 3px double $grey-crumb
+      img  
+        width: 100%
+        object-fit: cover
+    .details 
+      margin-top: 60px;
+      h1 
+        font-size: 43px
+        font-weight: 400
+        line-height: 38px
+        margin-bottom: 16px 
+        padding: 20px 0 0 20px
+      .priceContainer
+          font-family: $brand-font
+          letter-spacing: 0.01em
+          display: grid !important 
+          grid-template-columns: repeat(4, 1fr)
+          gap: 12px
+          height: 5em;
+          align-items: center
+          .variation
+            font-weight: 600
+            font-size: 1.2em
+          .price
+            justify-self: end
+            font-weight: 600
+            font-size: 1.2em
+          .quantity
+            justify-self: end
+            input[type="number"]
+              min-height: 3.1em
+              border-radius: 2px
+              max-width: 40px
+              text-align: center
+              font-size: .83em
+      .variations
+        padding: 20px
+        background-color: $standard-light-grey
+        margin-bottom: 24px
+        border-top: 3px double $grey-crumb
+        border-right: 3px double $grey-crumb
+        border-bottom: 3px double $grey-crumb
+        z-index: 0
+      .description 
+        padding: 0 0 20px 20px
+
+#shop
+  .container
+    width: 95%
+    max-width: 1440px
+    margin: 0 auto
+  .bannerContainer 
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: 50px 32px
+    background-color: $standard-light-grey
+    h1 
+      font-size: 52px
+      font-weight: 400
+      line-height: 62px
+    .subtitleStyle 
+      font-weight: normal 
+      font-size: 14px 
+      line-height: 17px 
+      margin-top: 32px 
+
+  .productContainer 
+    margin-top: 32px 
+    margin-left: 8px 
+    margin-right: 8px 
+
+  .cardGrid 
+    width: 100%
+    margin: 0 auto
+    display: grid
+    gap: 56px 32px
+    display: none
+
+    .mobileSlider
+      display: none
+
+    .show 
+      display: grid !important 
+      grid-template-columns: 1fr 1fr !important 
+      gap: 24px 12px 
+    
+  .product-grid 
+    width: 100% 
+    margin: 0 auto 
+    display: grid 
+    grid-template-columns: repeat(3, 1fr) 
+    gap: 32px 
+
+  .productCard
+    border: 3px double $grey-crumb
+    width: 100%
+    .detailsContainer 
+      padding: 16px 
+    .imageContainer 
+      position: relative 
+      cursor: pointer 
+      height: 400px
+      overflow: hidden
+      z-index: 100
+      img
+        display: block 
+        width: 100% 
+        object-fit: cover 
+        border-radius: 1px 
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+    .productName 
+      font-size: 17px 
+      line-height: 22px 
+      color: $standard-black
+      font-weight: normal 
+      font-family: $standard-header
+
+    .prices 
+      margin-top: 8px 
+      font-size: 14px 
+      line-height: 17px 
+      span 
+        font-size: 14px 
+        line-height: 17px 
+        font-weight: 500 
+        font-size: 13px 
+        line-height: 16px 
+      & > span 
+        &:first-child 
+          margin-right: 16px  
+    .bagContainer 
+      position: absolute 
+      bottom: 0px 
+      right: 0px 
+      width: 70px 
+      height: 70px 
+      background-color: $standard-white
+      display: flex 
+      align-items: center 
+      justify-content: center 
+      visibility: hidden 
+      opacity: 0 
+      transition: opacity 0.3s ease-in-out 
+      width: 40px 
+      height: 40px 
+      svg 
+        width: 20px 
+        height: 20px 
+    .show 
+      visibility: visible 
+      opacity: 1 
+    .hide 
+      visibility: hidden 
+      opacity: 0 
+
+  .product-collection 
+    width: 100% 
+    min-height: 630px 
+    background-size: cover 
+    background-repeat: no-repeat 
+    position: relative 
+    cursor: pointer 
+    transition: all 0.3s ease-in-out 
+    span 
+      transition: color 0.3s ease-in-out 
+    &:hover 
+      .overlay 
+        opacity: 0.4 
+        visibility: visible 
+    .content 
+      position: absolute 
+      bottom: 75px 
+      left: 55px 
+      color: $standard-white 
+      z-index: 10 
+      bottom: 50px 
+      left: 30px 
+      a 
+        &:hover 
+          color: $standard-gold
+    .title 
+      font-size: 42px 
+      line-height: 50px 
+      font-family: $standard-header 
+      margin-bottom: 24px 
+      padding-right: 16px 
+      display: block 
+      margin-bottom: 16px 
+    .text 
+      font-weight: 500 
+      font-size: 14px 
+      line-height: 17px 
+      border-bottom: 1px solid $standard-white
+    .overlay 
+      width: 100% 
+      min-height: 630px 
+      position: absolute 
+      top: 0px 
+      left: 0px 
+      background-color: $standard-black
+      opacity: 0 
+      visibility: hidden 
+      transition: all 0.3s ease-in-out 
+      z-index: 9 
+      min-height: 100% 
+
+.button 
+  display: inline-block
+  font-family: $standard-font
+  font-size: 14px
+  line-height: 17px
+  padding: 12px 15px
+  margin: 0
+  min-width: 150px
+  height: auto !important
+  transition: all 0.3s ease-in-out
+  text-transform: initial
+  text-align: center
+  outline: none
+  cursor: pointer
+  position: relative
+
+
+.primary 
+  border: 2px solid $standard-black
+  color: $standard-white
+  background-color: $standard-black
+  text-transform: uppercase
+  font-weight: 500
+  
+
+
+@media (hover: hover) 
+  .primary:hover 
+      border: 2px solid $standard-dark-grey
+      background-color: $standard-dark-grey
+  
+
+
+.secondary 
+  border: 2px solid $standard-black
+  color: $standard-black
+  background-color: $standard-white
+  text-transform: uppercase
+  font-weight: 600
+  letter-spacing: 0.1em
+
+
+@media (hover: hover) 
+  .secondary:hover 
+      border: 2px solid $grey-border
+  
+
+
+.secondary.alternate 
+  border: 2px solid $standard-white
+  color: $standard-white
+  background-color: transparent
+
+
+@media (hover: hover) 
+  .secondary.alternate:hover 
+      background-color: rgba(255,255,255,0.05)
+  
+
+
+
+@media (max-width: 800px) 
+  #product .product-container .content
+    grid-template-columns: repeat(1, 1fr)
+
+  #shop
+    .product-collection
+      min-height: 330px 
+    .product-grid 
+      grid-template-columns: 1fr 
+    .mobileSlider 
+      display: block 
+@media (max-width: 600px) 
+  #shop .imageContainer img
+    height: 300px !important 
+@media (max-width: 400px) 
+  #shop .imageContainer img
+    height: 220px !important 
+

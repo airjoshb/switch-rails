@@ -1,0 +1,403 @@
+@import 'variables'
+
+html, body 
+	box-sizing: border-box 
+	margin: 0 
+	font-family: $standard-font 
+	color: $standard-black 
+	font-size: 16px 
+	line-height: 1.5em 
+	font-weight: 400 
+* 
+	[data-button] 
+		cursor: pointer 
+		user-select: none 
+h1,
+.h1 
+	font-family: $brand-font
+	font-size: 72px 
+	line-height: 83px 
+  letter-spacing: 0.01em
+	margin: 0 
+h2,
+.h2 
+	font-family: $standard-header 
+	font-size: 52px 
+	line-height: 60px 
+	margin: 0 
+h3,
+.h3 
+	font-family: $standard-header 
+	font-size: 42px 
+	line-height: 49px 
+	margin: 0 
+h3 
+	&.location 
+		margin-right: 40px 
+		color: $standard-black 
+		font-family: $standard-header 
+		font-weight: 500 
+		padding-bottom: 10px 
+		font-size: 17px 
+		line-height: 15px 
+		border-bottom: 2px solid transparent
+h4,
+.h4 
+	font-family: $standard-header 
+	font-size: 32px 
+	line-height: 37px 
+	margin: 0 
+h5,
+.h5 
+	font-family: $standard-header 
+	font-size: 30px 
+	line-height: 35px 
+	margin: 0 
+h6,
+.h6 
+	font-family: $standard-header 
+	font-size: 25px 
+	line-height: 29px 
+	margin: 0 
+.quote 
+	font-family: $standard-header 
+	font-size: 42px 
+	line-height: 49px 
+	margin: 0 
+p 
+	margin: 0 
+.b1 
+	font-size: 20px 
+.b2 
+	font-size: 18px 
+.b3 
+	font-size: 16px 
+.b4 
+	font-size: 14px 
+.buttonText 
+	font-size: 14px 
+	text-transform: uppercase 
+	font-weight: 600 
+
+hr
+  width: 80%
+  color: $grey-crumb
+  border: none;
+  border-top: 3px double $grey-crumb;
+  overflow: visible;
+  text-align: center;
+  height: 5px;
+  &:after
+    background-color: $standard-light-grey
+    content: '§'
+    padding: 0 4px
+    position: relative
+    top: -13px;
+
+
+@media only screen and (max-width:767px) 
+  h1,.h1
+    font-size: 55px 
+  h2,.h2 
+    font-size: 50px 
+    font-size: 28px 
+  h3,
+    .h3 
+    font-size: 40px 
+    font-size: 26px 
+  h4,
+    .h4 
+    font-size: 30px 
+    font-size: 24px 
+  h5,
+    .h5 
+    font-size: 25px 
+    font-size: 22px 
+  h6,
+    .h6 
+    font-size: 20px 
+@media only screen and (max-width:480px) 
+  h1,.h1 
+    font-size: 30px 
+  h2,
+  .h2 
+    font-size: 28px
+  h3,
+  .h3
+    font-size: 26px
+  h4,
+  .h4
+    font-size: 24px
+  h5,
+  .h5 
+    font-size: 22px
+
+.subtitle 
+  font-weight: 500 
+  font-size: 20px 
+.subtitle 
+  &.small 
+    font-weight: 500 
+    font-size: 18px 
+.small 
+  font-size: 14px 
+.overline 
+  font-size: 11px 
+  font-weight: 600 
+  text-transform: uppercase 
+  letter-spacing: 0.5px 
+input 
+  &:focus 
+    outline: none !important 
+    outline-offset: none !important 
+a 
+  text-decoration: none 
+  color: $standard-black 
+  transition: all ease-in-out 0.3s 
+.uppercase 
+  text-transform: uppercase 
+.hover-text-main 
+  &:hover 
+    color: $standard-grey
+ul 
+  list-style: none 
+  padding: 0 
+  &.bullets 
+    margin-left: 40px 
+    list-style: disc 
+    li 
+      margin-bottom: 5px 
+ol 
+  margin: 0 
+  padding-left: 1.8em 
+.p-4 
+  padding: $space4
+.p-5 
+  padding: $space5
+.py-4 
+  padding-top: $space4 
+  padding-bottom: $space4 
+.py-8 
+  padding-top: $space8
+  padding-bottom: $space8 
+.pt-3 
+  padding-top: $space3 
+.pt-4 
+  padding-top: $space4
+.pb-0 
+  padding-bottom: 0px 
+.pb-4 
+  padding-bottom: $space4 
+.mb-0 
+  margin-bottom: 0px 
+.mb-4 
+  margin-bottom: $space4
+.ml-3 
+  margin-left: $space3
+.ml-4 
+  margin-left: $space4 
+.mt-2 
+  margin-top: $space2
+.mt-4 
+  margin-top: $space4
+.mt-5 
+  margin-top: $space5 
+.mx-3 
+  margin-left: $space3 
+  margin-right: $space3 
+.row 
+  display: flex 
+.flex-center 
+  width: 100% 
+  display: flex 
+  justify-content: center 
+  align-items: center 
+.flex-start 
+  width: 100% 
+  display: flex 
+  justify-content: flex-start 
+  align-items: center 
+.flex-end 
+  width: 100% 
+  display: flex 
+  justify-content: flex-end 
+  align-items: center 
+.flex-around 
+  width: 100% 
+  display: flex 
+  justify-content: space-around 
+  align-items: center 
+.flex-between 
+  width: 100% 
+  display: flex 
+  align-items: center 
+  justify-content: space-between 
+.flex-middle 
+  display: flex 
+  align-items: center 
+.grid 
+  display: grid 
+  gap: 40px 
+.grid-gap0 
+  display: grid 
+  gap: 0 
+.grid-gap20 
+  display: grid 
+  gap: 20px 
+.grid-gap60 
+  display: grid 
+  gap: 60px 
+.grid-0595 
+  grid-template-columns: 0.1fr 1.9fr 
+.grid-1585 
+  grid-template-columns: 0.3fr 1.7fr 
+.grid-2080 
+  grid-template-columns: 0.4fr 1.6fr 
+.grid-25 
+  grid-template-columns: 1fr 1fr 1fr 1fr 
+.grid-2575 
+  grid-template-columns: 0.5fr 1.5fr 
+.grid-3070 
+  grid-template-columns: 0.6fr 1.4fr 
+.grid-33 
+  grid-template-columns: 1fr 1fr 1fr 
+.grid-4060 
+  grid-template-columns: 0.8fr 1.2fr 
+.grid-50,
+.grid-5050 
+  grid-template-columns: 1fr 1fr 
+.grid-6040 
+  grid-template-columns: 1.2fr 0.8fr 
+.grid-7030 
+  grid-template-columns: 1.4fr 0.6fr 
+.grid-7525 
+  grid-template-columns: 1.5fr 0.5fr 
+.grid-v-space-0 
+  gap: 0 40px 
+.formField 
+  margin-bottom: 20px 
+  position: relative 
+  &.mb-0 
+    margin-bottom: 0px 
+  textarea 
+    resize: none 
+    height: 150px 
+  select 
+    padding: 9px 10px 
+  .error 
+    color: $error 
+    font-size: 12px 
+    line-height: 15px 
+.formField input[type='text'],
+.formField input[type='email'],
+.formField input[type='number'],
+.formField input[type='tel'],
+.formField input[type='password'],
+.formField textarea,
+.formField select 
+  width: 100% 
+  border: 1px solid $bg-light-gray 
+  font-size: 14px 
+  padding: 12px 20px 12px 12px 
+  line-height: 1 
+  box-sizing: border-box 
+  font-family: $standard-font 
+.formField label,
+.formField span.label 
+  display: block 
+  width: 100% 
+  font-size: 14px 
+.formField label.middle,
+.formField span.label.middle 
+  display: flex 
+  align-items: center 
+.formField.required label::after,
+.formField.required label::after,
+.formField.required label::after 
+  content: '*' 
+  display: inline-block 
+  margin-left: 4px 
+.genericError 
+  color: $error
+  font-size: 12px 
+  line-height: 15px 
+.dataTable 
+  width: 100% 
+.dataTableRow 
+  display: flex 
+  flex-wrap: wrap 
+  padding: 5px 0 
+  &:nth-child(odd) 
+    background-color: #efefef 
+.dataTableCell 
+  margin-left: 5px 
+  padding: 0 5px 
+  display: flex 
+  align-items: center 
+  &.alignTop 
+    align-items: flex-start 
+  &.alignBottom 
+    align-items: flex-end 
+  &:first-child 
+    margin-left: 0 
+.dataTableActionsCell 
+  margin-left: auto 
+  [data-button] 
+    margin-left: 5px 
+    cursor: pointer 
+.dataTableEditor 
+  width: 100% 
+  overflow: hidden 
+  opacity: 0 
+  visibility: hidden 
+  height: 0 
+  padding: 0 5px 
+  transition: all 0.3s ease-in-out 
+  &.active 
+    opacity: 1 
+    visibility: visible 
+    height: auto 
+    padding-top: 10px 
+.box 
+  border: 1px solid #eee 
+  padding: 10px 
+  &:nth-child(odd) 
+    background-color: #efefef 
+.text-center 
+  text-align: center 
+.text-right 
+  text-align: right 
+.icon-wrap 
+  display: flex 
+  justify-content: center 
+  align-items: center 
+.hidden 
+  opacity: 0 
+  visibility: hidden 
+  height: 0 
+  overflow: hidden 
+  transition: all 0.3s ease-in-out 
+.show 
+  opacity: 1 
+  visibility: visible 
+  height: auto 
+  overflow: initial 
+  transition: all 0.3s ease-in-out 
+.btnGroup 
+  & > * 
+    margin-right: 10px 
+  & > *:last-child 
+    margin-right: 0px 
+.disable-action 
+  pointer-events: none 
+  user-select: none 
+  cursor: not-allowed 
+.standardSpan 
+  font-weight: 500 
+  font-size: 14px 
+  line-height: 17px 
+.callout 
+  margin: 40px 0 
+  padding: 30px 
+  background-color: $bg-light-gray 
+  text-align: center 

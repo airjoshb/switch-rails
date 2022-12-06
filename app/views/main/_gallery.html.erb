@@ -1,0 +1,11 @@
+<section id="gallery">
+  <div class="gallery-grid">
+    <div class="cardGrid">
+      <% @gallery.each do |image| %>
+        <div class="imageContainer">
+          <%= image_tag "gallery/#{image.split('/').last}" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>

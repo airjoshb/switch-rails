@@ -1,51 +1,68 @@
-const openCartButton = document.getElementById('open-cart-button');
-openCartButton.addEventListener('click', cartElement.show);
+// // // Fetch the CartSession client secret
+// const response = await fetch('/cart_session');
+// const {clientSecret} = await response.json();
 
-const cartCountIndicator = document.getElementById('cart-count-indicator');
-const updateCartItemsCount = (cartState) => {
- cartCountIndicator.textContent = cartState.lineItems.count;
-};
-cartElement.on('ready', updateCartItemsCount);
-cartElement.on('change', updateCartItemsCount);
+// // // Create the Cart Element
+// const stripe = Stripe('pk_test_jKrgScIgSSyVtMVh011wUj0O', {
+//   betas: ['cart_beta_1'],
+// });
 
-// // Fetch the CartSession client secret
-const response = await fetch('/cart_session');
-const {clientSecret} = await response.json();
+// // // If you've used the Payment Element before, you might be accustomed to passing the
+// // // PaymentIntent client secret here while initializing elements. For Cart, you instead pass the
+// // // CartSession client secret while creating the Cart Element on the next line.
+// const elements = stripe.elements();
+// const cartElement = elements.create('cart', {clientSecret});
 
-// // Create the Cart Element
-const stripe = Stripe('pk_test_jKrgScIgSSyVtMVh011wUj0O', {
-  betas: ['cart_beta_1'],
-});
+// // // Mount the Cart Element to document.body
+// cartElement.mount(document.body);
 
-// // If you've used the Payment Element before, you might be accustomed to passing the
-// // PaymentIntent client secret here while initializing elements. For Cart, you instead pass the
-// // CartSession client secret while creating the Cart Element on the next line.
-const elements = stripe.elements();
-const cartElement = elements.create('cart', {clientSecret});
+// // Hook up the add button
+// const addBtn = document.getElementById('add-to-cart-button');
+// const errMsg = document.getElementById('error-message');
 
-// // Mount the Cart Element to document.body
-cartElement.mount(document.body);
+// addBtn.addEventListener('click', async () => {
+//   if (addBtn.dataset.loading === 'true') {
+//     return;
+//   }
 
-// Hook up the add button
-const addBtn = document.getElementById('add-to-cart-button');
-const errMsg = document.getElementById('error-message');
+//   errMsg.innerText = '';
+//   addBtn.dataset.loading = 'true';
 
-addBtn.addEventListener('click', async () => {
-  if (addBtn.dataset.loading === 'true') {
-    return;
-  }
+//   const response = await cartElement.addLineItem({
+//     product: addBtn.dataset.productId,
+//   });
 
-  errMsg.innerText = '';
-  addBtn.dataset.loading = 'true';
+//   // error.message is a user friendly error message to be displayed to your customer
+//   if (response.error) {
+//     errMsg.innerText = response.error.message;
+//   }
 
-  const response = await cartElement.addLineItem({
-    product: addBtn.dataset.productId,
-  });
+//   addBtn.dataset.loading = 'false';
+// });
 
-  // error.message is a user friendly error message to be displayed to your customer
-  if (response.error) {
-    errMsg.innerText = response.error.message;
-  }
+// // // Open Cart
+// const openCartButton = document.getElementById('open-cart-button');
+// openCartButton.addEventListener('click', cartElement.show);
 
-  addBtn.dataset.loading = 'false';
-});
+// const cartCountIndicator = document.getElementById('cart-count-indicator');
+// const updateCartItemsCount = (cartState) => {
+//  cartCountIndicator.textContent = cartState.lineItems.count;
+// };
+// cartElement.on('ready', updateCartItemsCount);
+// cartElement.on('change', updateCartItemsCount);
+
+// // Handle checkout events
+// cartElement.on('checkout', async () => {
+//   // Submit the checkout attempt to your server
+//   const res = await fetch('/create-checkout-session', {
+//     method: 'POST',
+//   })
+//   const {error, checkoutUrl} = await res.json();
+//   if (error) {
+//     // Pass the error message to be displayed if checkout failed
+//     cartElement.cancelCheckout(error.message);
+//   } else {
+//     // Redirect the user to the checkout URL to finish checking out
+//     window.location = checkoutUrl;
+//   }
+// });

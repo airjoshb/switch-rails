@@ -1,0 +1,20 @@
+<section id="charge" data-controller="charge" data-charge-item-value="<%= @cart.id %>" data-charge-return-url-value="<%= root_url %>" >
+  <div class="bannerContainer">
+    <h1>Checkout</h1>
+  </div>
+  <div class="cartContainer">
+      <div class="content">
+        <form id="payment-form">
+          <div id="payment-element">
+            <!--Stripe.js injects the Payment Element-->
+          </div>
+          <button id="submit">
+            <div class="spinner hidden" id="spinner"></div>
+            <span id="button-text">Pay now</span>
+          </button>
+          <div id="payment-message" class="hidden"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -13,7 +13,7 @@ class CartSessionsController < ApplicationController
     if cart_session_cookie
       cart_session = Stripe::APIResource.request(
         :get,
-        "/v1/cart/sessions/#{cart_session_cookie}/client_secret",
+        "/v1/cart/sessions/#{cart_session_cookie}",
       )
     end
 
@@ -37,7 +37,10 @@ class CartSessionsController < ApplicationController
       samesite: 'Lax',
       maxage: 1000 * 60 * 60 * 24 * 90,  # 90 days in ms
     }
-    {clientSecret: cart_session.client_secret}.to_json
+    clientSecret = cart_session[0].data[:client_secret].to_json
+    respond_to do |format|
+      format.json { render json: clientSecret }
+    end
   end
   
 end

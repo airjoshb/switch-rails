@@ -1,0 +1,29 @@
+<div class='content'>
+  <%= form_with model: @product do |product_form| %>
+    <% if @product.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+        <ul>
+        <% @product.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %> 
+    <%= render 'form', product_form: product_form %>
+    <div>
+      <h4>Variations</h4>
+      <% if @product.variations.any? %>
+        <% for variation in @product.variations %>
+          <div><%= variation.name %></div>
+          <% if variation.image.attached? %>
+            <div><%= variation.image.filename %></div>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= render "variation", product_form: product_form %>
+    </div>
+    <%= product_form.submit "Save Changes" %>
+  <% end %>
+  
+</div>

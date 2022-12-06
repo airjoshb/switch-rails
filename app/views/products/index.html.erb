@@ -1,0 +1,35 @@
+<section id="shop">
+  <div class="bannerContainer" >
+    <h1>fresh from the bakery</h1>
+    <span class="subtitleStyle">Order gluten-free, keto, and vegan goods, delivered to Santa Cruz and the Monterey Bay</span>
+  </div>
+  <div class="container">
+    <div class="productContainer">
+      <div class="productCardGrid">
+        <div class="product-grid">
+          <% for product in @products %>
+            <%= link_to product do %>
+              <div class="productCard">
+                <% if product.image.attached? %>
+                  <div class= "imageContainer" role="presentation" >
+                    <%= image_tag product.image.variant(resize_to_limit: [400, 400]), alt: product.name %>
+                  </div>
+                <% end %>
+                <div class= "detailsContainer">
+                  <span class="productName"><%= product.name %></span>
+                  <% if product.variations.present? %>
+                    <div class="prices">
+                      <span {itemprop: "price", content: product.variations.first.price / 100 } >
+                      <%= formatted_price(product.variations.first.amount) %>
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

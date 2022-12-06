@@ -1,0 +1,56 @@
+@import 'variables'
+
+#gallery 
+  display: flex
+
+  .gallery-grid
+    flex-grow: 1
+    align-self: start
+
+    .cardGrid 
+      display: grid
+      grid-template-columns: repeat(4, 1fr)
+      gap: 2px
+
+
+    .imageContainer 
+      width: 100%
+      line-height: normal
+
+
+    .imageContainer img 
+      width: 100%
+      object-fit: cover
+
+
+    .mobileSlider 
+      display: none
+
+
+@media (max-width: 1000px) 
+  #gallery
+    .gallery-grid
+      margin-right: 16px
+      .cardGrid 
+          grid-template-columns: repeat(3, 1fr)
+      
+@media (max-width: 800px) 
+  #gallery .gallery-grid .cardGrid 
+    grid-template-columns: repeat(1, 1fr)
+  
+
+  .mobileSlider 
+    display: block
+    margin-bottom: 32px
+  
+
+  #gallery 
+    margin-left: -3.5%
+    margin-right: -2.5%
+  
+
+  .gallery-grid    
+    position: static
+    margin-right: 0px
+  
+
