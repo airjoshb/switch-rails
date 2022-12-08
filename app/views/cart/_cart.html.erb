@@ -8,46 +8,36 @@
         <div class="items">
           <% for variation in @cart.variations %>
               <%= form_with(url: cart_remove_path) do |f| %>
-                <%= f.hidden_field :id, value: variation.id %>
+                <%= f.hidden_field :id, value: variation.orderables.first.id %>
                 <div class="priceContainer">
-                  <div class= "imageContainer" role="presentation" >
-                    <%= image_tag variation.product.image.variant(resize_to_limit: [125, 125]), alt: variation.product.name %>
-                  </div>
-                  <span class="variation">
-                    <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
-                        <%= variation.unit_quantity %> - 
-                        <%= variation.name.pluralize %>
-                    <% else %>
-                      <%= variation.name %>
-                    <% end %>
-                  </span>
+                  <%= render 'prices', variation: variation %>
                   <span class="price"><%= display_price(variation.amount) %></span>
-                  <span class= "close" ><%= f.submit "x" %></span>
+                  <span class= "close" ><%= f.submit "remove" %></span>
                 </div>
               <% end %> 
           <% end %>
         </div>
+        <hr />
         <div class="orderContainer">
           <div class="orderContent">
-            <h6 class="title">Order Summary</h6>
+            <div class="message">
+              Orders will be delivered to Santa Cruz area locations on Tuesday and Thursdays, and Monterey area Tuesday through Saturday
+            </div>
             <% if @cart %>
               <div class="orderDetail">
-                <span>
-                  Subtotal
-                  <div class="price"><%= formatted_price(@cart.total) %></div>
-                </span>
-                <div>Coupon: <%= text_field_tag :code %></div>
-                <hr />
-                <p class="total">Total: <%= formatted_price(@cart.total) %></p>
+                <p class="total">Subotal: <%= formatted_price(@cart.total) %></p>
               </div>
             <% else %>
               <p>Your cart is empty</p>
             <% end %>
-            <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
-              <%= f.hidden_field 'cart_id', value: @cart.id %>
-              <%= f.submit "Checkout", class: "button primary", id: "checkout-button" %>
-            <% end %>
+            <div class="checkout">
+              <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
+                <%= f.hidden_field 'cart_id', value: @cart.id %>
+                <%= f.submit "Checkout", class: "button primary", id: "checkout-button" %>
+              <% end %>
+            </div>
           </div>
+          
         </div>
       </div>
     <% end %>

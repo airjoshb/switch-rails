@@ -24,7 +24,7 @@
                 <span class="price"><%= display_price(variation.amount) %></span>
                 <% if variation.in_stock? %>
                   <span class="quantity">
-                    <%= f.number_field :quantity, value: 0, min: 1 %>
+                    <%= f.number_field :quantity, value: 1, min: 1 %>
                   </span>
                   <span><%= f.submit "Add to Bag", class: "button primary" %></span>
                 <% end %>

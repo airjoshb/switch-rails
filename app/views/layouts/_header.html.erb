@@ -4,12 +4,9 @@
       <div class="linkContainer">
         <nav role='presentation'>
           <%= link_to "shop", shop_path, class: "navLink" %>
-          <a href="#" class="navLink">
-            special events
-          </a>
-          <a href="#" class="navLink">
-            about
-          </a>
+          <% for page in @pages %>
+            <%= link_to page.slug, page_path(page.slug), class: "navLink" %>
+          <% end %>
         </nav>
       </div>
       <div class="burgerIcon">

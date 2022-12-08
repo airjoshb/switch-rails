@@ -1,0 +1,11 @@
+<div class= "imageContainer" role="presentation" >
+  <%= image_tag variation.product.image.variant(resize_to_limit: [75, 75]), alt: variation.product.name %>
+</div>
+<span class="variation">
+  <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
+      <%= variation.unit_quantity %> - 
+      <%= variation.name.pluralize %>
+  <% else %>
+    <%= variation.name %>
+  <% end %>
+</span>

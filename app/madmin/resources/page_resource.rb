@@ -1,21 +1,15 @@
-class ActiveStorage::BlobResource < Madmin::Resource
+class PageResource < Madmin::Resource
   # Attributes
   attribute :id, form: false
-  attribute :key
-  attribute :filename
-  attribute :content_type
-  attribute :service_name
-  attribute :byte_size
-  attribute :checksum
+  attribute :title
+  attribute :description
+  attribute :nav
+  attribute :slug
   attribute :created_at, form: false
-  attribute :analyzed
-  attribute :identified
-  attribute :composed
-  attribute :preview_image, index: false
+  attribute :updated_at, form: false
+  attribute :content, index: false
 
   # Associations
-  attribute :variant_records
-  attribute :attachments
 
   # Uncomment this to customize the display name of records in the admin area.
   # def self.display_name(record)

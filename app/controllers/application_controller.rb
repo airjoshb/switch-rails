@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def initialize_cart
+    @pages = Page.where(nav: true)
     @cart ||= Cart.find_by(id: session[:cart_id])
 
     if @cart.nil?

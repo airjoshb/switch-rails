@@ -12,10 +12,19 @@ class CreateCheckoutSessionsController < ApplicationController
   def create
     cart = Cart.find(params[:cart_id])
     prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
-    line_items = prices.map{|e| {price:  e.first, quantity: e.last}}
+    adjustable = Hash(enabled: true, minimum: 1, maximum: 10)
+    line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     checkout_session = Stripe::Checkout::Session.create({
       line_items: line_items,
       mode: 'payment',
+      cancel_url: "/cart",
+      allow_promotion_codes: true,
+      phone_number_collection: {
+        enabled: true
+      },
+      shipping_address_collection: {
+        allowed_countries: ['US'],
+      },
       success_url: 'http://localhost:3000/',
       cancel_url: 'http://localhost:3000/',
     })

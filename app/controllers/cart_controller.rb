@@ -14,6 +14,7 @@ class CartController < ApplicationController
     end
 
     respond_to do |format|
+      format.html { redirect_to cart_path }
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace('cart', partial: 'cart/icon', locals: {cart: @cart})
       end
@@ -24,12 +25,11 @@ class CartController < ApplicationController
     Orderable.find_by(id: params[:id]).destroy
 
     respond_to do |format|
+      format.html { redirect_to cart_path }
       format.turbo_stream do
-        render turbo_stream:
-          turbo_stream.replace('cart',
-          partial: 'cart/cart',
-          locals: {cart: @cart})
+        render turbo_stream: turbo_stream.replace('cart', partial: 'cart/prices', locals: {cart: @cart})
       end
     end
   end
+
 end

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root "main#index"
   # mount Bloak::Engine, at: "/blog"
   resources :products 
-  resource :cart_session
+  get '/p/:slug', to: 'pages#show', as: :page
   get "/shop", to: "products#index", as: "shop"
   post '/create-checkout-session', to: "create_checkout_sessions#create", as: "checkout-session"
 end
