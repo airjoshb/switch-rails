@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
 
   has_many :variations, -> {order('variations.row_order')}
+  belongs_to :category
 
   accepts_nested_attributes_for :variations, allow_destroy: true
   
@@ -12,6 +13,7 @@ class Product < ApplicationRecord
   has_rich_text :content
 
   default_scope { order(row_order: :asc) }
+
 
   after_save :product_change, if: :saved_changes?
 

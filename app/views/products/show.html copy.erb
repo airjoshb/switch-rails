@@ -1,0 +1,42 @@
+
+<section id="product">
+  <div class="product-container">
+    <div class="content">
+      <div class="imageContainer">
+        <%= image_tag @product.image if @product.image.attached? %>
+      </div>
+      <div class="details">
+        <h1><%= @product.name %></h1>
+        <p class="description"><%= @product.description %></p>
+        <div class="variations">
+          <% for variation in @product.variations %>
+            <%= form_with(url: cart_add_path) do |f| %>
+              <%= f.hidden_field :id, value: variation.id %>
+              <div class="priceContainer">
+                <span class="variation">
+                  <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
+                      <%= variation.unit_quantity %> - 
+                      <%= variation.name.pluralize %>
+                  <% else %>
+                    <%= variation.name %>
+                  <% end %>
+                </span>
+                <span class="price"><%= display_price(variation.amount) %></span>
+                <% if variation.in_stock? %>
+                  <span class="quantity">
+                    <%= f.number_field :quantity, value: 1, min: 1 %>
+                  </span>
+                  <span><%= f.submit "Add to Bag", class: "button primary" %></span>
+                <% end %>
+              </div>
+            <% end %> 
+            <% unless variation == @product.variations.last %>
+              <hr />
+            <% end %>
+          <% end %>
+        </div>
+      `<%= @product.content %>
+      </div>
+    </div>
+  </div>
+</section>

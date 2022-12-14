@@ -1,8 +1,14 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update]
+  before_action :set_categories, only: [:show, :index]
 
   def index
-    @products = Product.all.order(row_order: :asc)
+    if params[:category]
+      category = Category.find_by_name(params[:category])
+      @products = category.products
+    else
+      @products = Product.where.not(name: "bread club").order(row_order: :asc)
+    end
   end
 
   def edit
@@ -10,6 +16,10 @@ class ProductsController < ApplicationController
   end
 
   def show
+  end
+
+  def bread_club
+    @product = Product.find_by_name(params[:name])
   end
 
   def new
@@ -44,6 +54,10 @@ class ProductsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_product
     @product = Product.friendly.find(params[:id])
+  end
+
+  def set_categories
+    @categories = Category.all.order(name: :asc)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

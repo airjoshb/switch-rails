@@ -12,3 +12,11 @@ Product.create([
   {name: "Keto Pecan Bundt Cake", description: "A sugar-free cake worthy of your dessert table."},
   {name: "A Cake for Two", description: "A proper layer cake just big enough to share, or not."}
 ])
+Category.create([
+  {name: "Bread"},
+  {name: "Pies"},
+  {name: "Cupcakes"},
+  {name: "Keto"},
+  {name: "Vegan"},
+])
+User.create(name: 'notpie', password: 'p0rpo1se', password_confirmation: 'p0rpo1se')

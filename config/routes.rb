@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get  'sign_in', to: 'sessions#new'
+  post 'sign_in', to: 'sessions#create'
+  get  'sign_up', to: 'registrations#new'
+  post 'sign_up', to: 'registrations#create'
+  
   get 'orders/show'
   get 'cart', to: 'cart#show'
   post 'cart/add'
@@ -6,14 +11,21 @@ Rails.application.routes.draw do
   resources :charges, only: [:new]
   post 'charge', to: 'charges#charge'
   
+  resources :sessions, only: [:index, :show, :destroy]
+  resource  :password, only: [:edit, :update]
+  namespace :identity do
+    resource :email,              only: [:edit, :update]
+    resource :email_verification, only: [:edit, :create]
+    resource :password_reset,     only: [:new, :edit, :create, :update]
+  end
+  
   draw :madmin
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  root "main#index"
-  # mount Bloak::Engine, at: "/blog"
+  root 'main#index'
   resources :products 
   get '/p/:slug', to: 'pages#show', as: :page
-  get "/shop", to: "products#index", as: "shop"
-  post '/create-checkout-session', to: "create_checkout_sessions#create", as: "checkout-session"
+  get '/shop', to: 'products#index', as: 'shop'
+  get '/gluten-free-bread-club', to: 'products#bread_club', defaults: {name: 'bread club'}, as: 'bread_club'
+  post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'
+  post '/webhooks', to: 'create_checkout_sessions#webhooks', as: 'webhooks'
 end

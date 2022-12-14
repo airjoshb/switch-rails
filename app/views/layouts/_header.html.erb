@@ -7,6 +7,7 @@
           <% for page in @pages %>
             <%= link_to page.slug, page_path(page.slug), class: "navLink" %>
           <% end %>
+          <%= link_to "bread club", bread_club_path, class: "navLink" %>
         </nav>
       </div>
       <div class="burgerIcon">

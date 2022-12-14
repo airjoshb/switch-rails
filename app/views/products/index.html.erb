@@ -4,6 +4,12 @@
     <span class="subtitleStyle">Order gluten-free, keto, and vegan goods, delivered to Santa Cruz and the Monterey Bay</span>
   </div>
   <div class="container">
+    <div class="bakery-categories">
+      <%= link_to "All", products_path, class: "navLink" %>
+      <% for category in @categories %>
+        <%= link_to category.name, products_path(category: category.name), class: "navLink link"  %>
+      <% end %>
+    </div>
     <div class="productContainer">
       <div class="productCardGrid">
         <div class="product-grid">

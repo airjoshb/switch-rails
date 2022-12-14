@@ -17,6 +17,7 @@ class Variation < ApplicationRecord
   scope :in_stock, -> { where('count_on_hand > ? OR inventory_type = ? ', 0, :infinite, false) }
   scope :trackable, -> { where(inventory_type: :trackable)}
   scope :infinite, -> { where(inventory_type: :infinite)}
+  scope :recurring, -> { where(recurring: true)}
 
   def available?
     self.active
