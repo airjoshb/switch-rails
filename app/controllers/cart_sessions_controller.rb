@@ -4,7 +4,7 @@ class CartSessionsController < ApplicationController
 
   # Set your secret key. Remember to switch to your live secret key in production.
   # See your keys here: https://dashboard.stripe.com/apikeys
-  Stripe.api_key = 'sk_test_W8RvelVgJxdVMlZoZhggagqm'
+  Stripe.api_key = 'sk_test_51MHyqpLHQPVTKPLFIGOtLP7QCi7FY7RNnIfCEEEjJnY6IFdacwnJinWw5pnveHcPFzfjuBu5zFM15ohRrFZfWfPz00eIccqtm5'
   Stripe.api_version = '2015-04-07; cart_sessions_beta=v1;'
 
   def show

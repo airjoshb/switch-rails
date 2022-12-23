@@ -11,6 +11,7 @@ Product.create([
   {name: "Gluten-Free Sandwich Buns", description: "A soft, fluffy bun for your burger or sandwich."},
   {name: "Keto Pecan Bundt Cake", description: "A sugar-free cake worthy of your dessert table."},
   {name: "A Cake for Two", description: "A proper layer cake just big enough to share, or not."}
+  {name: "Bread Club", description: "Join our gluten-free bread club for Santa Cruz and Monterey"}
 ])
 Category.create([
   {name: "Bread"},

@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="content">
+    <div class="contentTop">
+      <div class="footerLinkContainer" >
+        <div class="footerLinks">
+          <% for page in @pages %>
+            <span class="linkTitle">
+              <%= link_to page.title, page_path(page.slug), class: "link" %>
+            </span>
+          <% end %>
+        </div>       
+      </div>
+      <div class="newsLetter">
+        <div class="newsLetterContent">
+          <div class="socialContainer">
+              <div class="socialIconContainer">
+                <Icon symbol={'instagram'}></Icon>
+              </div>
+            
+          </div>
+          <div class="copyrightContainer">
+            <span>
+              A Frazley Adventures, LLC joint ©<%= Date.today.year %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
