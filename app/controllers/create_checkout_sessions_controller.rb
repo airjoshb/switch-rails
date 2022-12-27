@@ -6,7 +6,7 @@ class CreateCheckoutSessionsController < ApplicationController
 
   # Set your secret key. Remember to switch to your live secret key in production.
   # See your keys here: https://dashboard.stripe.com/apikeys
-  Stripe.api_key = ENV.fetch('STRIPE_API_KEY')
+  Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
   endpoint_secret = ENV.fetch('ENDPOINT_SECRET')
 
   def create
