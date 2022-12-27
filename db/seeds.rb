@@ -26,4 +26,4 @@ Page.create([
   {title: "cancel"},
   {title: "faq"},
 ])
-User.create(name: ENV.fetch('ADMIN_NAME'), password: ENV.fetch('ADMIN_PASSWORD'), password_confirmation: ENV.fetch('ADMIN_PASSWORD'))
+User.create(email: ENV.fetch('ADMIN_EMAIL'), password: ENV.fetch('ADMIN_PASSWORD'), password_confirmation: ENV.fetch('ADMIN_PASSWORD'))
