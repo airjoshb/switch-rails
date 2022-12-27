@@ -10,8 +10,8 @@ Product.create([
   {name: "Gluten-Free Baguette", description: "A fresh, crusty, gluten-free baguette."},
   {name: "Gluten-Free Sandwich Buns", description: "A soft, fluffy bun for your burger or sandwich."},
   {name: "Keto Pecan Bundt Cake", description: "A sugar-free cake worthy of your dessert table."},
-  {name: "A Cake for Two", description: "A proper layer cake just big enough to share, or not."}
-  {name: "Bread Club", description: "Join our gluten-free bread club for Santa Cruz and Monterey"}
+  {name: "A Cake for Two", description: "A proper layer cake just big enough to share, or not."},
+  {name: "Bread Club", description: "Join our gluten-free bread club for Santa Cruz and Monterey"},
 ])
 Category.create([
   {name: "Bread"},
@@ -24,6 +24,6 @@ Page.create([
   {title: "about", slug: "about"},
   {title: "sucess"},
   {title: "cancel"},
-  {title: "faq"}
+  {title: "faq"},
 ])
 User.create(name: ENV.fetch('ADMIN_NAME'), password: ENV.fetch('ADMIN_PASSWORD'), password_confirmation: ENV.fetch('ADMIN_PASSWORD'))
