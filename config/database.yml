@@ -83,4 +83,5 @@ production:
   <<: *default
   database: switch_rails_production
   username: switch_rails
-  password: <%= ENV["SWITCH_RAILS_DATABASE_PASSWORD"] %>
+  password:  <%= ENV["DATABASE_URL"] %>
+
