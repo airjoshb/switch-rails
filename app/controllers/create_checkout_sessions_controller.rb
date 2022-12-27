@@ -6,9 +6,8 @@ class CreateCheckoutSessionsController < ApplicationController
 
   # Set your secret key. Remember to switch to your live secret key in production.
   # See your keys here: https://dashboard.stripe.com/apikeys
-  Stripe.api_key = 'sk_test_W8RvelVgJxdVMlZoZhggagqm'
-  Stripe.api_version = '2015-04-07; cart_sessions_beta=v1;'
-  endpoint_secret = 'whsec_f8dbfdee6d8c60ad0bdbf90839bb1a277cfa14ddb8725660677c5c66b8bdd5a4'
+  Stripe.api_key = ENV.fetch('STRIPE_API_KEY')
+  endpoint_secret = ENV.fetch('ENDPOINT_SECRET')
 
   def create
     cart = Cart.find(params[:cart_id])
@@ -27,8 +26,8 @@ class CreateCheckoutSessionsController < ApplicationController
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
-      success_url: 'http://localhost:3000/',
-      cancel_url: 'http://localhost:3000/',
+      success_url: 'http://localhost:3000/cart/success',
+      cancel_url: 'http://localhost:3000/cart/cancel',
     })
 
     reset_session

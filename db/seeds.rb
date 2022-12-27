@@ -20,4 +20,10 @@ Category.create([
   {name: "Keto"},
   {name: "Vegan"},
 ])
-User.create(name: 'notpie', password: 'p0rpo1se', password_confirmation: 'p0rpo1se')
+Page.create([
+  {title: "about", slug: "about"},
+  {title: "sucess"},
+  {title: "cancel"},
+  {title: "faq"}
+])
+User.create(name: ENV.fetch('ADMIN_NAME'), password: ENV.fetch('ADMIN_PASSWORD'), password_confirmation: ENV.fetch('ADMIN_PASSWORD'))

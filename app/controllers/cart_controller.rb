@@ -3,6 +3,12 @@ class CartController < ApplicationController
     # @render_cart = false
   end
 
+  def success
+  end
+
+  def cancel
+  end
+
   def add
     @variation = Variation.find_by(id: params[:id])
     quantity = params[:quantity].to_i

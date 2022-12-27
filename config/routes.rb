@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   
   get 'orders/show'
   get 'cart', to: 'cart#show'
+  get 'cart/cancel', to: 'cart#cancel'
+  get 'cart/success', to: 'cart#success'
   post 'cart/add'
   post 'cart/remove'
   resources :charges, only: [:new]

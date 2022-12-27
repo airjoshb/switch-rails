@@ -58,10 +58,17 @@ gem 'friendly_id', '~> 5.4.0'
 # Blog
 # gem 'bloak', git: "https://github.com/kuyio/bloak.git"
 
+# Admin
+gem "madmin", "~> 1.2"
+# Use Pwned to check if a password has been found in any of the huge data breaches [https://github.com/philnash/pwned]
+gem "pwned"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 end
+
+gem 'dotenv-rails', groups: [:development, :test]
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
@@ -80,11 +87,3 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
-
-gem "madmin", "~> 1.2"
-# Use Pwned to check if a password has been found in any of the huge data breaches [https://github.com/philnash/pwned]
-gem "pwned"
-# Use Pwned to check if a password has been found in any of the huge data breaches [https://github.com/philnash/pwned]
-gem "pwned"
-# Use Pwned to check if a password has been found in any of the huge data breaches [https://github.com/philnash/pwned]
-gem "pwned"
