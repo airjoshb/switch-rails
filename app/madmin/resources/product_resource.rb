@@ -10,7 +10,6 @@ class ProductResource < Madmin::Resource
   attribute :updated_at, form: false
   attribute :slug
   attribute :stripe_id
-  attribute :image
   attribute :content, index: false
 
   # Associations

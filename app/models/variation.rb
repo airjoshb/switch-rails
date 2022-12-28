@@ -2,8 +2,6 @@ class Variation < ApplicationRecord
   belongs_to :product
   has_many :orderables
   has_many :carts, through: :orderables
-
-  has_one_attached :image, dependent: :destroy
   
   enum inventory_type: {infinite: 'infinite', trackable: 'trackable'}
   enum interval: { day: 'day', week: 'week', month: 'month', year: 'year'}, _prefix: true

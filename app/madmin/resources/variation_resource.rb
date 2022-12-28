@@ -2,7 +2,6 @@ class VariationResource < Madmin::Resource
   # Attributes
   attribute :id, form: false
   attribute :name
-  attribute :image, form: false
   attribute :amount
   attribute :active
   attribute :add_on
