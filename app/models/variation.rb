@@ -56,7 +56,7 @@ class Variation < ApplicationRecord
 
   def variation_change
     require 'stripe'
-    Stripe.api_key = 'sk_test_W8RvelVgJxdVMlZoZhggagqm'
+    Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
     begin
     Stripe::Price.update(
       self.stripe_id, {

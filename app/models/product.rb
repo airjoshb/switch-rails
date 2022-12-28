@@ -1,7 +1,7 @@
 class Product < ApplicationRecord
 
   has_many :variations, -> {order('variations.row_order')}
-  belongs_to :category
+  belongs_to :category, optional: true
 
   accepts_nested_attributes_for :variations, allow_destroy: true
   
@@ -15,7 +15,7 @@ class Product < ApplicationRecord
   default_scope { order(row_order: :asc) }
 
 
-  after_save :product_change, if: :saved_changes?
+  # after_save :product_change, if: :saved_changes?
 
   
   def available?
@@ -26,7 +26,7 @@ class Product < ApplicationRecord
 
   def product_change
     require 'stripe'
-    Stripe.api_key = 'sk_test_W8RvelVgJxdVMlZoZhggagqm'
+    Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
     begin
       Stripe::Product.update(
         self.stripe_id, {

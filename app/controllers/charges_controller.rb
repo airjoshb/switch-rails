@@ -7,7 +7,7 @@ class ChargesController < ApplicationController
   end
 
   def charge
-    Stripe.api_key = 'sk_test_W8RvelVgJxdVMlZoZhggagqm'
+    Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
     @cart_total = Cart.find(params[:cart_id]).total.to_i
     payment_intent = Stripe::PaymentIntent.create(
       amount: @cart_total,
