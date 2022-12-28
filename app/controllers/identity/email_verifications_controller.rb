@@ -1,5 +1,5 @@
 class Identity::EmailVerificationsController < ApplicationController
-  skip_before_action :authenticate, only: :edit
+  # skip_before_action :authenticate, only: :edit
 
   before_action :set_user, only: :edit
 
