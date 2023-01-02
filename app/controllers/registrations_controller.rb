@@ -14,7 +14,7 @@ class RegistrationsController < ApplicationController
       cookies.signed.permanent[:session_token] = { value: session.id, httponly: true }
 
       send_email_verification
-      redirect_to madmin_path, notice: "Welcome! You have signed up successfully"
+      redirect_to root_path, notice: "Welcome! You have signed up successfully"
     else
       render :new, status: :unprocessable_entity
     end

@@ -3,27 +3,35 @@
 <h1>Devices & Sessions</h1>
 
 <div id="sessions">
-  <% @sessions.each do |session| %>
-    <div id="<%= dom_id session %>">
-      <p>
-        <strong>User Agent:</strong>
-        <%= session.user_agent %>
-      </p>
+  <% if @sessions %>
+    <% @sessions.each do |session| %>
+      <div id="<%= dom_id session %>">
+        <p>
+          <strong>User Email:</strong>
+          <%= session.user.email %>
+        </p>
+        <p>
+          <strong>User Agent:</strong>
+          <%= session.user_agent %>
+        </p>
 
-      <p>
-        <strong>Ip Address:</strong>
-        <%= session.ip_address %>
-      </p>
+        <p>
+          <strong>Ip Address:</strong>
+          <%= session.ip_address %>
+        </p>
 
-      <p>
-        <strong>Created at:</strong>
-        <%= session.created_at %>
-      </p>
+        <p>
+          <strong>Created at:</strong>
+          <%= session.created_at %>
+        </p>
 
-    </div>
-    <p>
-      <%= button_to "Log out", session, method: :delete %>
-    </p>
+      </div>
+      <p>
+        <%= button_to "Log out", session, method: :delete %>
+      </p>
+    <% end %>
+  <% else %>
+   There are no available sessions
   <% end %>
 </div>
 

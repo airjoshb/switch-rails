@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_13_011139) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,31 +57,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_13_011139) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "bloak_images", force: :cascade do |t|
-    t.string "name"
-    t.string "alt"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_bloak_images_on_name", unique: true
-  end
-
-  create_table "bloak_posts", force: :cascade do |t|
-    t.string "slug"
-    t.string "title"
-    t.string "topic"
-    t.string "summary"
-    t.text "content"
-    t.string "author_name"
-    t.string "author_email"
-    t.boolean "published", default: false
-    t.boolean "featured", default: false
-    t.integer "reading_time", default: 1
-    t.datetime "published_at", precision: nil
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_bloak_posts_on_slug", unique: true
-  end
-
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -91,6 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_13_011139) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
     t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
@@ -184,6 +160,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_13_011139) do
     t.string "stripe_id"
     t.enum "interval", enum_type: "interval_type"
     t.integer "interval_count"
+    t.string "slug"
     t.index ["product_id"], name: "index_variations_on_product_id"
   end
 

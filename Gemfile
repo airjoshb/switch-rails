@@ -55,13 +55,11 @@ gem 'stripe'
 # Product enhancements
 gem 'friendly_id', '~> 5.4.0'
 
-# Blog
-# gem 'bloak', git: "https://github.com/kuyio/bloak.git"
-
 # Admin
-gem "madmin", "~> 1.2"
 # Use Pwned to check if a password has been found in any of the huge data breaches [https://github.com/philnash/pwned]
 gem "pwned"
+gem "avo"
+
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

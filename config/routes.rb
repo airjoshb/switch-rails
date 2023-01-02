@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
+  mount Avo::Engine, at: Avo.configuration.root_path
   get  'sign_in', to: 'sessions#new'
   post 'sign_in', to: 'sessions#create'
+  post 'logout', to: 'sessions#delete'
   get  'sign_up', to: 'registrations#new'
   post 'sign_up', to: 'registrations#create'
   
@@ -20,8 +22,6 @@ Rails.application.routes.draw do
     resource :email_verification, only: [:edit, :create]
     resource :password_reset,     only: [:new, :edit, :create, :update]
   end
-  
-  draw :madmin
 
   root 'main#index'
   resources :products 

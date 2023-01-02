@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
   before_action :set_render_cart
   before_action :initialize_cart
   before_action :render_nav
+  before_action :set_current_request_details
+  before_action :authenticate
+
   
   def set_render_cart
     @render_cart = true
@@ -22,5 +25,16 @@ class ApplicationController < ActionController::Base
       @cart = Cart.create
       session[:cart_id] = @cart.id
     end
+  end
+
+  def authenticate
+    if session = Session.find_by_id(cookies.signed[:session_token])
+      Current.session = session
+    end
+  end
+
+  def set_current_request_details
+    Current.user_agent = request.user_agent
+    Current.ip_address = request.ip
   end
 end

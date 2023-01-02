@@ -11,6 +11,8 @@ class Variation < ApplicationRecord
 
   default_scope { order(row_order: :asc) }
 
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
 
   scope :in_stock, -> { where('count_on_hand > ? OR inventory_type = ? ', 0, :infinite, false) }
   scope :trackable, -> { where(inventory_type: :trackable)}

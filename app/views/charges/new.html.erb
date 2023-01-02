@@ -1,7 +1,5 @@
+<%= render "/main/banner", title: "checkout", subtitle: nil %>
 <section id="charge" data-controller="charge" data-charge-item-value="<%= @cart.id %>" data-charge-return-url-value="<%= root_url %>" >
-  <div class="bannerContainer">
-    <h1>Checkout</h1>
-  </div>
   <div class="cartContainer">
       <div class="content">
         <form id="payment-form">

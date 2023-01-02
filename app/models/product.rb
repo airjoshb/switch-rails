@@ -15,7 +15,7 @@ class Product < ApplicationRecord
   default_scope { order(row_order: :asc) }
 
 
-  # after_save :product_change, if: :saved_changes?
+  after_save :product_change, if: :saved_changes?
 
   
   def available?
