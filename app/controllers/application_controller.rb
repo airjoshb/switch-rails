@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery prepend: true 
   before_action :set_render_cart
-  before_action :initialize_cart
+  # before_action :initialize_cart
   before_action :render_nav
   before_action :set_current_request_details
   before_action :authenticate

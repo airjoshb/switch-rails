@@ -1,4 +1,5 @@
 class CreateCheckoutSessionsController < ApplicationController
+  skip_before_action :authenticate
 
   # This example sets up an endpoint using the Sinatra framework.
   # Watch this video to get started: https://youtu.be/8aA9Enb8NVc.
@@ -7,8 +8,7 @@ class CreateCheckoutSessionsController < ApplicationController
   # Set your secret key. Remember to switch to your live secret key in production.
   # See your keys here: https://dashboard.stripe.com/apikeys
   Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
-  endpoint_secret = ENV.fetch('ENDPOINT_SECRET')
-
+ 
   def create
     cart = Cart.find(params[:cart_id])
     prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
@@ -18,6 +18,7 @@ class CreateCheckoutSessionsController < ApplicationController
     checkout_session = Stripe::Checkout::Session.create({
       line_items: line_items,
       mode: mode,
+      customer_creation: "if_required",
       cancel_url: "/cart",
       allow_promotion_codes: true,
       phone_number_collection: {
@@ -29,13 +30,16 @@ class CreateCheckoutSessionsController < ApplicationController
       success_url: 'http://localhost:3000/cart/success',
       cancel_url: 'http://localhost:3000/cart/cancel',
     })
-
+    order = CustomerOrder.create(stripe_checkout_id: checkout_session.id)
+    order.orderables << cart.orderables
     reset_session
     redirect_to checkout_session.url, allow_other_host: true, status: 303
   end
    
   def webhooks
     event = nil
+    # endpoint_secret = ENV.fetch('ENDPOINT_SECRET')
+    endpoint_secret = 'whsec_635547ef75b9a35d58432ed6ecb5bd2b5e7805dae6fc4af0e37d54471f2afc17'
 
     # Verify webhook signature and extract the event
     # See https://stripe.com/docs/webhooks/signatures for more information.
@@ -52,6 +56,10 @@ class CreateCheckoutSessionsController < ApplicationController
     end
     
     case event['type']
+    when 'customer.created'
+      checkout_session = event['data']['object']
+
+      create_customer(checkout_session)
     when 'checkout.session.completed'
       checkout_session = event['data']['object']
 
@@ -64,13 +72,13 @@ class CreateCheckoutSessionsController < ApplicationController
       # you're still waiting for funds to be transferred from the customer's
       # account.
       if checkout_session.payment_status == 'paid'
-        fulfill_order(checkout_session)
+        process_order(checkout_session)
       end
     when 'checkout.session.async_payment_succeeded'
       checkout_session = event['data']['object']
 
       # Fulfill the purchase...
-      fulfill_order(checkout_session)
+      process_order(checkout_session)
     when 'checkout.session.async_payment_failed'
       session = event['data']['object']
 
@@ -81,18 +89,55 @@ class CreateCheckoutSessionsController < ApplicationController
     status 200
   end
 
-  def fulfill_order(line_items)
-    # TODO: fill in with your own logic
+  private
+  def create_customer(checkout_session)
+    search = Stripe::Customer.search({query: "email:\'#{checkout_session.email}\'"}).first
+    customer ||= Stripe::Customer.retrieve(search.id)
+    if customer.nil?
+      customer = Customer.create(stripe_id: checkout_session.id, email: checkout_session.email, phone: checkout_session.phone, name: checkout_session.name)
+    end
+    puts "Created #{customer.name} for #{checkout_session.inspect}"
+  end
+
+  def process_order(checkout_session)
+    order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
+    order.processed!
+    order.deliver_order_confirmation
     puts "Fulfilling order for #{line_items.inspect}"
   end
 
   def create_order(checkout_session)
-    # TODO: fill in with your own logic
-    puts "Creating order for #{checkout_session.inspect}"
+    begin
+      order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
+      payment = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
+      payment_method = Stripe::PaymentMethod.retrieve(payment.payment_method)
+      address_check = payment_method.card.address_line1_check = "pass" && payment_method.card.address_postal_code_check = "pass" ? true : false
+      address = Address.create(
+        street_1: checkout_session.shipping_details.address.line1, 
+        street_2: checkout_session.shipping_details.address.line2, 
+        city: checkout_session.shipping_details.address.city, 
+        state: checkout_session.shipping_details.address.state, 
+        postal: checkout_session.shipping_details.address.postal_code, 
+        address_check: address_check, 
+        customer_order: order)
+      pass_check = payment_method.card.cvc_check = "pass" ? true : false
+      method = PaymentMethod.create(
+        stripe_id: payment_method.id, 
+        card_type: payment_method.card.brand, 
+        cvc_check: pass_check, 
+        last_4: payment_method.card.last4,
+        customer_order: order)
+      order.update(description: payment.description, stripe_id: checkout_session.payment_intent, amount: checkout_session.amount_total)
+      customer = Customer.where(stripe_id: checkout_session.customer, email: checkout_session.customer_details.email).first_or_create
+      customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name)
+      customer.customer_orders << order
+    end
+    puts "Created order ##{order.guid} for #{checkout_session.inspect}"
   end
   
   def email_customer_about_failed_payment(checkout_session)
-    # TODO: fill in with your own logic
+    order = Order.find_by_stripe_id(checkout_session.payment_intent)
+    order.failed!
     puts "Emailing customer about payment failure for: #{checkout_session.inspect}"
   end
 

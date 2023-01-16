@@ -1,6 +1,6 @@
 
 <%= turbo_frame_tag "cart" do %>
-  <% if cart.quantity > 0 %>
+  <% if cart.present? && cart.quantity > 0 %>
     <div class="bagNotification">
       <span><%= cart.quantity %></span>
     </div>

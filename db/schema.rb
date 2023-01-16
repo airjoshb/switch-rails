@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_13_215648) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "interval_type", ["day", "week", "month", "year"]
   create_enum "inventory", ["trackable", "infinite"]
+  create_enum "status", ["pending", "processed", "failed", "fulfilled", "refunded"]
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -57,6 +58,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "addresses", force: :cascade do |t|
+    t.string "street_1"
+    t.string "street_2"
+    t.string "city"
+    t.string "state"
+    t.string "postal"
+    t.boolean "address_check"
+    t.bigint "customer_order_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_order_id"], name: "index_addresses_on_customer_order_id"
+  end
+
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -68,6 +82,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
     t.datetime "updated_at", null: false
     t.string "slug"
     t.index ["name"], name: "index_categories_on_name", unique: true
+  end
+
+  create_table "customer_orders", force: :cascade do |t|
+    t.string "guid"
+    t.string "stripe_id"
+    t.decimal "amount"
+    t.decimal "fee"
+    t.decimal "net"
+    t.text "description"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.enum "order_status", default: "pending", enum_type: "status"
+    t.bigint "customer_id"
+    t.string "stripe_checkout_id"
+    t.boolean "receipt_sent"
+    t.datetime "receipt_sent_date"
+    t.index ["customer_id"], name: "index_customer_orders_on_customer_id"
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "phone"
+    t.string "stripe_id"
   end
 
   create_table "email_verification_tokens", force: :cascade do |t|
@@ -92,7 +133,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "customer_order_id"
     t.index ["cart_id"], name: "index_orderables_on_cart_id"
+    t.index ["customer_order_id"], name: "index_orderables_on_customer_order_id"
     t.index ["variation_id"], name: "index_orderables_on_variation_id"
   end
 
@@ -108,6 +151,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
   create_table "password_reset_tokens", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
+  end
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.string "stripe_id"
+    t.string "last_4"
+    t.bigint "customer_order_id", null: false
+    t.boolean "cvc_check"
+    t.string "card_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_order_id"], name: "index_payment_methods_on_customer_order_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -166,10 +220,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_203935) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "customer_orders"
+  add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "orderables", "carts"
+  add_foreign_key "orderables", "customer_orders"
   add_foreign_key "orderables", "variations"
   add_foreign_key "password_reset_tokens", "users"
+  add_foreign_key "payment_methods", "customer_orders"
   add_foreign_key "products", "categories"
   add_foreign_key "sessions", "users"
   add_foreign_key "variations", "products"

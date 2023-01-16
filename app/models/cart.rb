@@ -1,5 +1,5 @@
 class Cart < ApplicationRecord
-  has_many :orderables
+  has_many :orderables, dependent: :destroy
   has_many :variations, through: :orderables
 
   def total

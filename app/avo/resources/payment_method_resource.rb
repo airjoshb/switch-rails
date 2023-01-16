@@ -1,4 +1,4 @@
-class CartResource < Avo::BaseResource
+class PaymentMethodResource < Avo::BaseResource
   self.title = :id
   self.includes = []
   # self.search_query = -> do
@@ -7,8 +7,10 @@ class CartResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
-  field :orderables, as: :has_many
-  field :variations, as: :has_many, through: :orderables
-  field :created_at, as: :date_time
+  field :stripe_id, as: :text
+  field :last_4, as: :text
+  field :customer_order, as: :belongs_to
+  field :cvc_check, as: :boolean
+  field :card_type, as: :text
   # add fields here
 end

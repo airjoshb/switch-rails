@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  guid: MyString
+  stripe_id: MyString
+  amount: 9.99
+  fee: 9.99
+  net: 9.99
+  description: MyText
+  completed_at: 2023-01-04 13:18:49
+
+two:
+  guid: MyString
+  stripe_id: MyString
+  amount: 9.99
+  fee: 9.99
+  net: 9.99
+  description: MyText
+  completed_at: 2023-01-04 13:18:49
