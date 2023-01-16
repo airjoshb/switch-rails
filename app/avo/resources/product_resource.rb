@@ -18,6 +18,7 @@ class ProductResource < Avo::BaseResource
   # Fields generated from the model
   field :name, as: :text
   field :description, as: :textarea
+  field :content, as: :trix, through: :action_text_rich_texts
   field :image, as: :file
   field :row_order, as: :number
   field :active, as: :boolean
