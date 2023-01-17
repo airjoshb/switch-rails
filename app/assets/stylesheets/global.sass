@@ -119,7 +119,21 @@ section
 .detailContent
   width: 85%
   margin: 0 auto
-  
+li, .trix-content li
+  margin-bottom: 1em
+li:first-child, .trix-content li:first-child
+  margin-top: .4em
+ol, .trix-content ol 
+  margin-bottom: 1em
+  li
+    font-weight: 600
+.trix-content a
+  border-bottom: $grey-crumb thin solid;
+  &:hover
+    border-color: $standard-gold
+    color: $standard-gold
+
+
 @media only screen and (max-width:767px) 
   h1,.h1
     font-size: 55px 

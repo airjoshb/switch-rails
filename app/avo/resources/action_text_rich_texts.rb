@@ -10,7 +10,7 @@ class ActionTextRichTexts < Avo::BaseResource
   # Fields generated from the model
   field :name, as: :text
   field :body, as: :textarea
-  field :record_type, as: :select, options: {'Product': :product, 'Page': :page}, display_with_value: true
+  field :record_type, as: :select, options: [:Product, :Page], display_with_value: true
   field :pages, as: :belongs_to, polymorphic_as: :record
   field :products, as: :belongs_to, polymorphic_as: :record
   # add fields here
