@@ -9,6 +9,7 @@ class Product < ApplicationRecord
   friendly_id :name, use: [:slugged, :history]
 
   has_one_attached :image, dependent: :destroy
+  has_many_attached :trix_attachments
   
   has_rich_text :content
 

@@ -9,7 +9,7 @@
 <div><%= product_form.label :row_order %></div>
 <div><%= product_form.number_field :row_order %></div>
 <div><%= product_form.label :image %></div>
-<% if @product.image.attached? %>
+<% if @product.image? %>
   <div><%= @product.image.filename %></div>
 <% end %>
 <div><%= product_form.file_field :image %></div>

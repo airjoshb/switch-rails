@@ -16,7 +16,7 @@
       <% if @product.variations.any? %>
         <% for variation in @product.variations %>
           <div><%= variation.name %></div>
-          <% if variation.image.attached? %>
+          <% if variation.image? %>
             <div><%= variation.image.filename %></div>
           <% end %>
         <% end %>
