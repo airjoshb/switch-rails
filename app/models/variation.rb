@@ -44,7 +44,7 @@ class Variation < ApplicationRecord
   end
 
   def in_stock?
-    return true if inventory_type = 'infinite'
+    return true if inventory_type == 'infinite'
     count_on_hand > 0
   end
 
