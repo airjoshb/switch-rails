@@ -57,7 +57,7 @@ class ProductsController < ApplicationController
   end
 
   def set_categories
-    @categories = Category.all.order(name: :asc)
+    @categories = Category.all
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

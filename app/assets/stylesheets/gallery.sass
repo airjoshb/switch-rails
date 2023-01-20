@@ -2,9 +2,8 @@
 
 #gallery 
   display: flex
-
-  .gallery-grid
-    flex-grow: 1
+  flex-flow: row wrap
+  .gallery-grid, .categoryGrid
     align-self: start
 
     .cardGrid 
@@ -12,6 +11,7 @@
       grid-template-columns: repeat(4, 1fr)
       gap: 2px
 
+    
 
     .imageContainer 
       width: 100%
@@ -26,7 +26,35 @@
     .mobileSlider 
       display: none
 
-
+.categoryGrid 
+  display: flex
+  flex-flow: row nowrap
+  flex: 1
+  padding: 1.4em 0
+  min-width: 0
+  height: 60vh
+  overflow: hidden
+  align-items: center
+.gridItem
+  display: flex
+  flex-flow: column nowrap
+  align-items: center
+  flex: 1
+  min-width: 0
+  max-width: 20%
+  overflow: hidden
+  img
+    width: auto
+.categoryGrid :nth-child(1)
+  order: 3
+.categoryGrid :nth-child(2)
+  order: 1
+.categoryGrid :nth-child(3)
+  order: 2
+.categoryGrid :nth-child(4)
+  order: 4
+.categoryGrid :nth-child(5)
+  order: 5
 @media (max-width: 1000px) 
   #gallery
     .gallery-grid

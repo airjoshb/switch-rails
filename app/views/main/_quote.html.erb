@@ -1,6 +1,5 @@
  <section id="quote">
   <div class="quote-content">
-    <span>about bread club</span>
-    <p>'A weekly gluten-free bread club with pickup locations in Santa Cruz and Monterey and the ability to add on our latest vegan, keto, sugar free, and gluten-free treats.'</p>
+    <p><%= Product.find_by_slug("bread-club").description %></p>
   </div> 
 </section>

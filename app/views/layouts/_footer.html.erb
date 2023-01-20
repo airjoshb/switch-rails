@@ -3,9 +3,9 @@
     <div class="contentTop">
       <div class="footerLinkContainer" >
         <div class="footerLinks">
-          <% for page in @pages %>
+          <% for page in @pages.where.not(slug: "home") %>
             <span class="linkTitle">
-              <%= link_to page.title, page_path(page.slug), class: "link" %>
+              <%= link_to page.title.downcase, page_path(page.slug), class: "link" %>
             </span>
           <% end %>
         </div>       

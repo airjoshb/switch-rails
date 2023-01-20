@@ -2,6 +2,7 @@ class PagesController < ApplicationController
   before_action :set_page, only: :show
 
   def show
+    redirect_to(root_url, :notice => 'Record not found') unless @page
   end
   
   private

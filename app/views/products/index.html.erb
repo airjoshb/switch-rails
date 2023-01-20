@@ -2,9 +2,12 @@
 <section id="shop">
   <div class="container">
     <div class="bakery-categories">
-      <%= link_to "All", products_path, class: "navLink" %>
       <% for category in @categories %>
-        <%= link_to category.name, products_path(category: category.name), class: "navLink link"  %>
+        <% if category.name == 'All' %>
+          <%= link_to "All", products_path, class: "navLink" %>
+        <% else %>
+          <%= link_to category.name, products_path(category: category.name), class: "navLink link"  %>
+        <% end %>
       <% end %>
     </div>
     <div class="productContainer">

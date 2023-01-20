@@ -1,0 +1,13 @@
+  <section id="gallery">
+    <div class="categoryGrid">
+      <% for category in @categories %>
+        <div class="gridItem">
+          <% if category.name == 'All' %>
+            <%= link_to image_tag(category.image), products_path %>
+          <% else %>
+            <%= link_to image_tag(category.image), products_path(category: category.name) %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
