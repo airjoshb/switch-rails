@@ -2,6 +2,9 @@
     <div class="categoryGrid">
       <% for category in @categories %>
         <div class="gridItem">
+          <% unless category.name == 'All' %>
+            <h5 class="categoryName"><%= category.name %></h4>
+          <% end %>
           <% if category.name == 'All' %>
             <%= link_to image_tag(category.image), products_path %>
           <% else %>
