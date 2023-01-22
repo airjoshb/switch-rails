@@ -9,7 +9,6 @@ class VariationResource < Avo::BaseResource
   # Fields generated from the model
   field :name, as: :text
   field :product_id, as: :number
-  field :image, as: :text
   field :amount, as: :number
   field :active, as: :boolean
   field :add_on, as: :boolean
@@ -18,10 +17,8 @@ class VariationResource < Avo::BaseResource
   field :row_order, as: :number
   field :recurring, as: :boolean
   field :inventory_type, as: :select, enum: ::Variation.inventory_types
-  field :stripe_id, as: :text
-  field :interval, as: :select, enum: ::Variation.intervals
+  field :interval, as: :select, enum: ::Variation.intervals, include_blank: 'No Interval'
   field :interval_count, as: :number
-  field :product, as: :belongs_to
   field :orderables, as: :has_many
   field :carts, as: :has_many, through: :orderables
   # add fields here
