@@ -8,7 +8,6 @@ class VariationResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :name, as: :text
-  field :product_id, as: :number
   field :amount, as: :number
   field :active, as: :boolean
   field :add_on, as: :boolean
