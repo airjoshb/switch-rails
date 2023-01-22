@@ -19,7 +19,7 @@ class VariationResource < Avo::BaseResource
   field :interval, as: :select, enum: ::Variation.intervals, include_blank: 'No Interval'
   field :interval_count, as: :number
   field :orderables, as: :has_many
-  field :stripe_id, as: :text, hide_on: [:edit, :index]
+  field :stripe_id, as: :text, hide_on: [:edit, :index, :new]
   field :carts, as: :has_many, through: :orderables
   # add fields here
 
