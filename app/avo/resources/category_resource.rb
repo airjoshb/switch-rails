@@ -1,5 +1,5 @@
 class CategoryResource < Avo::BaseResource
-  self.title = :id
+  self.title = :name
   self.includes = []
   self.resolve_query_scope = ->(model_class:) do
     model_class.order(name: :asc)
