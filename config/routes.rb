@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   resources :products 
   get '/p/:slug', to: 'pages#show', as: :page
   get '/shop', to: 'products#index', as: 'shop'
-  get '/gluten-free-bread-club', to: 'products#bread_club', defaults: {name: 'gluten_free_bread club'}, as: 'bread_club'
+  get '/gluten-free-bread-club', to: 'products#bread_club', defaults: {name: 'gluten free bread club'}, as: 'bread_club'
   post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'
   post '/webhooks', to: 'create_checkout_sessions#webhooks', as: 'webhooks'
 end
