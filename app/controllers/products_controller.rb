@@ -7,7 +7,7 @@ class ProductsController < ApplicationController
       category = Category.find_by_name(params[:category])
       @products = category.products
     else
-      @products = Product.where.not(name: "bread club").order(row_order: :asc)
+      @products = Product.order(row_order: :asc)
     end
   end
 
@@ -16,10 +16,7 @@ class ProductsController < ApplicationController
   end
 
   def show
-  end
 
-  def bread_club
-    @product = Product.find_by_name(params[:name])
   end
 
   def new
