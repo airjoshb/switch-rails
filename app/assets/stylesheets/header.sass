@@ -172,12 +172,27 @@
 		color: $standard-white 
 		font-size: 9px 
 @media (max-width:800px) 
+	#header
+		box-shadow: none
 	.header
 		display: grid 
 		grid-template-columns: repeat(1, 1fr)
 		align-items: center
 		justify-items: center
-
+	.header > :nth-child(1)
+		order: 3
+		border-top: .5px solid $grey-crumb
+		border-bottom: 3px double $grey-crumb
+		text-align: center
+		margin-top: .5em
+		padding: .5em 0
+	.header > :nth-child(2)
+		order: 1
+	.header > :nth-child(3)
+		order: 2
+	.header > div
+		width: 100%;
+		justify-content: center
 	.hideOnMobile 
 		display: none 
 	.brand svg
