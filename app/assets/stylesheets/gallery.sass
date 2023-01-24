@@ -63,10 +63,24 @@
 @media (max-width: 1000px) 
   #gallery
     .gallery-grid
-      margin-right: 16px
+      // margin-right: 16px
+      width: 97%
       .cardGrid 
           grid-template-columns: repeat(3, 1fr)
-      
+    .categoryGrid
+      flex-flow: column
+      height: unset
+      width: 100%
+      .gridItem
+        max-width: 100%;
+        overflow: hidden
+        border-bottom: 3px double grey
+        margin: 1.4em 0
+        width: 90%
+        flex-direction: row
+        justify-content: center
+        h5
+          order: 1
 @media (max-width: 800px) 
   #gallery .gallery-grid .cardGrid 
     grid-template-columns: repeat(1, 1fr)
