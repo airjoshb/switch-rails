@@ -25,7 +25,11 @@
 
     .mobileSlider 
       display: none
-
+.categoryHero
+  height: 225px
+  overflow: hidden
+  img
+    width: 100%
 .categoryGrid 
   display: flex
   flex-flow: row nowrap
@@ -41,7 +45,7 @@
   align-items: center
   flex: 1
   min-width: 0
-  max-width: 20%
+  max-width: 25%
   overflow: hidden
   img
     width: auto
@@ -74,7 +78,7 @@
       .gridItem
         max-width: 100%;
         overflow: hidden
-        border-bottom: 3px double grey
+        border-bottom: 3px double $grey-crumb
         margin: 1.4em 0
         width: 90%
         flex-direction: row

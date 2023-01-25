@@ -1,16 +1,13 @@
-  <section id="gallery">
-    <div class="categoryGrid">
-      <% for category in @categories %>
-        <div class="gridItem">
-          <% unless category.name == 'All' %>
-            <h5 class="categoryName"><%= category.name %></h4>
-          <% end %>
-          <% if category.name == 'All' %>
-            <%= link_to image_tag(category.image), products_path %>
-          <% else %>
-            <%= link_to image_tag(category.image), products_path(category: category.name) %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  </section>
+<div class="categoryHero">
+  <%= link_to image_tag(@all.image), products_path(@all) %>
+</div>
+<section id="gallery">
+  <div class="categoryGrid">
+    <% for category in @categories %>
+      <div class="gridItem">
+        <h5 class="categoryName"><%= category.name %></h5>
+        <%= link_to image_tag(category.image), products_path(category: category.name) %>
+      </div>
+    <% end %>
+  </div>
+</section>

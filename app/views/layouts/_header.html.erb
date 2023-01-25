@@ -14,7 +14,7 @@
       <div class="actionContainers">
         <h3 class="location">central coast, california </h3>
         <button class="iconButton iconContainer bagIconContainer">
-          <%= link_to cart_path do %>
+          <%= link_to cart_path, rel: 'nofollow' do %>
             <%= render "layouts/basket_icon" %>
             
           <%= render "cart/icon", cart: @cart %>

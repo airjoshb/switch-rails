@@ -3,6 +3,7 @@ class MainController < ApplicationController
   def index
     @gallery = Dir.glob("app/assets/images/gallery/*.jpg")
     @page = Page.find_by_slug("home")
-    @categories = Category.all
+    @categories = Category.where.not(name: "All")
+    @all = Category.find_by_name("All")
   end
 end
