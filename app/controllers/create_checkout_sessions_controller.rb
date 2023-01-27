@@ -27,8 +27,8 @@ class CreateCheckoutSessionsController < ApplicationController
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
-      success_url: 'http://localhost:3000/cart/success',
-      cancel_url: 'http://localhost:3000/cart/cancel',
+      success_url: cart_success_url,
+      cancel_url:  cart_cancel_url,
     })
     order = CustomerOrder.create(stripe_checkout_id: checkout_session.id)
     order.orderables << cart.orderables
