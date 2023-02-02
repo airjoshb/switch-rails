@@ -9,6 +9,7 @@ class CustomerResource < Avo::BaseResource
   # Fields generated from the model
   field :name, as: :text
   field :email, as: :text
+  field :phone, as: :text
   field :stripe_id, as: :text
   field :customer_orders, as: :has_many
   field :addresses, as: :has_many, through: :orders

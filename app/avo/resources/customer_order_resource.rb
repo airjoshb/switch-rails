@@ -5,11 +5,13 @@ class CustomerOrderResource < Avo::BaseResource
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
   # end
 
+  action MarkComplete
+  
   field :id, as: :id
   # Fields generated from the model
   field :guid, as: :text
   field :order_status, as: :select, enum: CustomerOrder.order_statuses
-  field :stripe_id, as: :text
+  field :stripe_id, as: :text, hide_on: [:index]
   field :amount, as: :number
   field :payment_method, as: :has_one
   field :address, as: :has_one
