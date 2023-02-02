@@ -1,5 +1,6 @@
 class CustomerOrderMailer < ApplicationMailer
   helper :application
+  layout 'mailer'
   
   def receipt_email(customer_order)
     @customer = customer_order.customer

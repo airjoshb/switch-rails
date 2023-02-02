@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   get '/p/:slug', to: 'pages#show', as: :page
   get '/shop', to: 'products#index', as: 'shop'
   post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'
-  post '/webhooks', to: 'create_checkout_sessions#webhooks', as: 'webhooks'
+  post '/webhook', to: 'create_checkout_sessions#webhook', as: 'webhook'
 
   # config/routes.rb
   direct :cdn_image do |model, options|

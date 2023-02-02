@@ -36,10 +36,9 @@ class CreateCheckoutSessionsController < ApplicationController
     redirect_to checkout_session.url, allow_other_host: true, status: 303
   end
    
-  def webhooks
+  def webhook
     event = nil
-    # endpoint_secret = ENV.fetch('ENDPOINT_SECRET')
-    endpoint_secret = 'whsec_635547ef75b9a35d58432ed6ecb5bd2b5e7805dae6fc4af0e37d54471f2afc17'
+    endpoint_secret = ENV.fetch('ENDPOINT_SECRET')
 
     # Verify webhook signature and extract the event
     # See https://stripe.com/docs/webhooks/signatures for more information.
@@ -102,7 +101,6 @@ class CreateCheckoutSessionsController < ApplicationController
   def process_order(checkout_session)
     order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
     order.processed!
-    order.deliver_order_confirmation
     puts "Fulfilling order for #{line_items.inspect}"
   end
 
@@ -128,7 +126,7 @@ class CreateCheckoutSessionsController < ApplicationController
         last_4: payment_method.card.last4,
         customer_order: order)
       order.update(description: payment.description, stripe_id: checkout_session.payment_intent, amount: checkout_session.amount_total)
-      customer = Customer.where(stripe_id: checkout_session.customer, email: checkout_session.customer_details.email).first_or_create
+      customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
       customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name)
       customer.customer_orders << order
     end

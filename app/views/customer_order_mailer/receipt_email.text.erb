@@ -1,0 +1,24 @@
+This is a receipt for your recent purchase at Switch Bakery on <%= @order.created_at.strftime("%B #{@order.created_at.day.ordinalize}")%>.
+" alt="Switch Bakery Logo" width="100" />
+Hi <%=@customer.name%>,
+Thanks for ordering from Switch Bakery. This email is the receipt for your purchase.
+Order #<%=@order.guid%>
+<%= @order.created_at.strftime("%B #{@order.created_at.day.ordinalize}, %Y")%>
+<% @order.orderables.each do |item|%>
+Quantity
+Description
+Amount
+<%= item.quantity %>
+<%= item.variation.name %>
+<%= formatted_price(item.variation.amount * item.quantity) %>
+<% end %>
+Total
+<%= formatted_price(@order.amount) %>
+Orders will be delivered to Santa Cruz area locations on Tuesday and Thursdays, and Monterey area Tuesday through Saturday.
+If you have any questions, simply reply to this email.
+Cheers,
+Amanda & Joshua
+This purchase will appear as “Switch Bakery” on your credit card statement for your card ending in <%=@order.payment_method.last_4 %>.
+Frazley Adventures, LLC
+PO Box 4138
+Monterey, CA 93942
