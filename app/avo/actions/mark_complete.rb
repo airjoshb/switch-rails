@@ -9,10 +9,10 @@ class MarkComplete < Avo::BaseAction
   self.cancel_button_label = "Not Yet"
 
   def handle(**args)
-    models = args.values_at(:models)
+    models = args[:models]
 
     models.each do |model|
-      model.update completed_at: Time.current
+      model.update(completed_at: Time.current)
       model.fulfilled!
     end
     succeed "Order(s) marked as complete!"
