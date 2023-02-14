@@ -1,10 +1,10 @@
 <% content_for :head do %>
-  <title>"the latest updates from Switch Bakery"</title>
-  <meta name="description" content="" />
+  <title>The latest updates from Switch Bakery</title>
+  <meta name="description" content="all of the latest news from our gluten-free bakery in Monterey" />
   <meta property="og:title", content="the latest updates from Switch Bakery" />
   <meta property="og:site_name", content="Switch Bakery" />
   <meta property="og:description", content="" />
-  <meta property="og:type", content="article" />
+  <meta property="og:type", content="articles" />
   <meta property="og:url", content="<%= updates_url %>" />
   <meta property="og:image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
   <meta name="twitter:title", content="the latest updates from Switch Bakery" />
@@ -12,7 +12,6 @@
   <meta name="twitter:image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
   <meta name="twitter:card", content="summary" />
   <meta name="twitter:url", content="<%=updates_url %>" />
-  <meta itemprop="description", content="" />
   <meta itemprop="image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
   <link rel="canonical" href="<%= updates_url %>" />
 <% end %>
