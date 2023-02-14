@@ -1,0 +1,44 @@
+<% content_for :head do %>
+  <title>"the latest updates from Switch Bakery"</title>
+  <meta name="description" content="" />
+  <meta property="og:title", content="the latest updates from Switch Bakery" />
+  <meta property="og:site_name", content="Switch Bakery" />
+  <meta property="og:description", content="" />
+  <meta property="og:type", content="article" />
+  <meta property="og:url", content="<%= updates_url %>" />
+  <meta property="og:image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
+  <meta name="twitter:title", content="the latest updates from Switch Bakery" />
+  <meta name="twitter:description", content="" />
+  <meta name="twitter:image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
+  <meta name="twitter:card", content="summary" />
+  <meta name="twitter:url", content="<%=updates_url %>" />
+  <meta itemprop="description", content="" />
+  <meta itemprop="image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
+  <link rel="canonical" href="<%= updates_url %>" />
+<% end %>
+<% content_for content_for :html do %>
+  "http://schema.org/Articles"
+<% end %>
+
+<%= render "/main/banner", title: "the latest updates from the bakery", subtitle: "" %>
+<section id="post">
+  <div class="container">
+    <div class="postContainer">
+      <div class="content">
+        <% @posts.group_by(&:created_at).each do |date, posts| %>
+          <div class="date"><%= date.strftime("%B, %Y") %></div>
+          <div class="post">
+            <% posts.each do |post| %>
+              <%= link_to update_path(post) do %>
+                <%= image_tag post.image.variant(resize_to_limit: [100, 100]), alt: post.title, class: "border left mr-4" if post.image.attached? %>
+                <div class="left">
+                  <h5><%= post.title %></h5>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

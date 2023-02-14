@@ -1,0 +1,43 @@
+<% content_for :head do %>
+  <title><%=@post.title %> | Switch Bakery</title>
+  <meta name="description" content="<%= @post.content.to_plain_text.truncate(300) %>" />
+  <meta property="og:title", content="<%=@post.title %> | Switch Bakery" />
+  <meta property="og:site_name", content="Switch Bakery" />
+  <meta property="og:description", content="<%= @post.content.to_plain_text.truncate(300) %>" />
+  <meta property="og:type", content="article" />
+  <meta property="og:url", content="<%= update_url %>" />
+  <meta property="og:image", content="<%=@post.image.url if @post.image.attached? %>" />
+  <meta name="twitter:title", content="<%=@post.title %> | Switch Bakery in Monterey" />
+  <meta name="twitter:description", content="<%= @post.content.to_plain_text.truncate(300) %>" />
+  <meta name="twitter:image", content="<%=@post.image.url if @post.image.attached? %>" />
+  <meta name="twitter:card", content="summary" />
+  <meta name="twitter:url", content="<%=update_url %>" />
+  <meta itemprop="headline", content="<%=@post.title %>" />
+  <meta itemprop="description", content="<%= @post.content.to_plain_text.truncate(300) %>" />
+  <meta itemprop="image", content="<%=@post.image.url if @post.image.attached? %>" />
+  <meta itemprop="datePublished", content="<%=@post.created_at.to_time.iso8601 %>" />
+  <link rel="canonical" href="<%= update_url %>" />
+<% end %>
+<% content_for content_for :html do %>
+  "http://schema.org/Article"
+<% end %>
+
+<div class="bannerContainer">
+  <%= image_tag @post.image.variant(resize_to_limit: [600, 600]), alt: @post.title  if @post.image.attached? %>
+</div>
+<section id="post">
+  <div class="container">
+    <div class="postContainer">
+      <div class="content">
+        <div class="postTitle">
+          <%= image_tag 'switch-bakery-gluten-free-bread.png', width: 50, alt: "Gluten Free Bread Delivery Fox on a Bike" %>
+          <h1><%= @post.title %></h1>
+          <div class="postDate"><%= time_ago_in_words @post.created_at %></div>
+          <hr/>
+        </div>
+        <%= @post.content %>
+      </div>
+    </div>
+  </div>
+</div>
+</section>

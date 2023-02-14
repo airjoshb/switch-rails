@@ -3,7 +3,7 @@
 html, body 
 	box-sizing: border-box 
 	margin: 0 
-	font-family: $standard-font 
+	font-family: $standard-header 
 	color: $standard-black 
 	font-size: 16px 
 	line-height: 1.5em 
@@ -47,12 +47,12 @@ h4,
 	font-size: 32px 
 	line-height: 37px 
 	margin: 0 
-h5,
-.h5 
-	font-family: $standard-header 
-	font-size: 25px 
-	line-height: 35px 
-	margin: 0 
+h5, .h5
+  font-weight: normal
+  font-family: $standard-header
+  font-size: 25px
+  line-height: 35px
+  margin: 0
 h6,
 .h6 
 	font-family: $standard-header 
@@ -64,8 +64,9 @@ h6,
 	font-size: 42px 
 	line-height: 49px 
 	margin: 0 
-p 
+p
 	margin: 0 
+  
 .b1 
 	font-size: 20px 
 .b2 
@@ -128,6 +129,13 @@ ol, .trix-content ol
   li
     font-weight: 600
 .trix-content 
+  font-family: $standard-header
+  font-size: 1.3em;
+  line-height: 1.5em;
+  img
+    border: thin solid $grey-crumb
+    padding: 1.5em 1em
+    background-color: $standard-light-grey 
   a
     border-bottom: $grey-crumb thin solid;
     &:hover
@@ -136,7 +144,10 @@ ol, .trix-content ol
   action-text-attachment a
     text-decoration: none;
     border: 0 none;
-
+.left
+  float: left
+.right
+  float: right
 
 @media only screen and (max-width:767px) 
   h1,.h1
@@ -152,10 +163,9 @@ ol, .trix-content ol
     .h4 
     font-size: 30px 
     font-size: 24px 
-  h5,
-    .h5 
+  h5,.h5 
     font-size: 25px 
-    font-size: 22px 
+    font-size: 22px
   h6,
     .h6 
     font-size: 20px 
@@ -239,6 +249,8 @@ ol
   margin-left: $space3
 .ml-4 
   margin-left: $space4 
+.mr-4 
+  margin-right: $space4
 .mt-2 
   margin-top: $space2
 .mt-4 

@@ -23,7 +23,8 @@
   <div class="pageContent"> 
     <p><%= @page.description %></p>
   </div>
- </section> 
+ </section>
+<% if @posts %><%= render "posts" %><% end %> 
 <%= render "hero" %>
 <%= render "quote" %>
 <%= render "gallery" %>

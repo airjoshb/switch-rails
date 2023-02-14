@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   root 'main#index'
   resources :products 
+  resources :updates, controller: :posts
   get '/p/:slug', to: 'pages#show', as: :page
   get '/shop', to: 'products#index', as: 'shop'
   post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'

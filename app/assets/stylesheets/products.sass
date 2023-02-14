@@ -64,7 +64,7 @@
       .description 
         padding: 0 0 20px 20px
 
-#shop, #page
+#shop, #page, #post
   .bakery-categories
     display: flex
     justify-content: space-around
@@ -87,11 +87,42 @@
       line-height: 17px 
       margin-top: 32px 
 
-  .productContainer, .pageContainer
+  .productContainer, .pageContainer, .postContainer
     margin-top: 32px 
     margin-left: 8px 
     margin-right: 8px 
-  
+  .postContainer .content
+    width: 58%
+    margin: 0 auto
+    padding-bottom: 2em
+    .post
+      width: 100%
+      height: auto
+      overflow: hidden
+    .postTitle
+      text-align: center
+      padding: 4em 0
+    .postDate
+      font-size: 1.2em
+      color: $standard-dark-grey
+      padding-bottom: 2em
+    .date
+      font-family: $standard-font
+      font-weight: 700
+      color: $grey-chip
+      margin-bottom: 1.3em
+    hr
+      width: 100%
+      color: $grey-one
+      border: none;
+      border-top: 1px solid $grey-one
+      overflow: visible;
+      text-align: center;
+      height: 5px;
+    a:hover
+      color: $standard-gold
+  .border 
+    border: 3px double $grey-crumb      
   .cardGrid 
     width: 100%
     margin: 0 auto
@@ -118,7 +149,8 @@
     border: 3px double $grey-crumb
     width: 100%
     .detailsContainer 
-      padding: 16px 
+      padding: 16px
+      text-align: center 
     .imageContainer 
       position: relative 
       cursor: pointer 
@@ -134,23 +166,16 @@
         position: absolute
         top: 50%
         transform: translateY(-50%)
-    .productName 
-      font-size: 17px 
-      line-height: 22px 
-      color: $standard-black
-      font-weight: normal 
-      font-family: $standard-header
+
 
     .prices 
       margin-top: 8px 
-      font-size: 14px 
+      font-size: 1em 
       line-height: 17px 
       span 
-        font-size: 14px 
+        font-size: 1em 
         line-height: 17px 
         font-weight: 500 
-        font-size: 13px 
-        line-height: 16px 
       & > span 
         &:first-child 
           margin-right: 16px  
@@ -301,6 +326,9 @@
       grid-template-columns: 1fr 
     .mobileSlider 
       display: block 
+  .postContainer .content, .bannerContainer img
+    width: 90%
+    margin: 0 auto
 @media (max-width: 600px) 
   #shop .imageContainer img
     height: 300px !important 

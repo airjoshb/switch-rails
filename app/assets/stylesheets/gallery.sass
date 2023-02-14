@@ -6,13 +6,38 @@
   .gallery-grid, .categoryGrid
     align-self: start
 
-    .cardGrid 
+    .cardGrid, .postGrid
       display: grid
       grid-template-columns: repeat(4, 1fr)
       gap: 2px
-
-    
-
+      a:hover
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+    .postGrid .imageContainer
+      position: relative
+      min-height: 350px
+      min-width: 350px
+      img
+        z-index: 1
+        border-radius: 1px
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        mask-image: linear-gradient(to top, transparent 0%, black 50%)
+      &:after
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent 65%, $standard-gold 100%);
+      .shadowTitle
+        position: absolute
+        bottom: 0
+        left: 0
+        z-index: 20
+        padding: 20px
+        color: $standard-white
     .imageContainer 
       width: 100%
       line-height: normal

@@ -22,11 +22,11 @@
                   </div>
                 <% end %>
                 <div class= "detailsContainer">
-                  <span class="productName"><%= product.name %></span>
+                  <h5><%= product.name %></h5>
                   <% if product.variations.present? %>
                     <div class="prices">
                       <span {itemprop: "price", content: product.variations.first.price / 100 } >
-                      <%= formatted_price(product.variations.first.amount) %>
+                      Starting at <%= formatted_price(product.variations.first.amount) %>
                       </span>
                     </div>
                   <% end %>
