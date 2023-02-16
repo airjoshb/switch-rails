@@ -85,7 +85,7 @@ class CreateCheckoutSessionsController < ApplicationController
       email_customer_about_failed_payment(checkout_session)
     end
 
-    return status 200
+    status 200
   end
 
   private
