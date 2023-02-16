@@ -98,8 +98,11 @@
     .gallery-grid
       // margin-right: 16px
       width: 97%
-      .cardGrid 
+      .cardGrid, .postgrid
           grid-template-columns: repeat(3, 1fr)
+      .postGrid
+        width: 80%
+        margin: 0 auto
     .categoryGrid
       flex-flow: column
       height: unset
@@ -115,10 +118,12 @@
         h5
           order: 1
 @media (max-width: 800px) 
-  #gallery .gallery-grid .cardGrid 
+  #gallery .gallery-grid .cardGrid, #gallery .gallery-grid .postGrid
     grid-template-columns: repeat(1, 1fr)
   
-
+  .postGrid
+    width: 80%
+    margin: 0 auto
   .mobileSlider 
     display: block
     margin-bottom: 32px

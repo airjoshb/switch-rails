@@ -8,4 +8,12 @@ class Post < ApplicationRecord
   
   has_rich_text :content
 
+  def thumbnail
+    self.image.variant({thumbnail: '150x150^', gravity: 'center', extent: '150x150'})
+  end
+
+  def medium_image
+    self.image.variant({resize: "300x300", gravity: "center" })
+  end
+
 end

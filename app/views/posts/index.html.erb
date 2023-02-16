@@ -29,7 +29,7 @@
           <% for post in posts %>
             <div class="post">
               <%= link_to update_path(post) do %>
-                <%= image_tag post.image.variant(resize_to_limit: [100, 100]), alt: post.title, class: "border mr-4" if post.image.attached? %>
+                <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
                 <div class="">
                   <h5><%= post.title %></h5>
                 </div>

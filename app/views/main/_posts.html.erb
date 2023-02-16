@@ -1,10 +1,10 @@
 <section id="gallery">
   <div class="gallery-grid">
     <div class="postGrid">
-      <% @posts.each do |post| %>
+      <% @posts.reverse.each do |post| %>
         <%= link_to update_path(post) do %>
           <div class="imageContainer">
-            <%= image_tag post.image.variant(resize_to_limit: [350,350]) %>
+            <%= image_tag post.medium_image, alt: post.title %>
             <h5 class="shadowTitle"><%= post.title %></h5>
           </div>
         <% end %>
