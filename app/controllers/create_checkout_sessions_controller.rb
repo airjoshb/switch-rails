@@ -1,5 +1,6 @@
 class CreateCheckoutSessionsController < ApplicationController
   skip_before_action :authenticate
+  skip_before_action :verify_authenticity_token
 
   # This example sets up an endpoint using the Sinatra framework.
   # Watch this video to get started: https://youtu.be/8aA9Enb8NVc.
@@ -19,7 +20,6 @@ class CreateCheckoutSessionsController < ApplicationController
       line_items: line_items,
       mode: mode,
       customer_creation: "if_required",
-      cancel_url: "/cart",
       allow_promotion_codes: true,
       phone_number_collection: {
         enabled: true
@@ -83,9 +83,11 @@ class CreateCheckoutSessionsController < ApplicationController
 
       # Send an email to the customer asking them to retry their order
       email_customer_about_failed_payment(checkout_session)
+    else
+      puts "Unhandled event type: #{event.type}"
     end
-
-    status 200
+    render json: { state: "processed" }, status: :ok
+    # status 200
   end
 
   private
@@ -101,7 +103,7 @@ class CreateCheckoutSessionsController < ApplicationController
   def process_order(checkout_session)
     order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
     order.processed!
-    puts "Fulfilling order for #{line_items.inspect}"
+    puts "Fulfilling ##{order.guid} for #{order.orderables.inspect}"
   end
 
   def create_order(checkout_session)
@@ -109,7 +111,7 @@ class CreateCheckoutSessionsController < ApplicationController
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
       payment = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
       payment_method = Stripe::PaymentMethod.retrieve(payment.payment_method)
-      address_check = payment_method.card.address_line1_check = "pass" && payment_method.card.address_postal_code_check = "pass" ? true : false
+      address_check = payment_method.card.checks.address_line1_check == "pass" && payment_method.card.checks.address_postal_code_check == "pass" ? true : false
       address = Address.create(
         street_1: checkout_session.shipping_details.address.line1, 
         street_2: checkout_session.shipping_details.address.line2, 
@@ -118,7 +120,7 @@ class CreateCheckoutSessionsController < ApplicationController
         postal: checkout_session.shipping_details.address.postal_code, 
         address_check: address_check, 
         customer_order: order)
-      pass_check = payment_method.card.cvc_check = "pass" ? true : false
+      pass_check = payment_method.card.checks.cvc_check == "pass" ? true : false
       method = PaymentMethod.create(
         stripe_id: payment_method.id, 
         card_type: payment_method.card.brand, 
