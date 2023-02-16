@@ -4,7 +4,7 @@
       <% @posts.each do |post| %>
         <%= link_to update_path(post) do %>
           <div class="imageContainer">
-            <%= image_tag post.image.variant(resize_to_limit: [200,200]) %>
+            <%= image_tag post.image.variant(resize_to_limit: [350,350]) %>
             <h5 class="shadowTitle"><%= post.title %></h5>
           </div>
         <% end %>
