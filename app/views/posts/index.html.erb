@@ -26,7 +26,7 @@
       <div class="content">
         <% @posts.group_by {|t| t.created_at.beginning_of_month }.each do |date, posts| %>
           <div class="date"><%= date.strftime("%B, %Y") %></div>
-          <% for post in posts %>
+          <% for post in posts.reverse %>
             <div class="post">
               <%= link_to update_path(post) do %>
                 <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
