@@ -8,7 +8,6 @@
     justify-content: center
     align-items: center
     flex-direction: column
-    margin-top: 32px 
     margin-left: 8px 
     margin-right: 8px
   .orderContainer
@@ -29,7 +28,7 @@
         float: right
         display: inline
   .items
-    padding: 1.5rem
+    padding: 0 1.5rem
   .imageContainer
     z-index: 100
     width: 75px
@@ -45,7 +44,7 @@
       -ms-transform: translateY(-50%)
       -webkit-transform: translateY(-50%)
       transform: translateY(-50%)
-  .priceContainer
+  .priceContainer, .details
     border: 1px solid $standard-grey
     font-family: $brand-font
     letter-spacing: 0.01em
@@ -62,6 +61,8 @@
       justify-self: end
       font-weight: 600
       font-size: 1.2em
+    .quantity, .quantity input
+      width: 30px
     .close 
       justify-self: end
       padding-right: 30px;
@@ -71,6 +72,16 @@
         background: $standard-gold
         color: $standard-white
         cursor: pointer
+  .addOnContainer
+    display: flex
+    flex-wrap: wrap
+  .addOnContainer>*
+      flex: 1 1 45%
+      margin-right: 5px   
+  .details
+    display: flex !important
+    justify-content: space-evenly
+    align-items: center
 @media (hover: hover) 
   #cart .priceContainer .close
     input:hover[type="submit"]

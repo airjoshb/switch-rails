@@ -1,0 +1,25 @@
+<h6>Weekly specials available for your order</h6>
+<div class="addOnContainer">
+<% for variation in @add_ons %>
+  <%= form_with(url: cart_add_path) do |f| %>
+    <%= f.hidden_field :id, value: variation.id %>
+    <div class="details">
+      <span class="variation">
+        <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
+            <%= variation.unit_quantity %> - 
+            <%= variation.name.pluralize %>
+        <% else %>
+          <%= variation.name %>
+        <% end %>
+      </span>
+      <span class="price"><%= display_price(variation.amount) %></span>
+      <% if variation.in_stock? %>
+        <span class="quantity">
+          <%= f.number_field :quantity, value: 1, min: 1 %>
+        </span>
+        <span><%= f.submit "Add to Bag", class: "button secondary" %></span>
+      <% end %>
+    </div>
+  <% end %> 
+<% end %>
+</div>

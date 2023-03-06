@@ -3,6 +3,7 @@ class CartController < ApplicationController
   
   def show
     # @render_cart = false
+    @add_ons = Variation.add_ons
   end
 
   def success

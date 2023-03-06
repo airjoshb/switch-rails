@@ -282,6 +282,13 @@
   background-color: $standard-black
   text-transform: uppercase
   font-weight: 500
+
+.secondary 
+  border: 2px solid $standard-black
+  color: $standard-white
+  background-color: $standard-black
+  text-transform: uppercase
+  font-weight: 500
   
 
 
@@ -297,23 +304,31 @@
   text-transform: uppercase
   font-weight: 600
   letter-spacing: 0.1em
+  font-size: 12px
+  line-height: 15px
+  padding: 8px 10px
+  margin: 0
+  min-width: unset
+  height: auto !important
 
 
 @media (hover: hover) 
   .secondary:hover 
       border: 2px solid $grey-border
-  
+      color: $grey-border
 
 
-.secondary.alternate 
-  border: 2px solid $standard-white
+
+.primary.alternate 
+  border: 2px solid $standard-gold
   color: $standard-white
-  background-color: transparent
+  background-color: $standard-gold
 
 
 @media (hover: hover) 
-  .secondary.alternate:hover 
+  .primary.alternate:hover 
       background-color: rgba(255,255,255,0.05)
+      color: $standard-gold
   
 
 

@@ -18,6 +18,7 @@ class Variation < ApplicationRecord
   scope :trackable, -> { where(inventory_type: :trackable)}
   scope :infinite, -> { where(inventory_type: :infinite)}
   scope :recurring, -> { where(recurring: true)}
+  scope :add_ons, -> { where(add_on: true)}
 
   def available?
     self.active

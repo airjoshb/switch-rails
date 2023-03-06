@@ -17,6 +17,7 @@
           <% end %>
         <% end %>
       </div>
+      <%= render "add_ons" unless @add_ons.empty? %>
       <hr />
       <div class="orderContainer">
         <div class="orderContent">
@@ -30,7 +31,7 @@
             <div class="checkout">
               <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
                 <%= f.hidden_field 'cart_id', value: @cart.id %>
-                <%= f.submit "Checkout", class: "button primary", id: "checkout-button" %>
+                <%= f.submit "Checkout", class: "button primary alternate", id: "checkout-button" %>
               <% end %>
             </div>
           <% else %>
