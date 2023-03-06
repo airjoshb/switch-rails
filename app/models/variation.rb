@@ -19,6 +19,7 @@ class Variation < ApplicationRecord
   scope :infinite, -> { where(inventory_type: :infinite)}
   scope :recurring, -> { where(recurring: true)}
   scope :add_ons, -> { where(add_on: true)}
+  scope :active, -> { where(active: true)}
 
   def available?
     self.active
@@ -59,20 +60,16 @@ class Variation < ApplicationRecord
     require 'stripe'
     Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
     begin
-    Stripe::Price.update(
-      self.stripe_id, {
-        product: self.product.stripe_id,
-        currency: 'usd',
-        active: self.active,
-        unit_amount: self.amount.to_i,
-        nickname: "#{self.name} (#{self.unit_quantity})",
-        recurring: self.recurring? ? {interval: self.interval, interval_count: self.interval_count} : nil
-    })
+    unless self.saved_change_to_amount? || self.saved_change_to_interval? || self.saved_change_to_interval_count? || self.saved_change_to_recurring?
+      Stripe::Price.update(
+        self.stripe_id, {
+          nickname: "#{self.name} (#{self.unit_quantity})",
+      })
+    end
     rescue
     stripe_price = Stripe::Price.create({
       product: self.product.stripe_id,
       currency: 'usd',
-      active: self.active,
       unit_amount: self.amount.to_i,
       nickname: "#{self.name} (#{self.unit_quantity})",
       recurring: self.recurring? ? {interval: self.interval, interval_count: self.interval_count} : nil

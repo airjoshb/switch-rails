@@ -5,9 +5,9 @@ class ProductsController < ApplicationController
   def index
     if params[:category]
       category = Category.find_by_name(params[:category])
-      @products = category.products
+      @products = category.products.active
     else
-      @products = Product.order(row_order: :asc)
+      @products = Product.active.order(row_order: :asc)
     end
   end
 

@@ -34,7 +34,7 @@
         <h1><%= @product.name %></h1>
         <p class="description"><%= @product.description %></p>
         <div class="variations">
-          <% for variation in @product.variations.order(row_order: :asc) %>
+          <% for variation in @product.variations.active.order(row_order: :asc) %>
             <%= form_with(url: cart_add_path) do |f| %>
               <%= f.hidden_field :id, value: variation.id %>
               <div class="priceContainer">

@@ -14,8 +14,8 @@ class Product < ApplicationRecord
   has_rich_text :content
 
   default_scope { order(row_order: :asc) }
-
-
+  scope :active, -> { where(active: true)}
+  
   after_save :product_change, if: :saved_changes?
 
   
@@ -32,14 +32,12 @@ class Product < ApplicationRecord
       Stripe::Product.update(
         self.stripe_id, {
         name: self.name,
-        active: self.active,
         description: self.description,
         shippable: self.variations.infinite.any? ? true : false,
       })
     rescue
     stripe_product = Stripe::Product.create({
       name: self.name,
-      active: self.active,
       description: self.description,
       shippable: self.variations.infinite.any? ? true : false,
     })
