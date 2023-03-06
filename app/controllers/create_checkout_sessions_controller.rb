@@ -16,10 +16,11 @@ class CreateCheckoutSessionsController < ApplicationController
     adjustable = Hash(enabled: true, minimum: 1, maximum: 10)
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     mode = cart.variations.recurring.any? ? "subscription" : "payment"
+    customer_creation = "if_required" unless mode == "subscription"
     checkout_session = Stripe::Checkout::Session.create({
       line_items: line_items,
       mode: mode,
-      customer_creation: "if_required",
+      customer_creation: customer_creation,
       allow_promotion_codes: true,
       phone_number_collection: {
         enabled: true
