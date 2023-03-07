@@ -21,5 +21,6 @@ module SwitchRails
 
     config.active_storage.service = :local
     config.active_storage.variant_processor = :mini_magick
+    config.active_storage.track_variants = true
   end
 end
