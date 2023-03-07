@@ -14,7 +14,7 @@
 
   <body>
     <%= render "layouts/header" %>
-    <main>
+    <main id="<%= controller_name %>">
       <%= yield %>
     </main>
     <footer><%= render "layouts/footer" %></footer>

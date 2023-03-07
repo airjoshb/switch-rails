@@ -21,7 +21,7 @@
 <% content_for content_for :html do %>
   "http://schema.org/Article"
 <% end %>
-
+<section id="updates">
 <div class="bannerContainer">
   <%= image_tag @post.image.variant(resize_to_limit: [600, 600]), alt: @post.title  if @post.image.attached? %>
 </div>

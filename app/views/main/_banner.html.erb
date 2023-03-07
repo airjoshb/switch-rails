@@ -1,5 +1,9 @@
 <div class="bannerContainer">
-  <%= image_tag 'switch-bakery-gluten-free-bread.png', width: 100, alt: "Gluten Free Bread Delivery Fox on a Bike" %>
+  <% if image.present? %>
+    <%= image_tag image, alt: subtitle %>
+  <% else %>
+    <%= image_tag 'switch-bakery-gluten-free-bread.png', alt: "Gluten Free Bread Delivery Fox on a Bike" %>
+  <% end %>
   <h1><%= title %></h1>
   <span class="subtitleStyle"><%= subtitle %></span>
 </div>

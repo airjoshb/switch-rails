@@ -4,10 +4,14 @@ class ProductsController < ApplicationController
 
   def index
     if params[:category]
-      category = Category.find_by_name(params[:category])
-      @products = category.products.active
+      @category = Category.find_by_name(params[:category])
+      @image = @category.image.variant(resize_to_limit: [200, 200])
+      @products = @category.products.active
+      @title = @category.name + " fresh from the bakery"
     else
       @products = Product.active.order(row_order: :asc)
+      @image = nil
+      @title = "fresh from the bakery"
     end
   end
 

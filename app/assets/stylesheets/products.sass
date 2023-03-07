@@ -333,7 +333,7 @@
 
 
 
-@media (max-width: 800px) 
+@media (max-width: 767px) 
   #product .product-container .content
     grid-template-columns: repeat(1, 1fr)
   .variations
@@ -345,9 +345,16 @@
       grid-template-columns: 1fr 
     .mobileSlider 
       display: block 
-  .postContainer .content, .bannerContainer img
-    width: 90%
-    margin: 0 auto
+  #posts 
+    .postContainer .content
+      width: 90%
+      margin: 0 auto
+    .bannerContainer
+      img
+        width: 50%
+        object-fit: contain
+        max-height: unset
+
 @media (max-width: 600px) 
   #shop .imageContainer img
     height: 300px !important 
