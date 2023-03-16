@@ -56,10 +56,24 @@ class CreateCheckoutSessionsController < ApplicationController
     end
     
     case event['type']
+    when 'invoice.created'
+    when 'invoice.finalized'
+    when 'invoice.created'
+    when 'invoice.updated'
+    when 'invoice.upcoming'
+    when 'customer.subscription.created'
+    when 'customer.subscription.updated'
+    when 'invoice.paid'
+    when 'invoice.payment_succeeded'
+    when 'payment_intent.succeeded'
+    when 'payment_intent.created'
     when 'customer.created'
-      checkout_session = event['data']['object']
+      customer = event['data']['object']
 
-      create_customer(checkout_session)
+      create_customer(customer)
+    when  'customer.updated'
+      customer = event['data']['object']
+      update_customer(customer)
     when 'checkout.session.completed'
       checkout_session = event['data']['object']
 
@@ -74,6 +88,8 @@ class CreateCheckoutSessionsController < ApplicationController
       if checkout_session.payment_status == 'paid'
         process_order(checkout_session)
       end
+    when 'charge.succeeded'
+    when 'payment_method.attached'
     when 'checkout.session.async_payment_succeeded'
       checkout_session = event['data']['object']
 
@@ -92,13 +108,41 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   private
-  def create_customer(checkout_session)
-    search = Stripe::Customer.search({query: "email:\'#{checkout_session.email}\'"}).first
-    customer ||= Stripe::Customer.retrieve(search.id)
-    if customer.nil?
-      customer = Customer.create(stripe_id: checkout_session.id, email: checkout_session.email, phone: checkout_session.phone, name: checkout_session.name)
-    end
-    puts "Created #{customer.name} for #{checkout_session.inspect}"
+  def create_customer(customer)
+    stripe_customer = Stripe::Customer.retrieve(customer.id)
+    customer = Customer.first_or_create(stripe_id: stripe_customer)
+    customer.update(email: customer.email, phone: customer.phone, name: customer.name)
+    puts "Created #{customer.name} for #{stripe_customer.inspect}"
+  end
+
+  def update_customer(customer)
+    stripe_customer = Stripe::Customer.retrieve(customer.id)
+    customer = Customer.find_by_stripe_id(stripe_customer)
+    customer.update(email: customer.email, phone: customer.phone, name: customer.name)
+    puts "Updated #{customer.name} for #{stripe_customer.inspect}"
+  end
+
+  def create_payment_method(payment, order)
+    payment_method = Stripe::PaymentMethod.retrieve(payment)
+    pass_check = payment_method.card.checks.cvc_check == "pass" ? true : false
+    payment = PaymentMethod.create(stripe_id: payment_method.id,
+      card_type: payment_method.card.brand, 
+      cvc_check: pass_check, 
+      last_4: payment_method.card.last4,
+      customer_order: order
+    )
+    puts "Created Payment Method for #{payment.inspect}"
+  end
+
+  def create_address(checkout_session, order)
+    address = Address.create(street_1: checkout_session.shipping_details.address.line1,
+      street_2: checkout_session.shipping_details.address.line2, 
+      city: checkout_session.shipping_details.address.city, 
+      state: checkout_session.shipping_details.address.state, 
+      postal: checkout_session.shipping_details.address.postal_code,
+      customer_order: order
+    )
+    puts "Created Address for #{checkout_session.inspect}"
   end
 
   def process_order(checkout_session)
@@ -110,27 +154,17 @@ class CreateCheckoutSessionsController < ApplicationController
   def create_order(checkout_session)
     begin
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
-      payment = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
-      payment_method = Stripe::PaymentMethod.retrieve(payment.payment_method)
-      address_check = payment_method.card.checks.address_line1_check == "pass" && payment_method.card.checks.address_postal_code_check == "pass" ? true : false
-      address = Address.create(
-        street_1: checkout_session.shipping_details.address.line1, 
-        street_2: checkout_session.shipping_details.address.line2, 
-        city: checkout_session.shipping_details.address.city, 
-        state: checkout_session.shipping_details.address.state, 
-        postal: checkout_session.shipping_details.address.postal_code, 
-        address_check: address_check, 
-        customer_order: order)
-      pass_check = payment_method.card.checks.cvc_check == "pass" ? true : false
-      method = PaymentMethod.create(
-        stripe_id: payment_method.id, 
-        card_type: payment_method.card.brand, 
-        cvc_check: pass_check, 
-        last_4: payment_method.card.last4,
-        customer_order: order)
-      order.update(description: payment.description, stripe_id: checkout_session.payment_intent, amount: checkout_session.amount_total)
+      if checkout_session.mode == "subscription"
+        invoice = Stripe::Invoice.retrieve(checkout_session.invoice)
+        intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent)
+      else
+        intent = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
+      end
+      create_address(checkout_session, order)
+      create_payment_method(intent.payment_method, order)
+      order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total)
       customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
-      customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name)
+      customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name, stripe_id: checkout_session.customer)
       customer.customer_orders << order
     end
     puts "Created order ##{order.guid} for #{checkout_session.inspect}"

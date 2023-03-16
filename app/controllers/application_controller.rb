@@ -1,13 +1,11 @@
 class ApplicationController < ActionController::Base
+  include ActiveStorage::SetCurrent
   protect_from_forgery prepend: true 
   before_action :set_render_cart
   # before_action :initialize_cart
   before_action :render_nav
   before_action :set_current_request_details
   before_action :authenticate
-  before_action do
-    ActiveStorage::Current.host = request.base_url
-  end
   
   def set_render_cart
     @render_cart = true
