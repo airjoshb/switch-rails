@@ -2,12 +2,14 @@
   <div class="gallery-grid">
     <div class="postGrid">
       <% @posts.reverse.each do |post| %>
+        <div class="flex">
         <%= link_to update_path(post) do %>
           <div class="imageContainer">
             <%= image_tag post.medium_image, alt: post.title %>
-            <h5 class="shadowTitle"><%= post.title %></h5>
           </div>
         <% end %>
+        <h5 class="p-4"><%= post.title %></h5>
+        </div>
       <% end %>
     </div>
   </div>
