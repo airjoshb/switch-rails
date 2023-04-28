@@ -11,7 +11,7 @@ class AddStatusToOrders < ActiveRecord::Migration[7.0]
     remove_column :customer_orders, :order_status
 
     execute <<-SQL
-      DROP TYPE order_status;
+      DROP TYPE status;
     SQL
   end
 end

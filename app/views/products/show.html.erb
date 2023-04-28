@@ -46,7 +46,11 @@
                     <%= variation.name %>
                   <% end %>
                 </span>
-                <span class="price"><%= display_price(variation.amount) %></span>
+                <span class="price">
+                  <%= display_price(variation.amount) %>
+                  <br />
+                  <%= subscription_quantity(variation.interval, variation.interval_count) if variation.recurring? %>
+                </span>
                 <% if variation.in_stock? %>
                   <span class="quantity">
                     <%= f.number_field :quantity, value: 1, min: 1 %>

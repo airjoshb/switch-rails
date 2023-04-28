@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_13_215716) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_043126) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_215716) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "interval_type", ["day", "week", "month", "year"]
   create_enum "inventory", ["trackable", "infinite"]
+  create_enum "state", ["open", "paid", "void", "uncollectible"]
   create_enum "status", ["pending", "processed", "failed", "fulfilled", "refunded"]
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -100,6 +101,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_215716) do
     t.string "stripe_checkout_id"
     t.boolean "receipt_sent"
     t.datetime "receipt_sent_date"
+    t.string "subscription_id"
+    t.string "fulfillment_method"
     t.index ["customer_id"], name: "index_customer_orders_on_customer_id"
   end
 
@@ -110,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_215716) do
     t.datetime "updated_at", null: false
     t.string "phone"
     t.string "stripe_id"
+    t.boolean "promotion_consent"
   end
 
   create_table "email_verification_tokens", force: :cascade do |t|
@@ -126,6 +130,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_215716) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "customer_order_id"
+    t.decimal "amount_due"
+    t.decimal "amount_paid"
+    t.boolean "attempted"
+    t.string "subscription_id"
+    t.string "invoice_id"
+    t.boolean "paid"
+    t.datetime "period_end"
+    t.datetime "period_start"
+    t.boolean "fulfilled"
+    t.datetime "fulfilled_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.enum "invoice_status", default: "open", enum_type: "state"
+    t.index ["customer_order_id"], name: "index_invoices_on_customer_order_id"
   end
 
   create_table "orderables", force: :cascade do |t|
@@ -232,6 +254,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_215716) do
   add_foreign_key "addresses", "customer_orders"
   add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
+  add_foreign_key "invoices", "customer_orders"
   add_foreign_key "orderables", "carts"
   add_foreign_key "orderables", "customer_orders"
   add_foreign_key "orderables", "variations"

@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer_orders: one
+  amount_due: 9.99
+  amount_paid: 9.99
+  attempted: false
+  status: 
+  subscription_id: MyString
+  invoice_id: MyString
+  paid: false
+  period_end: 2023-04-26 13:33:52
+  period_start: 2023-04-26 13:33:52
+  fulfilled: false
+  fulfilled_date: 2023-04-26 13:33:52
+
+two:
+  customer_orders: two
+  amount_due: 9.99
+  amount_paid: 9.99
+  attempted: false
+  status: 
+  subscription_id: MyString
+  invoice_id: MyString
+  paid: false
+  period_end: 2023-04-26 13:33:52
+  period_start: 2023-04-26 13:33:52
+  fulfilled: false
+  fulfilled_date: 2023-04-26 13:33:52

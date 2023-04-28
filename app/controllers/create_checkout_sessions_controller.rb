@@ -28,6 +28,23 @@ class CreateCheckoutSessionsController < ApplicationController
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
+      consent_collection: {
+        promotions: 'auto',
+      },
+      custom_fields: [
+        {
+          key: 'pickup',
+          label: {type: 'custom', custom: 'Pickup Location'},
+          optional: true,
+          type: 'dropdown',
+          dropdown: {
+            options: [
+              {label: 'Tuesday Market (Monterey)', value: 'tuesday'},
+              {label: 'Thursday Market (Carmel by the Sea)', value: 'thursday'},
+            ],
+          },
+        },
+      ],
       success_url: cart_success_url,
       cancel_url:  cart_cancel_url,
     })
@@ -57,14 +74,19 @@ class CreateCheckoutSessionsController < ApplicationController
     
     case event['type']
     when 'invoice.created'
-    when 'invoice.finalized'
-    when 'invoice.created'
+      invoice = event['data']['object']
+      create_invoice(invoice)
+    when 'invoice.finalized' 
     when 'invoice.updated'
     when 'invoice.upcoming'
     when 'customer.subscription.created'
     when 'customer.subscription.updated'
     when 'invoice.paid'
+      # invoice = event['data']['object']
+      # pay_invoice(invoice)
     when 'invoice.payment_succeeded'
+      invoice = event['data']['object']
+      pay_invoice(invoice.id)
     when 'payment_intent.succeeded'
     when 'payment_intent.created'
     when 'customer.created'
@@ -72,8 +94,6 @@ class CreateCheckoutSessionsController < ApplicationController
 
       create_customer(customer)
     when  'customer.updated'
-      customer = event['data']['object']
-      update_customer(customer)
     when 'checkout.session.completed'
       checkout_session = event['data']['object']
 
@@ -147,29 +167,49 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def process_order(checkout_session)
     order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
+    pay_invoice(checkout_session.invoice) if checkout_session.mode == "subscription"
     order.processed!
-    puts "Fulfilling ##{order.guid} for #{order.orderables.inspect}"
+    puts "Processed ##{order.guid} for #{order.orderables.inspect}"
   end
 
   def create_order(checkout_session)
     begin
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
+      consent = checkout_session.consent.promotions == "opt_in" ? true : false
       if checkout_session.mode == "subscription"
         invoice = Stripe::Invoice.retrieve(checkout_session.invoice)
-        intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent)
+        intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
       else
         intent = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
       end
       create_address(checkout_session, order)
       create_payment_method(intent.payment_method, order)
-      order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total)
+      order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: checkout_session.custom_fields.first.dropdown.value, subscription_id: checkout_session.subscription )
       customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
-      customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name, stripe_id: checkout_session.customer)
+      customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name, stripe_id: checkout_session.customer, promotion_consent: consent)
       customer.customer_orders << order
+      if checkout_session.mode == "subscription"
+        subscription = CustomerOrder.find_by_subscription_id(invoice.subscription)
+        invoice = Invoice.find_by_invoice_id(invoice.id)
+        subscription.invoices << invoice
+      end
     end
     puts "Created order ##{order.guid} for #{checkout_session.inspect}"
   end
-  
+
+  def create_invoice(invoice)
+    new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
+    new_invoice.update(subscription_id: invoice.subscription, period_start: invoice.period_start, period_end: invoice.period_end,
+      amount_due: invoice.amount_due, invoice_status: invoice.status
+    )
+  end
+
+  def pay_invoice(invoice)
+    get_invoice = Invoice.find_or_create_by(invoice_id: invoice)
+    get_invoice.update(amount_paid: invoice.amount_paid, paid: true)
+    invoice.paid!
+  end
+
   def email_customer_about_failed_payment(checkout_session)
     order = Order.find_by_stripe_id(checkout_session.payment_intent)
     order.failed!
