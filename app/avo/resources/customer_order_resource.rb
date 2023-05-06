@@ -6,6 +6,7 @@ class CustomerOrderResource < Avo::BaseResource
   # end
 
   action MarkComplete
+  action FetchInvoices
   
   field :id, as: :id
   # Fields generated from the model

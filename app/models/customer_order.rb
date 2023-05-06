@@ -18,6 +18,18 @@ class CustomerOrder < ApplicationRecord
     self.update(receipt_sent: true, receipt_sent_date: Time.zone.now )
   end
 
+  def fetch_invoices
+    subscription = Stripe::Subscription.retrieve(order.subscription_id)
+    invoices = Stripe::Invoice.list(subscription: subscription)
+    for invoice in invoices
+      new_invoice = order.invoices.find_or_create_by(invoice_id: invoice.id)
+      new_invoice.update(subscription_id: invoice.subscription, period_start: invoice.period_start, period_end: invoice.period_end, amount_due: invoice.amount_due, invoice_status: invoice.status, amount_paid: invoice.amount_paid )
+      if new_invoice.paid?
+        invoice.pay_invoice
+      end
+    end
+  end
+
   private
 
   def populate_guid
