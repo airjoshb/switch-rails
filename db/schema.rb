@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_25_043126) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_07_184219) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_043126) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "interval_type", ["day", "week", "month", "year"]
   create_enum "inventory", ["trackable", "infinite"]
-  create_enum "state", ["open", "paid", "void", "uncollectible"]
+  create_enum "state", ["draft", "open", "paid", "void", "uncollectible"]
   create_enum "status", ["pending", "processed", "failed", "fulfilled", "refunded"]
 
   create_table "action_text_rich_texts", force: :cascade do |t|
