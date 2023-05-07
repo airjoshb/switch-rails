@@ -3,7 +3,7 @@ class Invoice < ApplicationRecord
   enum invoice_status: { open: 'open', paid: 'paid', void: 'void', uncollectible: 'uncollectible' }
 
   def pay_invoice
-    invoice = Stripe::Invoice.retrieve(invoice_id)
+    invoice = Stripe::Invoice.retrieve(self.invoice_id)
     self.update(amount_paid: invoice.amount_paid, paid: true)
     self.paid!
   end

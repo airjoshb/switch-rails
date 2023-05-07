@@ -27,7 +27,7 @@ class CustomerOrder < ApplicationRecord
         period_end: invoice.period_end, amount_due: invoice.amount_due, invoice_status: invoice.status, amount_paid: invoice.amount_paid 
       )
       if new_invoice.paid?
-        invoice.pay_invoice
+        new_invoice.pay_invoice
       end
     end
   end
