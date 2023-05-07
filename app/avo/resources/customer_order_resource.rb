@@ -18,7 +18,7 @@ class CustomerOrderResource < Avo::BaseResource
   field :fulfillment_method, as: :text
   field :payment_method, as: :has_one
   field :address, as: :has_one
-  field :customer, as: :has_one
+  field :customer, as: :has_one, sortable: true
   field :orderables, as: :has_many
   field :invoices, as: :has_many
   field :description, as: :textarea

@@ -11,7 +11,7 @@ class InvoiceResource < Avo::BaseResource
   field :amount_due, as: :number
   field :amount_paid, as: :number
   field :attempted, as: :boolean
-  field :invoice_status, as: :select, enum: Invoice.invoice_statuses
+  field :invoice_status, as: :select, enum: Invoice.invoice_statuses, sortable: true
   field :subscription_id, as: :text
   field :invoice_id, as: :text
   field :paid, as: :boolean
