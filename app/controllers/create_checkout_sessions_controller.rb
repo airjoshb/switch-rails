@@ -207,7 +207,7 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def pay_invoice(invoice)
-    get_invoice = Invoice.find_or_create_by(invoice_id: invoice)
+    get_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
     get_invoice.update(amount_paid: invoice.amount_paid, paid: true)
     invoice.paid!
   end
