@@ -207,9 +207,10 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def pay_invoice(invoice)
+    stripe_invoice = Stripe::Invoice.retrieve(invoice)
     get_invoice = Invoice.find_or_create_by(invoice_id: invoice)
-    get_invoice.update(amount_paid: invoice.amount_paid, paid: true)
-    invoice.paid!
+    get_invoice.update(amount_paid: stripe_invoice.amount_paid, paid: true)
+    get_invoice.paid!
   end
 
   def email_customer_about_failed_payment(checkout_session)
