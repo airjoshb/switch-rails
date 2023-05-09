@@ -199,9 +199,9 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def create_invoice(invoice)
     new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
-    start = Time.at(invoice.period_start.to_i)
-  end = Time.at(invoice.period_end.to_i)
-    new_invoice.update(subscription_id: invoice.subscription, period_start: start, period_end: end,
+    time_start = Time.at(invoice.period_start.to_i)
+    time_end = Time.at(invoice.period_end.to_i)
+    new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
       amount_due: invoice.amount_due, invoice_status: invoice.status
     )
   end
