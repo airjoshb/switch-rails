@@ -81,6 +81,8 @@ class CreateCheckoutSessionsController < ApplicationController
     when 'invoice.upcoming'
     when 'customer.subscription.created'
     when 'customer.subscription.updated'
+      subscription = event['data']['object']
+      update_subscription_status(subscription)
     when 'invoice.paid'
       # invoice = event['data']['object']
       # pay_invoice(invoice)
@@ -204,6 +206,12 @@ class CreateCheckoutSessionsController < ApplicationController
     new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
       amount_due: invoice.amount_due, invoice_status: invoice.status
     )
+  end
+
+  def update_subscription_status(subscription)
+    stripe_subscription = Stripe::Subscription.retrieve(subscription)
+    order = CustomerOrder.find(subscription_id: stripe_subscription.id)
+    order.update(subscription_status: stripe_subscription.status)
   end
 
   def pay_invoice(invoice)

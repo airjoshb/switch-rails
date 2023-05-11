@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_07_184219) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_233520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -103,6 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_07_184219) do
     t.datetime "receipt_sent_date"
     t.string "subscription_id"
     t.string "fulfillment_method"
+    t.string "subscription_status"
     t.index ["customer_id"], name: "index_customer_orders_on_customer_id"
   end
 

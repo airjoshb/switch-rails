@@ -12,6 +12,7 @@ class CustomerOrderResource < Avo::BaseResource
   # Fields generated from the model
   field :guid, as: :text
   field :order_status, as: :select, enum: CustomerOrder.order_statuses
+  field :subscription_status, as: :text
   field :stripe_id, as: :text, hide_on: [:index]
   field :subscription_id, as: :text, hide_on: [:index]
   field :amount, as: :number
