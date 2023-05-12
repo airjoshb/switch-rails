@@ -210,13 +210,13 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def update_subscription_status(subscription)
     stripe_subscription = Stripe::Subscription.retrieve(subscription)
-    order = CustomerOrder.find(subscription_id: stripe_subscription.id)
+    order = CustomerOrder.find_by_subscription_id(stripe_subscription.id)
     order.update(subscription_status: stripe_subscription.status)
   end
 
   def pay_invoice(invoice)
     stripe_invoice = Stripe::Invoice.retrieve(invoice)
-    get_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
+    get_invoice = Invoice.find_by_invoice_id(stripe_invoice.id)
     get_invoice.update(amount_paid: stripe_invoice.amount_paid, paid: true)
     get_invoice.paid!
   end
