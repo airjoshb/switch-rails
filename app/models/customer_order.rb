@@ -21,9 +21,9 @@ class CustomerOrder < ApplicationRecord
   def fetch_invoices
     subscription = Stripe::Subscription.retrieve(self.subscription_id)
     invoices = Stripe::Invoice.list(subscription: subscription)
-    time_start = Time.at(invoice.period_start.to_i)
-    time_end = Time.at(invoice.period_end.to_i)
     for invoice in invoices
+      time_start = Time.at(invoice.period_start.to_i)
+      time_end = Time.at(invoice.period_end.to_i)
       new_invoice = self.invoices.find_or_create_by(invoice_id: invoice.id)
       new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, 
         period_end: time_end, amount_due: invoice.amount_due, invoice_status: invoice.status, amount_paid: invoice.amount_paid 
