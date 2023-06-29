@@ -12,7 +12,8 @@ class CreateCheckoutSessionsController < ApplicationController
  
   def create
     cart = Cart.find(params[:cart_id])
-    prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
+    prices = cart.orderables.joins(:variation).pluck('variations.stripe_id', 'quantity')
+    # prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
     adjustable = Hash(enabled: true, minimum: 1, maximum: 10)
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     mode = cart.variations.recurring.any? ? "subscription" : "payment"

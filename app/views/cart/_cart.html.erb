@@ -5,12 +5,12 @@
         <% unless @cart %>
           <h4 class="center">Add something delicious to your cart!</h2>
         <% else %>
-          <% for variation in @cart.variations %>
+          <% for orderable in @cart.orderables %>
               <%= form_with(url: cart_remove_path) do |f| %>
                 <%= f.hidden_field :id, value: @cart.orderables.first.id %>
                 <div class="priceContainer">
-                  <%= render 'prices', variation: variation %>
-                  <span class="price"><%= display_price(variation.amount) %></span>
+                  <%= render 'prices', variation: orderable.variation %>
+                  <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
                   <span class= "close" ><%= f.submit "remove" %></span>
                 </div>
               <% end %> 
