@@ -18,6 +18,11 @@ class CreateCheckoutSessionsController < ApplicationController
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     mode = cart.variations.recurring.any? ? "subscription" : "payment"
     customer_creation = "if_required" unless mode == "subscription"
+    if params[:shipping] == 'shr_1NR39pLHQPVTKPLFaiYcBs0M'
+      shipping = [{label: 'N/A', value: 'ship'}]
+    else
+      shipping = [{label: 'Tuesday Market (Monterey)', value: 'tuesday'}, {label: 'Thursday Market (Carmel by the Sea)', value: 'thursday'}]
+    end
     checkout_session = Stripe::Checkout::Session.create({
       line_items: line_items,
       mode: mode,
@@ -29,6 +34,9 @@ class CreateCheckoutSessionsController < ApplicationController
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
+      shipping_options: [
+        shipping_rate: params[:shipping],
+      ],
       consent_collection: {
         promotions: 'auto',
       },
@@ -39,10 +47,8 @@ class CreateCheckoutSessionsController < ApplicationController
           optional: true,
           type: 'dropdown',
           dropdown: {
-            options: [
-              {label: 'Tuesday Market (Monterey)', value: 'tuesday'},
-              {label: 'Thursday Market (Carmel by the Sea)', value: 'thursday'},
-            ],
+            options: 
+              shipping
           },
         },
       ],

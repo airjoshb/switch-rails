@@ -328,13 +328,20 @@
   color: $standard-white
   background-color: $standard-gold
 
-
 @media (hover: hover) 
-  .primary.alternate:hover 
+  .primary.alternate:hover, 
       background-color: rgba(255,255,255,0.05)
       color: $standard-gold
   
-
+.primary.sale
+  border: 2px solid $sale
+  color: $standard-white
+  background-color: $sale
+  
+@media (hover: hover) 
+  .primary.sale:hover
+      background-color: rgba(255,255,255,0.05)
+      color: $sale
 
 
 @media (max-width: 767px) 
