@@ -35,7 +35,7 @@ class CreateCheckoutSessionsController < ApplicationController
         allowed_countries: ['US'],
       },
       shipping_options: [
-        shipping_rate: params[:shipping],
+        shipping_rate: mode == "subscription" ? nil : params[:shipping],
       ],
       consent_collection: {
         promotions: 'auto',
