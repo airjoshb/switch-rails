@@ -139,8 +139,7 @@ class CreateCheckoutSessionsController < ApplicationController
   private
   def create_customer(customer)
     stripe_customer = Stripe::Customer.retrieve(customer.id)
-    customer = Customer.first_or_create(stripe_id: stripe_customer)
-    customer.update(email: customer.email, phone: customer.phone, name: customer.name)
+    customer = Customer.create_with(email: stripe_customer.email, phone: stripe_customer.phone, name: stripe_customer.name).find_or_create_by(stripe_id: stripe_customer.id)
     puts "Created #{customer.name} for #{stripe_customer.inspect}"
   end
 
@@ -207,13 +206,34 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def create_invoice(invoice)
-    customer_order = CustomerOrder.find_by_subscription_id(invoice.subscription)
+    if invoice.subscription.exists?
+      customer_order = CustomerOrder.find_by_subscription_id(invoice.subscription)
+    else
+      stripe_customer = Stripe::Customer.retrieve(invoice.customer)
+      customer = Customer.create_with(phone: stripe_customer.phone, name: stripe_customer.name).find_or_create_by(stripe_id: stripe_customer.id)
+      orderables = []
+      cart = Cart.create
+      customer_order = customer.customer_orders.create
+      for line in invoice.lines
+        variation = Variation.find_by_stripe_id(line.price.id)
+        orderable = Orderable.create(variation: variation, quantity: line.quantity, cart: cart)
+        orderables << orderable
+      end
+      customer_order.orderables << orderables
+    end
+    customer_order.address.create(city: invoice.customer_address.city, 
+      street_2: invoice.customer_address.line_2, 
+      street_1: invoice.customer_address.line_1,
+      state: invoice.customer_address.state,
+      postal: invoice.customer_address.postal_code
+    )
     new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id,  customer_order_id: customer_order.id)
     time_start = Time.at(invoice.period_start.to_i)
     time_end = Time.at(invoice.period_end.to_i)
     new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
       amount_due: invoice.amount_due, invoice_status: invoice.status
     )
+    puts "Created invoice ##{new_invoice.id}"
   end
 
   def update_subscription_status(subscription)
