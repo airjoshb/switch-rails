@@ -36,12 +36,12 @@ class CustomerOrder < ApplicationRecord
   end
 
   def update_subscription_status
-    stripe_subscription = Stripe::Subscription.retrieve(order.subscription_id)
+    stripe_subscription = Stripe::Subscription.retrieve(self.subscription_id)
     price = stripe_subscription.items.first.price.id
-    unless stripe_subscription.items.first.price.id == order.variations.exists?(stripe_id: price)
+    unless stripe_subscription.items.first.price.id == self.orderables.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
-      order.orderables.first.update(current: false)
-      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true)
+      self.orderables.first.update(current: false)
+      self.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: self.orderables.first.cart, current: true)
     end
     self.update(subscription_status: stripe_subscription.status)
     puts "Updated Subscription"
