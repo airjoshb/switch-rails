@@ -35,7 +35,7 @@ class CustomerOrder < ApplicationRecord
   end
 
   def update_subscription_status
-    stripe_subscription = Stripe::Subscription.retrieve(self.stripe_id)
+    stripe_subscription = Stripe::Subscription.retrieve(self.subscription_id)
     price = stripe_subscription.items.first.price.id
     if stripe_subscription.items.first.price.id == self.orderables.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
