@@ -7,8 +7,7 @@ class OrderableResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
-  field :variation_id, as: :number
-  field :cart_id, as: :number
+  field :current, as: :boolean
   field :quantity, as: :number
   field :variation, as: :belongs_to
   field :cart, as: :belongs_to
