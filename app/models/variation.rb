@@ -96,15 +96,6 @@ class Variation < ApplicationRecord
           nickname: "#{self.name} (#{self.unit_quantity})",
       })
     end
-    stripe_price = Stripe::Price.create({
-      product: self.product.stripe_id,
-      currency: 'usd',
-      unit_amount: self.amount.to_i,
-      nickname: "#{self.name} (#{self.unit_quantity})",
-      recurring: self.recurring? ? {interval: self.interval, interval_count: self.interval_count} : nil
-    })
-    self.update_columns(stripe_id: stripe_price.id)
-    end
   end
 
   def init_count_on_hand
