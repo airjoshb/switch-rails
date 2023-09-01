@@ -40,7 +40,7 @@ class CustomerOrder < ApplicationRecord
     price = stripe_subscription.items.first.price.id
     unless self.variations.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
-      self.orderables.first.update(current: false)
+      self.orderables.last.update(current: false)
       self.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: self.orderables.first.cart, current: true)
     end
     self.update(subscription_status: stripe_subscription.status)
