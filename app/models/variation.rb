@@ -71,7 +71,7 @@ class Variation < ApplicationRecord
   private
 
   def price_create
-    unless new_record?
+    if new_record?
       require 'stripe'
       Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
       stripe_price = Stripe::Price.create({
