@@ -8,6 +8,7 @@ class Variation < ApplicationRecord
 
   after_save :init_count_on_hand, if: Proc.new { |p| p.count_on_hand.blank? }
   after_save :variation_change, if: :saved_changes?
+  after_save :price_create, if: :id_changed?
 
   default_scope { order(row_order: :asc) }
 
@@ -54,7 +55,36 @@ class Variation < ApplicationRecord
     set_count_on_hand(0) if count_on_hand > 0
   end
 
+  def price_create
+    require 'stripe'
+    Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
+    stripe_price = Stripe::Price.create({
+      product: self.product.stripe_id,
+      currency: 'usd',
+      unit_amount: self.amount.to_i,
+      nickname: "#{self.name} (#{self.unit_quantity})",
+      recurring: self.recurring? ? {interval: self.interval, interval_count: self.interval_count} : nil
+    })
+    self.update_columns(stripe_id: stripe_price.id)
+  end
+
   private
+
+  def price_create
+    unless new_record?
+      require 'stripe'
+      Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
+      stripe_price = Stripe::Price.create({
+        product: self.product.stripe_id,
+        currency: 'usd',
+        unit_amount: self.amount.to_i,
+        nickname: "#{self.name} (#{self.unit_quantity})",
+        recurring: self.recurring? ? {interval: self.interval, interval_count: self.interval_count} : nil
+      })
+      self.update_columns(stripe_id: stripe_price.id)
+    end
+  end
+
 
   def variation_change
     require 'stripe'
@@ -66,7 +96,6 @@ class Variation < ApplicationRecord
           nickname: "#{self.name} (#{self.unit_quantity})",
       })
     end
-    rescue
     stripe_price = Stripe::Price.create({
       product: self.product.stripe_id,
       currency: 'usd',

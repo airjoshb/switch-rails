@@ -6,9 +6,9 @@ class ProductResource < Avo::BaseResource
     model_class.order(name: :asc)
   end
 
-  self.resolve_find_scope = ->(model_class:) do
-    model_class.friendly
-  end
+  self.find_record_method = ->(model_class:, id:, params:) {
+    model_class.friendly.find id
+  }
 
   # self.search_query = -> do
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)

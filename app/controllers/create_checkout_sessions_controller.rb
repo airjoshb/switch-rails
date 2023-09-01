@@ -238,8 +238,15 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def update_subscription_status(subscription)
     stripe_subscription = Stripe::Subscription.retrieve(subscription)
+    price = stripe_subscription.items.first.price.id
     order = CustomerOrder.find_by_subscription_id(stripe_subscription.id)
+    if stripe_subscription.items.first.price.id == order.orderables.exists?(stripe_id: price)
+      variation = Variation.find_by_stripe_id(price)
+      order.orderables.first.update(current: false)
+      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true)
+    end
     order.update(subscription_status: stripe_subscription.status)
+    puts "Updated Subscription"
   end
 
   def pay_invoice(invoice)
