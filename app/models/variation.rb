@@ -55,19 +55,6 @@ class Variation < ApplicationRecord
     set_count_on_hand(0) if count_on_hand > 0
   end
 
-  def price_create
-    require 'stripe'
-    Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
-    stripe_price = Stripe::Price.create({
-      product: self.product.stripe_id,
-      currency: 'usd',
-      unit_amount: self.amount.to_i,
-      nickname: "#{self.name} (#{self.unit_quantity})",
-      recurring: self.recurring? ? {interval: self.interval, interval_count: self.interval_count} : nil
-    })
-    self.update_columns(stripe_id: stripe_price.id)
-  end
-
   private
 
   def price_create
@@ -96,6 +83,7 @@ class Variation < ApplicationRecord
           nickname: "#{self.name} (#{self.unit_quantity})",
       })
     end
+  end
   end
 
   def init_count_on_hand
