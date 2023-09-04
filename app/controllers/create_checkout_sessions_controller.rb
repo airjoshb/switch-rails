@@ -216,7 +216,7 @@ class CreateCheckoutSessionsController < ApplicationController
       customer_order = customer.customer_orders.create
       for line in invoice.lines
         variation = Variation.find_by_stripe_id(line.price.id)
-        orderable = Orderable.create(variation: variation, quantity: line.quantity, cart: cart)
+        orderable = Orderable.create(variation: variation, quantity: line.quantity, cart: cart, current: true)
         orderables << orderable
       end
       customer_order.orderables << orderables
