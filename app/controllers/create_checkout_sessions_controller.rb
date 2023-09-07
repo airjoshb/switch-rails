@@ -173,6 +173,7 @@ class CreateCheckoutSessionsController < ApplicationController
       city: checkout_session.shipping_details.address.city, 
       state: checkout_session.shipping_details.address.state, 
       postal: checkout_session.shipping_details.address.postal_code,
+      name: checkout_session.shipping_details.name,
       customer_order: order
     )
     puts "Created Address for #{checkout_session.inspect}"
@@ -189,6 +190,7 @@ class CreateCheckoutSessionsController < ApplicationController
     begin
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
       consent = checkout_session.consent.promotions == "opt_in" ? true : false
+      fulfillment = checkout_session.shipping_options.present? ? "Ship" : checkout_session.custom_fields.first.dropdown.value 
       if checkout_session.mode == "subscription"
         invoice = Stripe::Invoice.retrieve(checkout_session.invoice)
         intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
@@ -197,7 +199,7 @@ class CreateCheckoutSessionsController < ApplicationController
       end
       create_address(checkout_session, order)
       create_payment_method(intent.payment_method, order)
-      order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: checkout_session.custom_fields.first.dropdown.value, subscription_id: checkout_session.subscription )
+      order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: fulfillment, subscription_id: checkout_session.subscription )
       customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
       customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name, stripe_id: checkout_session.customer, promotion_consent: consent)
       customer.customer_orders << order
