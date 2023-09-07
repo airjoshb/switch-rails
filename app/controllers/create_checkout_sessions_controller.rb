@@ -55,7 +55,12 @@ class CreateCheckoutSessionsController < ApplicationController
       success_url: cart_success_url,
       cancel_url:  cart_cancel_url,
     })
-    order = CustomerOrder.create(stripe_checkout_id: checkout_session.id)
+    if mode == "subscription"
+      status = "active" 
+    else 
+      status = nil
+    end
+    order = CustomerOrder.create(stripe_checkout_id: checkout_session.id, subscription_status: status)
     order.orderables << cart.orderables
     reset_session
     redirect_to checkout_session.url, allow_other_host: true, status: 303
@@ -197,20 +202,19 @@ class CreateCheckoutSessionsController < ApplicationController
       customer.update(phone: checkout_session.customer_details.phone, name: checkout_session.customer_details.name, stripe_id: checkout_session.customer, promotion_consent: consent)
       customer.customer_orders << order
       if checkout_session.mode == "subscription"
-        subscription = CustomerOrder.find_by_subscription_id(invoice.subscription)
-        invoice = Invoice.find_by_invoice_id(invoice.id)
-        subscription.invoices << invoice
+        create_invoice(invoice)
       end
     end
     puts "Created order ##{order.guid} for #{checkout_session.inspect}"
   end
 
   def create_invoice(invoice)
-    if invoice.subscription.exists?
+    if invoice.subscription.present?
       customer_order = CustomerOrder.find_by_subscription_id(invoice.subscription)
     else
       stripe_customer = Stripe::Customer.retrieve(invoice.customer)
       customer = Customer.create_with(phone: stripe_customer.phone, name: stripe_customer.name).find_or_create_by(stripe_id: stripe_customer.id)
+      intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
       orderables = []
       cart = Cart.create
       customer_order = customer.customer_orders.create
@@ -220,26 +224,31 @@ class CreateCheckoutSessionsController < ApplicationController
         orderables << orderable
       end
       customer_order.orderables << orderables
+      customer_order.address.create(city: invoice.customer_address.city, 
+        street_2: invoice.customer_address.line_2, 
+        street_1: invoice.customer_address.line_1,
+        state: invoice.customer_address.state,
+        postal: invoice.customer_address.postal_code
+      )
+      create_payment_method(intent.payment_method, customer_order)
     end
-    customer_order.address.create(city: invoice.customer_address.city, 
-      street_2: invoice.customer_address.line_2, 
-      street_1: invoice.customer_address.line_1,
-      state: invoice.customer_address.state,
-      postal: invoice.customer_address.postal_code
-    )
-    new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id,  customer_order_id: customer_order.id)
+    new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
     time_start = Time.at(invoice.period_start.to_i)
     time_end = Time.at(invoice.period_end.to_i)
     new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
       amount_due: invoice.amount_due, invoice_status: invoice.status
     )
+    if customer_order.present?
+      customer_order.invoices << new_invoice
+    end
     puts "Created invoice ##{new_invoice.id}"
   end
 
   def update_subscription_status(subscription)
+    order = CustomerOrder.find_by_subscription_id(subscription)
+    return unless order.present?
     stripe_subscription = Stripe::Subscription.retrieve(subscription)
     price = stripe_subscription.items.first.price.id
-    order = CustomerOrder.find_by_subscription_id(stripe_subscription.id)
     unless order.variations.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
       order.orderables.last.update(current: false)
