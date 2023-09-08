@@ -109,6 +109,9 @@ class CreateCheckoutSessionsController < ApplicationController
 
       update_customer(customer)
     when 'invoice.created'
+      invoice = event['data']['object']
+
+      create_invoice(invoice)
     when 'invoice.finalized' 
       invoice = event['data']['object']
 
