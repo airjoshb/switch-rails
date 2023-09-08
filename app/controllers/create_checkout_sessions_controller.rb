@@ -124,10 +124,12 @@ class CreateCheckoutSessionsController < ApplicationController
       attach_subscription(subscription.id)
     when 'customer.subscription.updated'
       subscription = event['data']['object']
+      
       update_subscription_status(subscription.id)
     when 'invoice.paid'
     when 'invoice.payment_succeeded'
       invoice = event['data']['object']
+      
       pay_invoice(invoice.id)
     when 'payment_intent.succeeded'
     when 'payment_intent.created'
@@ -248,44 +250,6 @@ class CreateCheckoutSessionsController < ApplicationController
     puts "Updated #{customer.name} for #{stripe_customer.inspect}"
   end
 
-  def pay_invoice(invoice)
-    if invoice.subscription.present?
-      customer_order = CustomerOrder.find_by_subscription_id(invoice.subscription)
-    else
-      stripe_customer = Stripe::Customer.retrieve(invoice.customer)
-      customer = Customer.create_with(phone: stripe_customer.phone, name: stripe_customer.name).find_or_create_by(stripe_id: stripe_customer.id)
-      intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
-      orderables = []
-      cart = Cart.create
-      customer_order = customer.customer_orders.create
-      for line in invoice.lines
-        variation = Variation.find_by_stripe_id(line.price.id)
-        orderable = Orderable.create(variation: variation, quantity: line.quantity, cart: cart, current: true)
-        orderables << orderable
-      end
-      customer_order.orderables << orderables
-      if invoice.customer_address.present?
-        customer_order.address.create(city: invoice.customer_address.city, 
-          street_2: invoice.customer_address.line_2, 
-          street_1: invoice.customer_address.line_1,
-          state: invoice.customer_address.state,
-          postal: invoice.customer_address.postal_code
-        )
-      end
-      create_payment_method(intent.payment_method, customer_order)
-    end
-    new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
-    time_start = Time.at(invoice.period_start.to_i)
-    time_end = Time.at(invoice.period_end.to_i)
-    new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
-      amount_due: invoice.amount_due, invoice_status: invoice.status
-    )
-    if customer_order.present?
-      customer_order.invoices << new_invoice
-    end
-    puts "Created invoice ##{new_invoice.id}"
-  end
-
   def attach_invoice(invoice, order)
     time_start = Time.at(invoice.period_start.to_i)
     time_end = Time.at(invoice.period_end.to_i)
@@ -332,7 +296,7 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def pay_invoice(invoice)
     stripe_invoice = Stripe::Invoice.retrieve(invoice)
-    get_invoice = Invoice.find_or_create_by(invoice_id: stripe_invoice.id)
+    get_invoice = Invoice.find(invoice_id: stripe_invoice.id)
     get_invoice.update(amount_paid: stripe_invoice.amount_paid, invoice_status: stripe_invoice.status)
     get_invoice.paid!
   end
