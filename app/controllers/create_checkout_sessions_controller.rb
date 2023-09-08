@@ -194,13 +194,6 @@ class CreateCheckoutSessionsController < ApplicationController
     puts "Created #{customer.name} for #{stripe_customer.inspect}"
   end
 
-  def update_customer(customer)
-    stripe_customer = Stripe::Customer.retrieve(customer.id)
-    customer = Customer.find_by_stripe_id(stripe_customer)
-    customer.update(email: stripe_customer.email, phone: stripe_customer.phone, name: stripe_customer.name)
-    puts "Updated #{customer.name} for #{stripe_customer.inspect}"
-  end
-
   def create_address(checkout_session, order)
     address = Address.create(street_1: checkout_session.shipping_details.address.line1,
       street_2: checkout_session.shipping_details.address.line2, 
@@ -239,16 +232,20 @@ class CreateCheckoutSessionsController < ApplicationController
       end
       create_payment_method(intent.payment_method, customer_order)
     end
-    new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id)
+    new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id, customer_order: customer_order)
     time_start = Time.at(invoice.period_start.to_i)
     time_end = Time.at(invoice.period_end.to_i)
     new_invoice.update(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
       amount_due: invoice.amount_due, invoice_status: invoice.status
     )
-    if customer_order.present?
-      customer_order.invoices << new_invoice
-    end
     puts "Created invoice ##{new_invoice.id}"
+  end
+
+  def update_customer(customer)
+    stripe_customer = Stripe::Customer.retrieve(customer.id)
+    customer = Customer.find_by_stripe_id(stripe_customer)
+    customer.update(email: stripe_customer.email, phone: stripe_customer.phone, name: stripe_customer.name)
+    puts "Updated #{customer.name} for #{stripe_customer.inspect}"
   end
 
   def pay_invoice(invoice)
