@@ -20,8 +20,12 @@ class CustomerOrder < ApplicationRecord
   end
 
   def fetch_invoices
-    subscription = Stripe::Subscription.retrieve(self.subscription_id)
-    invoices = Stripe::Invoice.list(subscription: subscription)
+    if self.subscription_id.present?
+      subscription = Stripe::Subscription.retrieve(self.subscription_id)
+      invoices = Stripe::Invoice.list(subscription: subscription)
+    else
+      invoices = Stripe::Invoice.search(query: 'customer:'"'#{self.customer.stripe_id}'", limit:'100')
+    end
     for invoice in invoices
       time_start = Time.at(invoice.period_start.to_i)
       time_end = Time.at(invoice.period_end.to_i)
