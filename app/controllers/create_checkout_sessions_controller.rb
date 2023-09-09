@@ -112,12 +112,17 @@ class CreateCheckoutSessionsController < ApplicationController
       invoice = event['data']['object']
 
       create_invoice(invoice)
+    when 'invoice.updated'
+    when 'invoice.upcoming'
+    when 'invoice.paid'
+    when 'invoice.payment_succeeded'
+      invoice = event['data']['object']
+      
+      pay_invoice(invoice)
     when 'invoice.finalized' 
       invoice = event['data']['object']
 
-      create_invoice(invoice)
-    when 'invoice.updated'
-    when 'invoice.upcoming'
+      finalize_invoice(invoice)
     when 'customer.subscription.created'
       subscription = event['data']['object']
 
@@ -126,11 +131,7 @@ class CreateCheckoutSessionsController < ApplicationController
       subscription = event['data']['object']
       
       update_subscription_status(subscription.id)
-    when 'invoice.paid'
-    when 'invoice.payment_succeeded'
-      invoice = event['data']['object']
-      
-      pay_invoice(invoice.id)
+    
     when 'payment_intent.succeeded'
     when 'payment_intent.created'
     when 'charge.succeeded'
@@ -164,6 +165,7 @@ class CreateCheckoutSessionsController < ApplicationController
         intent = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
       end
       create_address(checkout_session, order)
+      intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent)
       create_payment_method(intent.payment_method, order)
       order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: fulfillment, subscription_id: checkout_session.subscription )
       customer = create_customer(checkout_session.customer, order, consent)
@@ -214,25 +216,7 @@ class CreateCheckoutSessionsController < ApplicationController
     else
       stripe_customer = Stripe::Customer.retrieve(invoice.customer)
       customer = Customer.create_with(phone: stripe_customer.phone, name: stripe_customer.name).find_or_create_by(stripe_id: stripe_customer.id)
-      intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
-      orderables = []
-      cart = Cart.create
       customer_order = customer.customer_orders.create
-      for line in invoice.lines
-        variation = Variation.find_by_stripe_id(line.price.id)
-        orderable = Orderable.create(variation: variation, quantity: line.quantity, cart: cart, current: true)
-        orderables << orderable
-      end
-      customer_order.orderables << orderables
-      if invoice.customer_address.present?
-        customer_order.address.create(city: invoice.customer_address.city, 
-          street_2: invoice.customer_address.line_2, 
-          street_1: invoice.customer_address.line_1,
-          state: invoice.customer_address.state,
-          postal: invoice.customer_address.postal_code
-        )
-      end
-      create_payment_method(intent.payment_method, customer_order)
     end
     new_invoice = Invoice.find_or_create_by(invoice_id: invoice.id, customer_order: customer_order)
     time_start = Time.at(invoice.period_start.to_i)
@@ -241,6 +225,29 @@ class CreateCheckoutSessionsController < ApplicationController
       amount_due: invoice.amount_due, invoice_status: invoice.status
     )
     puts "Created invoice ##{new_invoice.id}"
+  end
+
+  def finalize_invoice(invoice)
+    stripe_invoice = Stripe::Invoice.retrieve(invoice.id)
+    invoice = Invoice.find_by(invoice_id: stripe_invoice.id)
+    customer_order = invoice.customer_order
+    unless customer_order.orderables.any?
+      orderables = []
+      cart = Cart.create
+      for line in  stripe_invoice.lines
+        variation = Variation.find_by_stripe_id(line.price.id)
+        orderable = Orderable.create(variation: variation, quantity: line.quantity, cart: cart, current: true)
+        orderables << orderable
+      end
+      customer_order.orderables << orderables
+    end
+    intent = Stripe::PaymentIntent.retrieve(stripe_invoice.payment_intent) 
+    create_payment_method(intent.payment_method, customer_order) unless customer_order.payment_method.present?
+    time_start = Time.at( stripe_invoice.period_start.to_i)
+    time_end = Time.at( stripe_invoice.period_end.to_i)
+    invoice.update(period_start: time_start, period_end: time_end,
+      amount_due:  stripe_invoice.amount_due, invoice_status:  stripe_invoice.status
+    )
   end
 
   def update_customer(customer)
@@ -295,10 +302,19 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def pay_invoice(invoice)
-    stripe_invoice = Stripe::Invoice.retrieve(invoice)
-    get_invoice = Invoice.find(invoice_id: stripe_invoice.id)
-    get_invoice.update(amount_paid: stripe_invoice.amount_paid, invoice_status: stripe_invoice.status)
-    get_invoice.paid!
+    stripe_invoice = Stripe::Invoice.retrieve(invoice.id)
+    invoice = Invoice.find_by(invoice_id: stripe_invoice.id)
+    customer_order = invoice.customer_order
+    if customer_order.address.blank? && stripe_invoice.customer_address.present?
+      customer_order.address.create(city: stripe_invoice.customer_address.city, 
+        street_2: stripe_invoice.customer_address.line_2, 
+        street_1: stripe_invoice.customer_address.line_1,
+        state: stripe_invoice.customer_address.state,
+        postal: stripe_invoice.customer_address.postal_code
+      )
+    end
+    invoice.update(amount_paid: stripe_invoice.amount_paid, invoice_status: stripe_invoice.status)
+    invoice.paid!
   end
 
   def email_customer_about_failed_payment(checkout_session)
