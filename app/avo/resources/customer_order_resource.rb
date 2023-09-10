@@ -13,7 +13,7 @@ class CustomerOrderResource < Avo::BaseResource
   field :guid, as: :text
   field :created_at, as: :date_time
   field :order_status, as: :select, enum: CustomerOrder.order_statuses
-  field :subscription_status, as: :text
+  field :subscription_status, as: :text, sortable: true
   field :stripe_id, as: :text, hide_on: [:index]
   field :subscription_id, as: :text, hide_on: [:index]
   field :amount, as: :number
