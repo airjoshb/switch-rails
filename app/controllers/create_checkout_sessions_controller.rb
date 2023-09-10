@@ -273,7 +273,7 @@ class CreateCheckoutSessionsController < ApplicationController
   def update_subscription_status(subscription)
     order = CustomerOrder.find_by_subscription_id(subscription.id)
     return unless order.present?
-    stripe_subscription = Stripe::Subscription.retrieve(subscription)
+    stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
     price = stripe_subscription.items.first.price.id
     unless order.variations.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
