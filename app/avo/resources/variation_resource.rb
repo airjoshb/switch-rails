@@ -19,6 +19,7 @@ class VariationResource < Avo::BaseResource
   field :amount, as: :number
   field :active, as: :boolean
   field :add_on, as: :boolean
+  field :preferences, as: :has_many
   field :count_on_hand, as: :number
   field :unit_quantity, as: :number
   field :row_order, as: :number

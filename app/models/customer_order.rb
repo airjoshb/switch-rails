@@ -3,6 +3,7 @@ class CustomerOrder < ApplicationRecord
   has_many :orderables, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :variations, through: :orderables
+  has_many :customer_boxes
   has_one :address, dependent: :destroy
   has_one :payment_method, dependent: :destroy
 

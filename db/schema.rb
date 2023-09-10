@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_07_190713) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_10_214002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,6 +73,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_190713) do
     t.index ["customer_order_id"], name: "index_addresses_on_customer_order_id"
   end
 
+  create_table "box_variations", force: :cascade do |t|
+    t.bigint "box_id", null: false
+    t.bigint "variation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["box_id"], name: "index_box_variations_on_box_id"
+    t.index ["variation_id"], name: "index_box_variations_on_variation_id"
+  end
+
+  create_table "boxes", force: :cascade do |t|
+    t.datetime "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "customer_order_id"
+    t.datetime "last_box_date"
+    t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
+  end
+
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -121,6 +139,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_190713) do
   create_table "email_verification_tokens", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_email_verification_tokens_on_user_id"
+  end
+
+  create_table "emails", force: :cascade do |t|
+    t.datetime "date_sent"
+    t.string "subject"
+    t.bigint "customer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_emails_on_customer_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -198,6 +225,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_190713) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "preference_associations", force: :cascade do |t|
+    t.bigint "preference_id", null: false
+    t.bigint "customer_id"
+    t.bigint "variation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_preference_associations_on_customer_id"
+    t.index ["preference_id"], name: "index_preference_associations_on_preference_id"
+    t.index ["variation_id"], name: "index_preference_associations_on_variation_id"
+  end
+
+  create_table "preferences", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -255,14 +300,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_190713) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "customer_orders"
+  add_foreign_key "box_variations", "boxes"
+  add_foreign_key "box_variations", "variations"
+  add_foreign_key "boxes", "customer_orders"
   add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
+  add_foreign_key "emails", "customers"
   add_foreign_key "invoices", "customer_orders"
   add_foreign_key "orderables", "carts"
   add_foreign_key "orderables", "customer_orders"
   add_foreign_key "orderables", "variations"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "payment_methods", "customer_orders"
+  add_foreign_key "preference_associations", "customers"
+  add_foreign_key "preference_associations", "preferences"
+  add_foreign_key "preference_associations", "variations"
   add_foreign_key "products", "categories"
   add_foreign_key "sessions", "users"
   add_foreign_key "variations", "products"

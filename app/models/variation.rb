@@ -2,6 +2,11 @@ class Variation < ApplicationRecord
   belongs_to :product
   has_many :orderables
   has_many :carts, through: :orderables
+  has_many :preference_associations, dependent: :destroy, inverse_of: :variation
+  has_many :preferences, through: :preference_associations
+  has_many :box_variations, dependent: :destroy, inverse_of: :variation
+  has_many :boxes, through: :box_variations
+  has_many :customer_boxes, through: :box_variations, foreign_key: :box_id
   
   enum inventory_type: {infinite: 'infinite', trackable: 'trackable'}
   enum interval: { day: 'day', week: 'week', month: 'month', year: 'year'}, _prefix: true
@@ -21,6 +26,7 @@ class Variation < ApplicationRecord
   scope :recurring, -> { where(recurring: true)}
   scope :add_ons, -> { where(add_on: true)}
   scope :active, -> { where(active: true)}
+  scope :preference, -> (preference) { joins(:preferences).where(preferences: { name: preference }) }
 
   def available?
     self.active
@@ -32,6 +38,10 @@ class Variation < ApplicationRecord
 
   def recurring?
     self.recurring
+  end
+
+  def preference_filter(preference)
+    joins(:preferences).where(preferences: {name: preference})
   end
 
   def adjust_count_on_hand(value)
