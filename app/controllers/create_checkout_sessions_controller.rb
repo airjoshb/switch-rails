@@ -55,11 +55,6 @@ class CreateCheckoutSessionsController < ApplicationController
       success_url: cart_success_url,
       cancel_url:  cart_cancel_url,
     })
-    if mode == "subscription"
-      status = "active" 
-    else 
-      status = nil
-    end
     order = CustomerOrder.create(stripe_checkout_id: checkout_session.id, subscription_status: status)
     order.orderables << cart.orderables
     reset_session
