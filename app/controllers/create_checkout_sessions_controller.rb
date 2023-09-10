@@ -238,6 +238,9 @@ class CreateCheckoutSessionsController < ApplicationController
     order_invoice.update(period_start: time_start, period_end: time_end,
       amount_due:  stripe_invoice.amount_due, invoice_status:  stripe_invoice.status
     )
+    if stripe_invoice.status == "paid"
+      order_invoice.paid!
+    end
   end
 
   def update_customer(customer)
