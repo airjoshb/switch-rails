@@ -22,13 +22,13 @@ class VariationResource < Avo::BaseResource
   field :preferences, as: :has_many
   field :count_on_hand, as: :number
   field :unit_quantity, as: :number
-  field :row_order, as: :number
+  field :row_order, as: :number, hide_on: [:index]
   field :recurring, as: :boolean
   field :inventory_type, as: :select, enum: ::Variation.inventory_types
   field :interval, as: :select, enum: ::Variation.intervals, include_blank: 'No Interval'
   field :interval_count, as: :number
   field :orderables, as: :has_many
-  field :stripe_id, as: :text, hide_on: [:index, :new]
+  field :stripe_id, as: :text, hide_on: [:new]
   field :carts, as: :has_many, through: :orderables
   # add fields here
 
