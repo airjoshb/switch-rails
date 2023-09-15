@@ -303,8 +303,8 @@ class CreateCheckoutSessionsController < ApplicationController
     stripe_invoice = Stripe::Invoice.retrieve(invoice)
     order_invoice = Invoice.find_by(invoice_id: stripe_invoice)
     customer_order = order_invoice.customer_order
-    intent = Stripe::PaymentIntent.retrieve(stripe_invoice.payment_intent) 
-    create_payment_method(intent.payment_method, customer_order) unless customer_order.payment_method.present?
+    charge = Stripe::Charge.retrieve(stripe_invoice.charge)
+    create_payment_method(charge.payment_method, customer_order) unless customer_order.payment_method.present?
     order_invoice.update(amount_paid: stripe_invoice.amount_paid, invoice_status: stripe_invoice.status)
     order_invoice.paid!
   end
