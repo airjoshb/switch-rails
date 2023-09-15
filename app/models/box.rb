@@ -3,12 +3,31 @@ class Box < ApplicationRecord
   has_many :customer_orders, through: :customer_boxes
   has_many :box_variations, dependent: :destroy
   has_many :variations, through: :box_variations
+  has_many :emails
   has_rich_text :note
 
   def generate_customer_boxes
-    'get all active subscribers
-    create boxes for only customers whose last box is within the timeframe for subscription interval
-    add variations from parent box that matches customer preferences'
+    subscribers = CustomerOrder.active
+    subscribers.current.weekly.each do |subscriber|
+      return unless subscriber.last_box_date < self.date - 7
+      self.customer_boxes.create(date: self.date, customer_order: subscriber)
+      subscriber.update(last_box_date: self.date)
+    end
+    subscribers.current.bimonthly.each do |subscriber|
+      start_date= self.date - 2.weeks
+      end_date= self.date
+      return unless subscriber.last_box_date.between?(start_date, end_date)
+      self.customer_boxes.create(date: self.date, customer_order: subscriber)
+      subscriber.update(last_box_date: self.date)
+    end
+    subscribers.current.bimonthly.each do |subscriber|
+      start_date= self.date - 1.month
+      end_date= self.date
+      return unless subscriber.last_box_date.between?(start_date, end_date)
+      self.customer_boxes.create(date: self.date, customer_order: subscriber)
+      subscriber.update(last_box_date: self.date)
+    end
+    'add variations from parent box that matches customer preferences'
   end
 
   def send_email

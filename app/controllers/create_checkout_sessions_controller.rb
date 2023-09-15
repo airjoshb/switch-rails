@@ -55,7 +55,7 @@ class CreateCheckoutSessionsController < ApplicationController
       success_url: cart_success_url,
       cancel_url:  cart_cancel_url,
     })
-    order = CustomerOrder.create(stripe_checkout_id: checkout_session.id, subscription_status: status)
+    order = CustomerOrder.create(stripe_checkout_id: checkout_session.id)
     order.orderables << cart.orderables
     reset_session
     redirect_to checkout_session.url, allow_other_host: true, status: 303
@@ -152,7 +152,8 @@ class CreateCheckoutSessionsController < ApplicationController
     begin
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
       consent = checkout_session.consent.promotions == "opt_in" ? true : false
-      fulfillment = checkout_session.shipping_options.present? ? "Ship" : checkout_session.custom_fields.first.dropdown.value 
+      shipping_amount = checkout_session.shipping_options.first[:shipping_amount]
+      fulfillment = shipping_amount > 0 ? "Ship" : checkout_session.custom_fields.first.dropdown.value 
       if checkout_session.mode == "subscription"
         invoice = Stripe::Invoice.retrieve(checkout_session.invoice)
         intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
@@ -160,7 +161,6 @@ class CreateCheckoutSessionsController < ApplicationController
         intent = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
       end
       create_address(checkout_session, order)
-      intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent)
       create_payment_method(intent.payment_method, order)
       order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: fulfillment, subscription_id: checkout_session.subscription )
       customer = create_customer(checkout_session.customer, order, consent)

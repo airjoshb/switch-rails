@@ -11,6 +11,13 @@ class CustomerOrder < ApplicationRecord
 
   validates_uniqueness_of :guid
 
+  scope :monthly, -> { joins(:variations).where(variations: { interval: :month }) }
+  scope :weekly, -> { joins(:variations).where('variations.interval = ? AND variations.interval_count = ?', 'week', 1 ) }
+  scope :bimonthly, -> { joins(:variations).where('variations.interval = ? AND interval_count = ?', 'week', 2 ) }
+  scope :active, -> { where(subscription_status: :active).where.not(subscription_id: nil)}
+  scope :current, -> { joins(:orderables).where(orderables: { current: true })}
+
+
   after_initialize  :populate_guid, if: Proc.new { |p| p.guid.blank? }
   after_save :deliver_order_confirmation, if: Proc.new { saved_change_to_order_status?(from: 'pending', to: 'processed') }
   
