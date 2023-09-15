@@ -188,10 +188,12 @@ class CreateCheckoutSessionsController < ApplicationController
     stripe_customer = Stripe::Customer.search(query: 'email:'"'#{customer.email}'")
     if stripe_customer.present?
       customer = stripe_customer.first
+      stripe_id = customer.id
     else
       customer = customer
+      stripe_id = nil
     end
-    order_customer = Customer.create_with(promotion_consent: consent, phone: customer.phone, name: customer.name, stripe_id: stripe_customer.data.first.id).find_or_create_by(customer.email)
+    order_customer = Customer.create_with(promotion_consent: consent, phone: customer.phone, name: customer.name, stripe_id: stripe_id ).find_or_create_by(customer.email)
     order_customer.customer_orders << order if order.present?
     puts "Created #{order_customer.name} for #{stripe_customer.inspect}"
   end
