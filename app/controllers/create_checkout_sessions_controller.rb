@@ -163,7 +163,7 @@ class CreateCheckoutSessionsController < ApplicationController
       create_address(checkout_session, order)
       create_payment_method(intent.payment_method, order)
       order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: fulfillment, subscription_id: checkout_session.subscription )
-      customer = create_customer(checkout_session.customer, order, consent)
+      create_customer(checkout_session.customer_details, order, consent)
       # customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
       # customer.update(promotion_consent: consent)
       # customer.customer_orders << order
@@ -177,18 +177,20 @@ class CreateCheckoutSessionsController < ApplicationController
   def create_payment_method(payment, order)
     payment_method = Stripe::PaymentMethod.retrieve(payment)
     pass_check = payment_method.card.checks.cvc_check == "pass" ? true : false
-    order_payment = PaymentMethod.create(stripe_id: payment_method.id,
-      card_type: payment_method.card.brand, 
+    order_payment = PaymentMethod.create_with(card_type: payment_method.card.brand, 
       cvc_check: pass_check, 
       last_4: payment_method.card.last4,
-      customer_order: order
-    )
+      customer_order: order).find_by(stripe_id: payment_method.id)
     puts "Created Payment Method for #{order_payment.inspect}"
   end
 
   def create_customer(customer, order, consent)
-    stripe_customer = Stripe::Customer.retrieve(customer)
-    order_customer = Customer.create_with(promotion_consent: consent, email: stripe_customer.email, phone: stripe_customer.phone, name: stripe_customer.name).find_or_create_by(stripe_id: stripe_customer.id)
+    stripe_customer = Stripe::Customer.search(query: 'email:'"'#{customer.email}'")
+    if stripe_customer.present?
+      customer = stripe_customer.first
+    else
+      customer = customer
+    order_customer = Customer.create_with(promotion_consent: consent, phone: customer.phone, name: customer.name, stripe_id: stripe_customer.data.first.id).find_or_create_by(customer.email)
     order_customer.customer_orders << order if order.present?
     puts "Created #{order_customer.name} for #{stripe_customer.inspect}"
   end
