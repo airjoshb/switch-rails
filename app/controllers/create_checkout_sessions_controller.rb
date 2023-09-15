@@ -193,7 +193,7 @@ class CreateCheckoutSessionsController < ApplicationController
       customer = customer
       stripe_id = nil
     end
-    order_customer = Customer.create_with(promotion_consent: consent, phone: customer.phone, name: customer.name, stripe_id: stripe_id ).find_by(customer.email)
+    order_customer = Customer.create_with(promotion_consent: consent, phone: customer.phone, name: customer.name, stripe_id: stripe_id ).find_by(email: customer.email)
     order_customer.customer_orders << order if order.present?
     puts "Created #{order_customer.name} for #{stripe_customer.inspect}"
   end
