@@ -126,7 +126,10 @@ class CreateCheckoutSessionsController < ApplicationController
       subscription = event['data']['object']
       
       update_subscription_status(subscription)
-    
+    when 'customer.subscription.updated'
+      subscription = event['data']['object']
+      
+      cancel_subscription(subscription)
     when 'payment_intent.succeeded'
     when 'payment_intent.created'
     when 'charge.succeeded'
@@ -283,13 +286,25 @@ class CreateCheckoutSessionsController < ApplicationController
     return unless order.present?
     stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
     price = stripe_subscription.items.first.price.id
+    if subscription.pause_collection.present?
+      sub_status = "paused"
+    else
+      sub_status = stripe_subscription.status
+    end
     unless order.variations.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
       order.orderables.last.update(current: false)
       order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true)
     end
-    order.update(subscription_status: stripe_subscription.status)
+    order.update(subscription_status: sub_status)
     puts "Updated Subscription"
+  end
+
+  def cancel_subscription(subscription)
+    order = CustomerOrder.find_by_subscription_id(subscription.id)
+    order.update(subscription_status: stripe_subscription.status, canceled_at: subscription.canceled_at)
+    order.orderables.last.update(current: false)
+    puts "Cancel Subscription"
   end
 
   def process_order(checkout_session)
