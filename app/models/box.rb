@@ -6,8 +6,11 @@ class Box < ApplicationRecord
   has_many :emails
   has_rich_text :note
 
+  after_save :generate_customer_boxes
+
   def generate_customer_boxes
     subscribers = CustomerOrder.active
+    return if self.customer_boxes.count == subscribers.current.weekly.count + subscribers.current.bimonthly + subscribers.current.bimonthly
     subscribers.current.weekly.each do |subscriber|
       return unless subscriber.last_box_date < self.date - 7
       self.customer_boxes.create(date: self.date, customer_order: subscriber)

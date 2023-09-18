@@ -31,7 +31,7 @@
                   <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
                     <%= f.hidden_field 'cart_id', value: @cart.id %>
                     <%= f.hidden_field 'shipping', value: ENV.fetch('SHIPPING') %>
-                    <%= f.submit "Ship in CA", class: "button primary sale", id: "checkout-button" %>
+                    <%= f.submit "Ship", class: "button primary sale", id: "checkout-button" %>
                   <% end %>
                 </div>
               <% end %>
