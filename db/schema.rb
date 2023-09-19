@@ -87,8 +87,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_164253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "customer_order_id"
-    t.integer "boxable_id"
-    t.string "boxable_type"
+    t.integer "box_id"
+    t.string "type"
     t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
   end
 

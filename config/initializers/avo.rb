@@ -96,7 +96,7 @@ Avo.configure do |config|
   ## == Breadcrumbs ==
   config.display_breadcrumbs = true
   config.set_initial_breadcrumbs do
-    add_breadcrumb "Home", '/avo'
+    add_breadcrumb "Home", '/avo/resources/customer_orders'
   end
 
   ## == Menus ==

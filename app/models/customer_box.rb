@@ -1,5 +1,5 @@
 class CustomerBox < Box
-  belongs_to :boxable, polymorphic: true
+  belongs_to :box, foreign_key: :box_id
   belongs_to :customer_order
   has_one :customer_email
   
