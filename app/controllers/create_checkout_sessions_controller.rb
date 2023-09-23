@@ -155,7 +155,7 @@ class CreateCheckoutSessionsController < ApplicationController
     begin
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
       consent = checkout_session.consent.promotions == "opt_in" ? true : false
-      shipping_amount = checkout_session.shipping_options.first[:shipping_amount]
+      shipping_amount = checkout_session.shipping_cost.present? ? checkout_session.shipping_cost : 0
       fulfillment = shipping_amount > 0 ? "Ship" : checkout_session.custom_fields.first.dropdown.value 
       if checkout_session.mode == "subscription"
         invoice = Stripe::Invoice.retrieve(checkout_session.invoice)
