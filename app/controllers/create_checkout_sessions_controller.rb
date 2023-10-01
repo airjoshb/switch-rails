@@ -183,7 +183,7 @@ class CreateCheckoutSessionsController < ApplicationController
     order_payment = PaymentMethod.create_with(card_type: payment_method.card.brand, 
       cvc_check: pass_check, 
       last_4: payment_method.card.last4,
-      customer_order: order).find_by(stripe_id: payment_method.id)
+      customer_order: order).find_or_create_by(stripe_id: payment_method.id)
     puts "Created Payment Method for #{order_payment.inspect}"
   end
 
