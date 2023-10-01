@@ -10,6 +10,7 @@ class CustomerBoxResource < Avo::BaseResource
   field :date, as: :date_time
   field :box, as: :belongs_to
   field :customer, as: :has_one
+  field :address, as: :has_one
   field :customer_order, as: :belongs_to
   field :note, as: :trix
   # add fields here
