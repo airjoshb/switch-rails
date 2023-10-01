@@ -8,7 +8,7 @@ class CustomerOrder < ApplicationRecord
   has_one :payment_method, dependent: :destroy
 
   enum order_status: {pending: 'pending', processed: 'processed', failed: 'failed', fulfilled: 'fulfilled', refunded: 'refunded'}
-
+  SUBSCRIPTION_STATUS = %i[active canceled paused].freeze
   validates_uniqueness_of :guid
 
   scope :monthly, -> { joins(:variations).where(variations: { interval: :month }) }

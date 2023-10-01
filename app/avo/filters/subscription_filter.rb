@@ -1,4 +1,4 @@
-class SubscriptionFilter < Avo::Filters::BooleanFilter
+class SubscriptionFilter < Avo::Filters::SelectFilter
   self.name = "Subscription filter"
   # self.visible = -> do
   #   true
