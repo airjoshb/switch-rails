@@ -6,6 +6,8 @@ class BoxResource < Avo::BaseResource
   # end
   self.link_to_child_resource = true
 
+  action CreateCustomerBoxes
+
   field :id, as: :id
   # Fields generated from the model
   field :date, as: :date_time
