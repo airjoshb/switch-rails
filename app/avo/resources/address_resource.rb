@@ -1,5 +1,5 @@
 class AddressResource < Avo::BaseResource
-  self.title = :id
+  self.title = :street_1
   self.includes = []
   # self.search_query = -> do
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
