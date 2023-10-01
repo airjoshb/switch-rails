@@ -18,6 +18,7 @@ class CustomerOrderResource < Avo::BaseResource
   field :subscription_status, as: :select, options: CustomerOrder::SUBSCRIPTION_STATUS, include_blank: 'No Subscription'
   field :stripe_id, as: :text, hide_on: [:index]
   field :subscription_id, as: :text, hide_on: [:index]
+  field :last_box_date, as: :date_time
   field :amount, as: :number
   field :fulfillment_method, as: :text
   field :payment_method, as: :has_one, hide_on: [:index]
