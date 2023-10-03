@@ -9,6 +9,7 @@ class CustomerOrderResource < Avo::BaseResource
   action FetchInvoices
 
   filter SubscriptionFilter
+  filter IntervalFilter
   
   field :id, as: :id
   # Fields generated from the model

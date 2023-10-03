@@ -2,7 +2,7 @@ class CustomerBox < Box
   belongs_to :box, foreign_key: :box_id
   belongs_to :customer_order
   has_one :customer_email
-  has_one :customer, through: :customer_order
+  has_one :customer, through: :customer_order, foreign_key: :box_id
   has_one :address, through: :customer_order
   
   def set_dates

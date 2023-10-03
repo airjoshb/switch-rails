@@ -7,11 +7,11 @@ class SubscriptionFilter < Avo::Filters::SelectFilter
   def apply(request, query, value)
     case value
     when 'active'
-      query.where(subscription_status: 'active')
+      query.where(subscription_status: 'active').processed
     when 'canceled'
-      query.where(subscription_status: 'canceled')
+      query.where(subscription_status: 'canceled').processed
     when 'paused'
-      query.where(subscription_status: 'paused')
+      query.where(subscription_status: 'paused').processed
     else
       query
     end
