@@ -14,7 +14,6 @@ class CustomerOrderResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :guid, as: :text
-  field :created_at, as: :date_time
   field :order_status, as: :select, enum: CustomerOrder.order_statuses
   field :subscription_status, as: :select, options: CustomerOrder::SUBSCRIPTION_STATUS, include_blank: 'No Subscription'
   field :stripe_id, as: :text, hide_on: [:index]
