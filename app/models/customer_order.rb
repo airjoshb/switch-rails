@@ -15,7 +15,7 @@ class CustomerOrder < ApplicationRecord
   scope :weekly, -> { joins(:variations).where('variations.interval = ? AND variations.interval_count = ?', 'week', 1 ) }
   scope :bimonthly, -> { joins(:variations).where('variations.interval = ? AND interval_count = ?', 'week', 2 ) }
   scope :active, -> { where(subscription_status: :active).where.not(subscription_id: nil)}
-  scope :current_sub, -> { joins(:orderables).where(orderables: { current: true })}
+  scope :current_sub, -> { joins(:orderables).where(orderables: { current: true }).distinct}
   scope :processed, -> { where(order_status: :processed )}
 
 

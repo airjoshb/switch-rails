@@ -12,20 +12,17 @@ class Box < ApplicationRecord
   def generate_customer_boxes
     subscribers = CustomerOrder.active.processed
     box_count = self.customer_boxes.size
-    active_subscribers = []
-    weekly_subscribers = subscribers.weekly.where('last_box_date > ?', self.date - 7.days).current_sub.distinct
-    bimonthly_subscribers = subscribers.bimonthly.where(last_box_date: self.date - 2.weeks..self.date).current_sub.distinct
-    monthly_subscribers = subscribers.monthly.where(last_box_date: self.date - 1.month..self.date).current_sub.distinct
-    active_subscribers << weekly_subscribers + bimonthly_subscribers + monthly_subscribers
-    existing_boxes = weekly_subscribers.size + bimonthly_subscribers.size + monthly_subscribers.size
-    while box_count != existing_boxes
-      active_subscribers.each do |subscribers|
-        subscribers.each do |subscriber|
-          box = self.customer_boxes.create(date: self.date, customer_order: subscriber)
-          subscriber.update(last_box_date: self.date)
-          box_count = box_count + 1
-        end
-      end
+    weekly_subscribers = subscribers.weekly.where('last_box_date >= ?', self.date - 7.days).current_sub
+    bimonthly_subscribers = subscribers.bimonthly.where('last_box_date <= ?', self.date - 2.weeks).current_sub
+    monthly_subscribers = subscribers.monthly.where('last_box_date <= ?', self.date - 3.weeks - 1.day).current_sub
+    active_subscribers = weekly_subscribers + bimonthly_subscribers + monthly_subscribers
+    current_boxes = self.customer_orders.map { |x| x['id'] }
+    active_subscribers = active_subscribers.map { |x| x['id'] }
+    customer_orders = active_subscribers - current_boxes
+    customer_orders.each do |customer|
+      subscriber = CustomerOrder.find(customer) 
+      box = self.customer_boxes.create(date: self.date, customer_order: subscriber)
+      subscriber.update(last_box_date: self.date)
     end
     'add variations from parent box that matches customer preferences'
   end
