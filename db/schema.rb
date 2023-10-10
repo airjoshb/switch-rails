@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_10_001935) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_10_180141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -148,12 +148,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_001935) do
   create_table "emails", force: :cascade do |t|
     t.datetime "date_sent"
     t.string "subject"
-    t.bigint "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "box_id"
     t.index ["box_id"], name: "index_emails_on_box_id"
-    t.index ["customer_id"], name: "index_emails_on_customer_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -312,7 +310,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_001935) do
   add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "emails", "boxes"
-  add_foreign_key "emails", "customers"
   add_foreign_key "invoices", "customer_orders"
   add_foreign_key "orderables", "carts"
   add_foreign_key "orderables", "customer_orders"
