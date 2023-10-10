@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_01_222002) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_10_001935) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -89,6 +89,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_01_222002) do
     t.bigint "customer_order_id"
     t.integer "box_id"
     t.string "type"
+    t.boolean "email_sent"
+    t.datetime "email_sent_date"
     t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
   end
 

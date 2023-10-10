@@ -7,6 +7,7 @@ class BoxResource < Avo::BaseResource
   self.link_to_child_resource = true
 
   action CreateCustomerBoxes
+  action SendBoxEmail
 
   field :id, as: :id
   # Fields generated from the model
@@ -14,6 +15,7 @@ class BoxResource < Avo::BaseResource
   field :type, as: :select, name: "Type", options: { CustomerBox: "CustomerBox" }, include_blank: true
   field :note, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
   field :variations, as: :has_many
+  field :email, as: :has_one
   field :customer_boxes, as: :has_many, hide_search_input: true
   
   # add fields here

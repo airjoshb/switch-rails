@@ -4,7 +4,7 @@ class Box < ApplicationRecord
   has_many :customer_orders, through: :customer_boxes, source: :customer_order
   has_many :box_variations, dependent: :destroy
   has_many :variations, through: :box_variations
-  has_many :emails
+  has_one :email
   has_rich_text :note
 
   # after_save :generate_customer_boxes
@@ -29,8 +29,13 @@ class Box < ApplicationRecord
   end
 
   def send_email
-    'send box email to all subscribers with customer boxes
-    include notes from parent box & customer box'
+    self.customer_boxes.each do |box|
+      return if box.email_sent
+      customer_order = box.customer_order
+      CustomerOrderMailer.box_email(self, customer_order).deliver
+      box.update(email_sent: true, email_sent_date: Time.zone.now )
+    end
   end
+
 
 end
