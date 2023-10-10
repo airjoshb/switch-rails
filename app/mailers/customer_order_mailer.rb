@@ -8,9 +8,10 @@ class CustomerOrderMailer < ApplicationMailer
     mail(:to => @customer.email, :subject => "Your Switch Bakery order is in process!")
   end
 
-  def box_email(box, customer_order)
+  def box_email(box, customer_order, customer_box)
     @customer = customer_order.customer
     @box = box
-    mail(:to => @customer.email, :subject => @box.email.subject)
+    @customer_box = customer_box
+    mail(:to => @customer.email, :cc => "amanda@switchbakery.com", :subject => @box.email.subject)
   end
 end

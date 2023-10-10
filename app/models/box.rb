@@ -30,9 +30,9 @@ class Box < ApplicationRecord
 
   def send_email
     self.customer_boxes.each do |box|
-      return if box.email_sent
+      next box if box.email_sent?
       customer_order = box.customer_order
-      CustomerOrderMailer.box_email(self, customer_order).deliver
+      CustomerOrderMailer.box_email(self, customer_order, box).deliver
       box.update(email_sent: true, email_sent_date: Time.zone.now )
     end
   end

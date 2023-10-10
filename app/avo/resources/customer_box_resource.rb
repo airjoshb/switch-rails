@@ -5,6 +5,7 @@ class CustomerBoxResource < Avo::BaseResource
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
   # end
   self.model_class = ::CustomerBox
+  
   field :id, as: :id
   # Fields generated from the model
   field :date, as: :date_time
@@ -12,7 +13,8 @@ class CustomerBoxResource < Avo::BaseResource
   field :customer, as: :has_one
   field :address, as: :has_one
   field :customer_order, as: :belongs_to
-  field :email_sent, as: :boolean
   field :note, as: :trix
+  field :email_sent, as: :boolean
+  field :email_sent_date, as: :date_time
   # add fields here
 end
