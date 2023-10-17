@@ -1,9 +1,9 @@
 class BoxResource < Avo::BaseResource
   self.title = :date
   self.includes = []
-  # self.search_query = -> do
-  #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
-  # end
+  self.search_query = -> do
+    scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
+  end
   self.link_to_child_resource = true
 
   action CreateCustomerBoxes

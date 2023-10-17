@@ -26,25 +26,16 @@
               <p class="total">Subotal: <%= formatted_price(@cart.total) %></p>
             </div>
             <div class="checkout">
-              <% unless @cart.variations.recurring.any? %>
-                <div class="inline">
-                  <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
-                    <%= f.hidden_field 'cart_id', value: @cart.id %>
-                    <%= f.hidden_field 'shipping', value: ENV.fetch('SHIPPING') %>
-                    <%= f.submit "Ship", class: "button primary sale", id: "checkout-button" %>
-                  <% end %>
-                </div>
-              <% end %>
               <div class="inline">
                 <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
                   <%= f.hidden_field 'cart_id', value: @cart.id %>
                   <%= f.hidden_field 'shipping', value: ENV.fetch('PICKUP') %>
-                  <%= f.submit "Pickup/Delivery", class: "button primary alternate", id: "checkout-button" %>
+                  <%= f.submit "Checkout", class: "button primary alternate", id: "checkout-button" %>
                 <% end %>
               </div>
             </div>
             <div class="message">
-              Orders will be delivered to Santa Cruz area locations on Wednesday and Friday. If you are in the Monterey area you can also select an option to pick up at the Tuesday market or Thursday in Carmel By The Sea at checkout.
+              Orders in Santa Cruz or Monterey will be delivered on Monday, Wednesday or Friday. You can also select to pick up at the Tuesday market in Monterey or Thursday in Carmel By The Sea at checkout.
             </div>
           <% else %>
             <p>Your cart is empty</p>
