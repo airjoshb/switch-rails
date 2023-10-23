@@ -12,7 +12,7 @@ class Variation < ApplicationRecord
   enum interval: { day: 'day', week: 'week', month: 'month', year: 'year'}, _prefix: true
 
   after_save :init_count_on_hand, if: Proc.new { |p| p.count_on_hand.blank? }
-  after_save :price_create, if: :saved_changes?
+  after_update :price_create, if: :saved_changes?
   after_save :price_create, if: :id_previously_changed?
 
   default_scope { order(row_order: :asc) }
