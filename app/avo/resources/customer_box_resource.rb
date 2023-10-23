@@ -6,6 +6,8 @@ class CustomerBoxResource < Avo::BaseResource
   # end
   self.model_class = ::CustomerBox
   
+  action ExportCsv
+
   field :id, as: :id
   # Fields generated from the model
   field :date, as: :date_time

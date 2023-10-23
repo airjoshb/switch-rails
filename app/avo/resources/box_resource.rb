@@ -8,6 +8,7 @@ class BoxResource < Avo::BaseResource
 
   action CreateCustomerBoxes
   action SendBoxEmail
+  action ExportCsv
 
   field :id, as: :id
   # Fields generated from the model
