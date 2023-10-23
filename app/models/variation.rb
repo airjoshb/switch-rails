@@ -12,7 +12,8 @@ class Variation < ApplicationRecord
   enum interval: { day: 'day', week: 'week', month: 'month', year: 'year'}, _prefix: true
 
   after_save :init_count_on_hand, if: Proc.new { |p| p.count_on_hand.blank? }
-  after_update :price_create, if: :saved_changes?
+  after_update :price_create, if: :changeable?
+  after_update :variation_change, if: :name_previously_changed?
   after_save :price_create, if: :id_previously_changed?
 
   default_scope { order(row_order: :asc) }
@@ -84,18 +85,24 @@ class Variation < ApplicationRecord
     self.update_columns(stripe_id: stripe_price.id)
   end
 
+  def changeable?
+    self.saved_change_to_amount? || self.saved_change_to_interval? || self.saved_change_to_interval_count? || self.saved_change_to_recurring?
+  end
 
   def variation_change
     require 'stripe'
     Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
-    begin
-    unless self.saved_change_to_amount? || self.saved_change_to_interval? || self.saved_change_to_interval_count? || self.saved_change_to_recurring?
-      Stripe::Price.update(
-        self.stripe_id, {
-          nickname: "#{self.name} (#{self.unit_quantity})",
-      })
-    end
+    Stripe::Price.update(
+      self.stripe_id, {
+        nickname: "#{self.name} (#{self.unit_quantity})",
+    })
   end
+
+  def active_change
+    require 'stripe'
+    Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
+    Stripe::Price.update(
+      self.stripe_id, {active: self.active})
   end
 
   def init_count_on_hand
