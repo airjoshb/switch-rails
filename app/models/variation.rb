@@ -47,7 +47,7 @@ class Variation < ApplicationRecord
 
   def adjust_count_on_hand(value)
     with_lock do
-      set_count_on_hand(count_on_hand + value)
+      set_count_on_hand(count_on_hand - value)
     end
   end
 

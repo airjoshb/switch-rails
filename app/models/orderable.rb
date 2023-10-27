@@ -4,7 +4,7 @@ class Orderable < ApplicationRecord
   belongs_to :customer_order, optional: true
 
   scope :current_sub, -> { where( current: true )}
-
+  scope :trackable, -> { joins(:variation).where(variations: {inventory_type: :trackable}) }
 
   def total
     variation.amount * quantity

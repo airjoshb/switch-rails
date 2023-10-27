@@ -310,6 +310,12 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def process_order(checkout_session)
     order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
+    if order.orderables.trackable.any?
+      adjustments = order.orderables.trackable
+      adjustments.each do |adjustment|
+        adjustment.variation.adjust_count_on_hand(adjustment.quantity)
+      end
+    end
     pay_invoice(checkout_session.invoice) if checkout_session.mode == "subscription"
     order.processed!
     puts "Processed ##{order.guid} for #{order.orderables.inspect}"
