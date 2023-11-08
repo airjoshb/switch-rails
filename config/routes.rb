@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   end
 
   root 'main#index'
+  get "/sitemap" => redirect("tools/sitemap")
+  get "/tools/sitemap" => "sitemap#index", :as => :sitemap_tools, :defaults => {:format => :xml}
   resources :products 
   resources :updates, controller: :posts
   get '/p/:slug', to: 'pages#show', as: :page
