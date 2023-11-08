@@ -1,8 +1,8 @@
 
 <% content_for :head do %>
-  <title><%=@product.name %> | Switch Bakery</title>
+  <title>Order <%=@product.name.pluralize %> fresh from Switch Bakery</title>
   <meta name="description" content="<%= @product.description %>" />
-  <meta property="og:title", content="<%=@product.name %> | Switch Bakery" />
+  <meta property="og:title", content="Order <%=@product.name.pluralize %> fresh from Switch Bakery" />
   <meta property="og:site_name", content="Switch Bakery" />
   <meta property="og:description", content="<%= @product.description %>" />
   <meta property="og:type", content="product" />
@@ -10,7 +10,7 @@
   <meta property="og:image", content="<%=@product.image.url if @product.image.attached? %>" />
   <meta property="product:price:currency", content="USD" />
   <meta property="product:price:amount", content="<%= @product.variations.map(&:amount).min / 100 if @product.variations.exists? %>" />
-  <meta name="twitter:title", content="<%=@product.name %> from the Switch Bakery in Monterey" />
+  <meta name="twitter:title", content="Order <%=@product.name.pluralize %> fresh from Switch Bakery" />
   <meta name="twitter:description", content="<%= @product.description %>" />
   <meta name="twitter:image", content="<%=@product.image.url if @product.image.attached? %>" />
   <meta name="twitter:card", content="summary" />
@@ -25,12 +25,12 @@
 <% end %>
 
 <section id="product">
-  <div class="product-container">
+  <div class="product-container" itemscope itemtype= "http://schema.org/Offer">
     <div class="content">
-      <div class="imageContainer">
+      <div class="imageContainer" itemprop="image">
         <%= image_tag @product.image.variant(resize_to_limit: [800, 800]) if @product.image.attached? %>
       </div>
-      <div class="details">
+      <div class="details" itemprop="offers">
         <h1><%= @product.name %></h1>
         <p class="description"><%= @product.description %></p>
         <div class="variations">
@@ -47,15 +47,20 @@
                   <% end %>
                 </span>
                 <span class="price">
+                  <span itemprop= "price" content="<%= @product.variations.first.amount / 100 %>">
                   <%= display_price(variation.amount) %>
                   <br />
                   <%= subscription_quantity(variation.interval, variation.interval_count) if variation.recurring? %>
                 </span>
                 <% if variation.in_stock? %>
+                  <meta content= "InStock" itemprop="availability" />
+                  <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
                   <span class="quantity">
                     <%= f.number_field :quantity, value: 1, min: 1 %>
                   </span>
                   <span><%= f.submit "Add to Bag", class: "button primary" %></span>
+                <% else %>
+                  <meta content= "OutOfStock" itemprop="availability" />
                 <% end %>
               </div>
             <% end %> 

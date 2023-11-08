@@ -2,6 +2,7 @@
 <html temscope itemtype=<%= content_for?(:html) ? yield(:html) : "http://schema.org/WebPage" %> >
   <head>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= yield(:head) %>
     <%= favicon_link_tag %>
     <script src="https://js.stripe.com/v3/" async></script>
     <%= csrf_meta_tags %>
@@ -9,7 +10,6 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= yield(:head) %>
   </head>
 
   <body>
