@@ -1,7 +1,7 @@
 <% content_for :head do %>
   <title><%= params[:category].present? ? "Order Gluten-free #{@category.name}" : "Order Gluten-free Bread, Cake, Vegan, and Keto Goods"%> from Switch Bakery</title>
   <meta name="description" content="<%= params[:category].present? ? "Get Gluten-free #{@category.name}" : "Order gluten-free and fresh"%> from our bakery for pickup and delivery in Monterey, Santa Cruz, or shipped anywhere in the US. We make Feel Good Food for your gut made with no funny ingredients, corn starch or seed oils." />
-  <meta property="og:title", content="<%= params[:category].present? ? "Order Gluten-free #{@category.name}" : "Order Gluten-free Bread, Cake & Keto Goods"%> from Switch Bakery" />
+  <meta property="og:title", content="<%= params[:category].present? ? "Order Gluten-free #{@category.name}" : "Order Gluten-free Bread, Vegan, and Keto Goods"%> from Switch Bakery" />
   <meta property="og:site_name", content="Switch Bakery" />
   <meta property="og:description", content="<%= params[:category].present? ? "Get Gluten-free #{@category.name}" : "Order gluten-free and fresh"%> from our bakery for pickup and delivery in Monterey, Santa Cruz, or shipped anywhere in the US. We make Feel Good Food for your gut made with no funny ingredients, corn starch or seed oils."" />
   <meta property="og:type", content="product" />
@@ -10,7 +10,7 @@
   <meta property="og:price:amount", content="<%= @products.first.variations.first.amount / 100 %>" />
   <meta property="og:price:currency", content="USD" />
   <meta property="og:price:availability", content="instock" />
-  <meta name="twitter:title", content="<%= params[:category].present? ? "Order Gluten-free #{@category.name}" : "Order Gluten-free Bread, Cake & Keto Goods"%> from Switch Bakery" />
+  <meta name="twitter:title", content="<%= params[:category].present? ? "Order Gluten-free #{@category.name}" : "Order Gluten-free Bread, Vegan, and Keto Goods"%> from Switch Bakery" />
   <meta name="twitter:description", content="<%= params[:category].present? ? "Get Gluten-free #{@category.name}" : "Order gluten-free and fresh"%> from our bakery for pickup and delivery in Monterey, Santa Cruz, or shipped anywhere in the US. We make Feel Good Food for your gut made with no funny ingredients, corn starch or seed oils."" />
   <meta name="twitter:image", content="<%=@products.first.image.url if @products.first.image.attached? %>" />
   <meta name="twitter:card", content="summary" />
