@@ -6,7 +6,7 @@
     <% for category in @categories %>
       <div class="gridItem">
         <h5 class="categoryName"><%= category.name %></h5>
-        <%= link_to image_tag(category.image), products_path(category: category.name) %>
+        <%= link_to image_tag(cdn_image_url(category.image)), products_path(category: category.name) %>
       </div>
     <% end %>
   </div>
