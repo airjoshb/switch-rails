@@ -21,7 +21,7 @@
 <% content_for content_for :html do %>
   "http://schema.org/Product"
 <% end %>
-<%= render "/main/banner", image: @image, title: @title, subtitle: "Order gluten-free, keto, and vegan baked goods, delivered to Santa Cruz and the Monterey Bay & shipped everywhere in the US." %>
+<%= render "/main/banner", image: @image, title: @title, subtitle: @category.present? && @category.description? ? @category.description : "Order gluten-free, keto, and vegan baked goods, delivered to Santa Cruz and the Monterey Bay & shipped everywhere in the US." %>
 <section id="shop">
   <div class="container">
     <div class="bakery-categories">

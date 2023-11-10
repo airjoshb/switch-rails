@@ -5,6 +5,6 @@ class Category < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: [:slugged, :history]
 
-  default_scope { order(:name) }
+  # default_scope { order(:row_order) }
 
 end
