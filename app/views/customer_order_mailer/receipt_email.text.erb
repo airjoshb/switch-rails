@@ -14,8 +14,16 @@ Amount
 <% end %>
 Total
 <%= formatted_price(@order.amount) %>
-Orders will be delivered to Santa Cruz area locations on Wednesday and Friday. If you are in the Monterey area you can also select an option to pick up at the Tuesday market or Thursday in Carmel By The Sea.
-If you have any questions, simply reply to this email.
+<% if @order.fulfillment_method != "Ship" %>
+  Your order will be ready for pickup <%= @order.fulfillment_method.titleize %>
+  If you have any questions, simply reply to this email.
+<% elsif @order.fulfillment_method == "Ship" %>
+  Your order will be shipped on our next available production day.
+  If you have any questions, simply reply to this email.
+<% else %>
+  Orders are typically delivered to Santa Cruz & Monterey area locations on Monday, Wednesday, and Thursday.
+  If you have any questions, simply reply to this email.
+<% end %>
 Cheers,
 Amanda & Joshua
 This purchase will appear as “Switch Bakery” on your credit card statement for your card ending in <%=@order.payment_method.last_4 %>.
