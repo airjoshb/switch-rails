@@ -7,4 +7,6 @@ class Category < ApplicationRecord
 
   # default_scope { order(:row_order) }
 
+  scope :active, -> { where(active: :true) }
+  scope :categories, -> { where.not(name: "All")}
 end

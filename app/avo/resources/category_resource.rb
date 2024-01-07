@@ -17,6 +17,7 @@ class CategoryResource < Avo::BaseResource
   field :name, as: :text
   field :image, as: :file
   field :description, as: :textarea
+  field :active, as: :boolean
   field :row_order, as: :number
   field :products, as: :has_many
   # add fields here
