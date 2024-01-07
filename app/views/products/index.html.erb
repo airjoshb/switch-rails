@@ -6,16 +6,16 @@
   <meta property="og:description", content="<%= params[:category].present? ? "Get Gluten-free #{@category.name}" : "Order gluten-free and fresh"%> from our bakery for pickup and delivery in Monterey, Santa Cruz, or shipped anywhere in the US. We make Feel Good Food for your gut made with no funny ingredients, corn starch or seed oils."" />
   <meta property="og:type", content="product" />
   <meta property="og:url", content="<%= products_url %>" />
-  <meta property="og:image", content="<%=@products.first.image.url if @products.first.image.attached? %>" />
-  <meta property="og:price:amount", content="<%= @products.first.variations.first.amount / 100 %>" />
+  <meta property="og:image", content="<%=@products.first.image.url if @products.present? && @products.first.image.attached? %>" />
+  <meta property="og:price:amount", content="<%= @products.first.variations.first.amount / 100 if @products.present? %>" />
   <meta property="og:price:currency", content="USD" />
   <meta property="og:price:availability", content="instock" />
   <meta name="twitter:title", content="<%= params[:category].present? ? "Order Gluten-free #{@category.name}" : "Order Gluten-free Bread, Vegan, and Keto Goods"%> from Switch Bakery" />
   <meta name="twitter:description", content="<%= params[:category].present? ? "Get Gluten-free #{@category.name}" : "Order gluten-free and fresh"%> from our bakery for pickup and delivery in Monterey, Santa Cruz, or shipped anywhere in the US. We make Feel Good Food for your gut made with no funny ingredients, corn starch or seed oils."" />
-  <meta name="twitter:image", content="<%=@products.first.image.url if @products.first.image.attached? %>" />
+  <meta name="twitter:image", content="<%=@products.first.image.url if @products.present? && @products.first.image.attached? %>" />
   <meta name="twitter:card", content="summary" />
   <meta name="twitter:url", content="<%=products_url %>" />
-  <meta itemprop="image", content="<%=@products.first.image.url if @products.first.image.attached? %>" />
+  <meta itemprop="image", content="<%=@products.first.image.url if @products.present? &&@products.first.image.attached? %>" />
   <link rel="canonical" href="<%= products_url %>" />
 <% end %>
 <% content_for content_for :html do %>
@@ -33,29 +33,33 @@
     <div class="productContainer">
       <div class="productCardGrid">
         <div class="product-grid">
-          <% for product in @products %>
-            <%= link_to product do %>
-              <span itemscope itemtype= "http://schema.org/Offer">
-                <div class="productCard" itemprop="offers">
-                  <% if product.image.attached? %>
-                    <div class= "imageContainer" role="presentation" itemprop="image" >
-                      <%= image_tag product.image.variant(resize_to_limit: [400, 400]), alt: product.name %>
-                    </div>
-                  <% end %>
-                  <div class= "detailsContainer">
-                    <meta content= "InStock" itemprop="availability" />
-                    <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
-                    <h5 itemprop= "name"><%= product.name %></h5>
-                    <% if product.variations.present? %>
-                      <div class="prices">
-                        <span itemprop= "price" content="<%= product.variations.first.amount / 100 %>">
-                        Starting at <%= formatted_price(product.variations.first.amount) %>
-                        </span>
+          <% if @products.empty? %>
+           <p>There are no <%= @category.blank? ? "products" : @category.name %> available at this time</p>
+          <% else %>
+            <% for product in @products %>
+              <%= link_to product do %>
+                <span itemscope itemtype= "http://schema.org/Offer">
+                  <div class="productCard" itemprop="offers">
+                    <% if product.image.attached? %>
+                      <div class= "imageContainer" role="presentation" itemprop="image" >
+                        <%= image_tag product.image.variant(resize_to_limit: [400, 400]), alt: product.name %>
                       </div>
                     <% end %>
+                    <div class= "detailsContainer">
+                      <meta content= "InStock" itemprop="availability" />
+                      <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
+                      <h5 itemprop= "name"><%= product.name %></h5>
+                      <% if product.variations.present? %>
+                        <div class="prices">
+                          <span itemprop= "price" content="<%= product.variations.first.amount / 100 %>">
+                          Starting at <%= formatted_price(product.variations.first.amount) %>
+                          </span>
+                        </div>
+                      <% end %>
+                    </div>
                   </div>
-                </div>
-              </span>
+                </span>
+              <% end %>
             <% end %>
           <% end %>
         </div>
