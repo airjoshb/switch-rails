@@ -58,7 +58,7 @@ class ProductsController < ApplicationController
   end
 
   def set_categories
-    @categories = Category.active.categories.order(row_order: :asc)
+    @categories = Category.categories.order(row_order: :asc)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

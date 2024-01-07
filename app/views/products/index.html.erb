@@ -26,7 +26,7 @@
   <div class="container">
     <div class="bakery-categories">
       <%= link_to "All", products_path, class: "navLink" %>
-      <% for category in @categories %>
+      <% for category in @categories.active %>
         <%= link_to category.name, products_path(category: category.name), class: "navLink link"  %>
       <% end %>
     </div>
