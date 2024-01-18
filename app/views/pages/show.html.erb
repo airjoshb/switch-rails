@@ -13,7 +13,7 @@
   <meta itemprop="headline", content="<%=@page.title %>" />
   <meta itemprop="description", content="<%= @page.description %>" />
   <meta itemprop="datePublished", content="<%=@page.created_at.to_time.iso8601 %>" />
-  <link rel="canonical" href="<%= update_url %>" />
+  <link rel="canonical" href="<%= page_url %>" />
 <% end %>
 <% content_for content_for :html do %>
   "http://schema.org/WebPage"
