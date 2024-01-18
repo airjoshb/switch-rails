@@ -28,6 +28,8 @@ Rails.application.routes.draw do
   get "/tools/sitemap" => "sitemap#index", :as => :sitemap_tools, :defaults => {:format => :xml}
   resources :products 
   resources :updates, controller: :posts
+  get "p/Home" => redirect("/")
+  get "p/home" => redirect("/")
   get '/p/:slug', to: 'pages#show', as: :page
   get '/shop', to: 'products#index', as: 'shop'
   post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'

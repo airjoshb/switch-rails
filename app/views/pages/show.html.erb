@@ -1,3 +1,23 @@
+<% content_for :head do %>
+  <title><%=@page.title %> | Switch Bakery</title>
+  <meta name="description" content="<%= @page.description %>" />
+  <meta property="og:title", content="<%=@page.title %> | Switch Bakery" />
+  <meta property="og:site_name", content="Switch Bakery" />
+  <meta property="og:description", content="<%= @page.description %>" />
+  <meta property="og:type", content="website" />
+  <meta property="og:url", content="<%= page_url %>" />
+  <meta name="twitter:title", content="<%=@page.title %> | Switch Bakery in Monterey" />
+  <meta name="twitter:description", content="<%= @page.description) %>" />
+  <meta name="twitter:card", content="summary" />
+  <meta name="twitter:url", content="<%= page_url %>" />
+  <meta itemprop="headline", content="<%=@page.title %>" />
+  <meta itemprop="description", content="<%= @page.description %>" />
+  <meta itemprop="datePublished", content="<%=@page.created_at.to_time.iso8601 %>" />
+  <link rel="canonical" href="<%= update_url %>" />
+<% end %>
+<% content_for content_for :html do %>
+  "http://schema.org/WebPage"
+<% end %>
 <%= render "/main/banner", image: nil, title: @page.title, subtitle: @page.description %>
 <section id="page">
   <div class="container">

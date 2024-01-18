@@ -165,7 +165,7 @@ class CreateCheckoutSessionsController < ApplicationController
         intent = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
       end
       create_address(checkout_session, order)
-      create_payment_method(intent.payment_method, order)
+      create_payment_method(intent, order)
       order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: fulfillment, subscription_id: checkout_session.subscription )
       create_customer(checkout_session.customer_details, order, consent)
       # customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
@@ -178,13 +178,24 @@ class CreateCheckoutSessionsController < ApplicationController
     puts "Created order ##{order.guid} for #{checkout_session.inspect}"
   end
   
-  def create_payment_method(payment, order)
-    payment_method = Stripe::PaymentMethod.retrieve(payment)
-    pass_check = payment_method.card.checks.cvc_check == "pass" ? true : false
-    order_payment = PaymentMethod.create_with(card_type: payment_method.card.brand, 
-      cvc_check: pass_check, 
-      last_4: payment_method.card.last4,
-      customer_order: order).find_or_create_by(stripe_id: payment_method.id)
+  def create_payment_method(intent, order)
+    return if order.payment_method.present?
+    payment_intent = Stripe::PaymentIntent.retrieve(intent)
+    payment_method = Stripe::PaymentMethod.retrieve(payment_intent.payment_method)
+    charge = Stripe::Charge.retrieve(payment_intent.latest_charge)
+    if charge.payment_method_details.type == "card"
+      card = charge.payment_method_details.card
+      pass_check = card.checks.cvc_check == "pass" ? true : false
+      order_payment = PaymentMethod.create_with(card_type: card.brand, 
+        cvc_check: pass_check, 
+        last_4: card.last4,
+        customer_order: order).find_or_create_by(stripe_id: payment_method.id)
+    else
+      order_payment = PaymentMethod.create_with(card_type: charge.payment_method_details.type, 
+        cvc_check: true, 
+        last_4: "",
+        customer_order: order).find_or_create_by(stripe_id: payment_method.id)
+    end
     puts "Created Payment Method for #{order_payment.inspect}"
   end
 
