@@ -62,7 +62,7 @@
                     <% if @order.subscription_id.present? %>
                         <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">You can change your subscription at any time by clicking <a href="https://billing.stripe.com/p/login/4gweXM2aTbJ1aly4gg?prefilled_email=<%= @order.customer.email %>">this link</a></p>
                      <% end %>
-                     <% if order.fulfillment_method.blank? %>
+                    <% if @order.fulfillment_method.blank? %>
                       <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">
                         Orders are typically delivered to Santa Cruz & Monterey area locations on Monday, Wednesday, and Thursday.
                         </br> If you have any questions, simply reply to this email.
