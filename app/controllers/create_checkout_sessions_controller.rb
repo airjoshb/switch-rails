@@ -165,7 +165,7 @@ class CreateCheckoutSessionsController < ApplicationController
         intent = Stripe::PaymentIntent.retrieve(checkout_session.payment_intent)
       end
       create_address(checkout_session, order)
-      create_payment_method(checkout_session.payment_intent, order)
+      create_payment_method(intent, order)
       order.update(stripe_id: checkout_session.id, amount: checkout_session.amount_total, fulfillment_method: fulfillment, subscription_id: checkout_session.subscription )
       create_customer(checkout_session.customer_details, order, consent)
       # customer = Customer.where(email: checkout_session.customer_details.email).first_or_create
