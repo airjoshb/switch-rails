@@ -180,8 +180,7 @@ class CreateCheckoutSessionsController < ApplicationController
   
   def create_payment_method(intent, order)
     return if order.payment_method.present?
-    payment_intent = Stripe::PaymentIntent.retrieve(intent)
-    payment_method = Stripe::PaymentMethod.retrieve(payment_intent.payment_method)
+    payment_method = Stripe::PaymentMethod.retrieve(intent.payment_method)
     charge = Stripe::Charge.retrieve(payment_intent.latest_charge)
     if charge.payment_method_details.type == "card"
       card = charge.payment_method_details.card
