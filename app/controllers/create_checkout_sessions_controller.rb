@@ -172,7 +172,7 @@ class CreateCheckoutSessionsController < ApplicationController
       # customer.update(promotion_consent: consent)
       # customer.customer_orders << order
       if checkout_session.mode == "subscription"
-        attach_invoice(invoice, order)
+        attach_invoice(invoice.id, order)
       end
     end
     puts "Created order ##{order.guid} for #{checkout_session.inspect}"
@@ -273,12 +273,11 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def attach_invoice(invoice, order)
-    time_start = Time.at(invoice.period_start.to_i)
-    time_end = Time.at(invoice.period_end.to_i)
-    order_invoice = Invoice.create_with(subscription_id: invoice.subscription, period_start: time_start, period_end: time_end,
-      amount_due: invoice.amount_due, invoice_status: invoice.status).find_or_create_by(invoice_id: invoice.id)
-    customer_order = CustomerOrder.find(order.id)
-    customer_order.invoices << order_invoice
+    stripe_invoice = Stripe::Invoice.retrieve(invoice.id)
+    time_start = Time.at(stripe_invoice.period_start.to_i)
+    time_end = Time.at(stripe_invoice.period_end.to_i)
+    order_invoice = Invoice.create_with(subscription_id: stripe_invoice.subscription, period_start: time_start, period_end: time_end,
+      amount_due: stripe_invoice.amount_due, invoice_status: stripe_invoice.status).find_or_create_by(invoice_id: invoice, customer_order: order.id)
   end
   
   def attach_subscription(subscription)
