@@ -199,8 +199,9 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def create_customer(customer, order, consent)
-    stripe_customer = Stripe::Customer.search(query: 'email:'"'#{customer.email}'")
+    return unless customer.email.present?
     if stripe_customer.present?
+      stripe_customer = Stripe::Customer.search(query: 'email:'"'#{customer.email}'")
       customer = stripe_customer.first
       stripe_id = customer.id
     else
