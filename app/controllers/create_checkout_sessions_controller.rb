@@ -277,7 +277,7 @@ class CreateCheckoutSessionsController < ApplicationController
     time_start = Time.at(stripe_invoice.period_start.to_i)
     time_end = Time.at(stripe_invoice.period_end.to_i)
     order_invoice = Invoice.create_with(subscription_id: stripe_invoice.subscription, period_start: time_start, period_end: time_end,
-      amount_due: stripe_invoice.amount_due, invoice_status: stripe_invoice.status).find_or_create_by(invoice_id: invoice, customer_order: order.id)
+      amount_due: stripe_invoice.amount_due, invoice_status: stripe_invoice.status).find_or_create_by(invoice_id: invoice, customer_order: order)
   end
   
   def attach_subscription(subscription)
