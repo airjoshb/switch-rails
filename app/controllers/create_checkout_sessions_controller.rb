@@ -99,7 +99,7 @@ class CreateCheckoutSessionsController < ApplicationController
     when 'customer.created'
       customer = event['data']['object']
 
-      create_customer(customer.id, nil, nil)
+      create_customer(customer, nil, nil)
     when  'customer.updated'
       customer = event['data']['object']
 
