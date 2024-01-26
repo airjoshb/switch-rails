@@ -273,7 +273,7 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def attach_invoice(invoice, order)
-    stripe_invoice = Stripe::Invoice.retrieve(invoice.id)
+    stripe_invoice = Stripe::Invoice.retrieve(invoice)
     time_start = Time.at(stripe_invoice.period_start.to_i)
     time_end = Time.at(stripe_invoice.period_end.to_i)
     order_invoice = Invoice.create_with(subscription_id: stripe_invoice.subscription, period_start: time_start, period_end: time_end,
