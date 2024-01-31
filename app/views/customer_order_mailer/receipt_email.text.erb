@@ -14,7 +14,12 @@ Amount
 <% end %>
 Total
 <%= formatted_price(@order.amount) %>
-<% if @order.fulfillment_method != "Ship" %>
+<% if @order.fulfillment_method.empty? %>
+  <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">
+    Orders are typically delivered to Santa Cruz & Monterey area locations on Monday, Wednesday, and Thursday.
+    </br> If you have any questions, simply reply to this email.
+  </p>
+<% elsif @order.fulfillment_method != "Ship" %>
   Your order will be ready for pickup <%= @order.fulfillment_method.titleize %>
   If you have any questions, simply reply to this email.
 <% elsif @order.fulfillment_method == "Ship" %>
