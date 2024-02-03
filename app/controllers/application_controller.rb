@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
   
   def set_render_cart
     @render_cart = true
+    if session[:cart_id].present?
+      @cart ||= Cart.find_by(id: session[:cart_id])
+    end
   end
 
   def render_nav
