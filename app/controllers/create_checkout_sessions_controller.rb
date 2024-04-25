@@ -268,7 +268,7 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def update_customer(customer)
     stripe_customer = Stripe::Customer.retrieve(customer.id)
-    order_customer = Customer.find_or_create_by_stripe_id(stripe_customer.id)
+    order_customer = Customer.find_or_create_by(stripe_id: stripe_customer.id)
     order_customer.update(email: stripe_customer.email, phone: stripe_customer.phone, name: stripe_customer.name)
     puts "Updated #{customer.name} for #{stripe_customer.inspect}"
   end
