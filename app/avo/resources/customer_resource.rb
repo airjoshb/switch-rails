@@ -1,5 +1,5 @@
 class CustomerResource < Avo::BaseResource
-  self.title = :email
+  self.title = :name
   self.includes = []
   self.search_query = -> do
     scope.ransack(name_eq: params[:q],stripe_id_eq: params[:q],emaol_eq: params[:q], m: "or").result(distinct: false)
