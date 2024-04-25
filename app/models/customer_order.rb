@@ -17,6 +17,11 @@ class CustomerOrder < ApplicationRecord
   scope :active, -> { where(subscription_status: :active).where.not(subscription_id: nil)}
   scope :current_sub, -> { joins(:orderables).where(orderables: { current: true }).distinct}
   scope :processed, -> { where(order_status: :processed )}
+  scope :pending, -> { where(order_status: :pending )}
+  scope :invoices, -> { joins(:invoices).where(invoices: { invoice_status: :paid })}
+  scope :last_week, -> {where(created_at: Date.today..1.week )}
+  scope :two_weeks, -> {where(created_at: Date.today <= 2.weeks.ago )}
+
 
 
   after_initialize  :populate_guid, if: Proc.new { |p| p.guid.blank? }
