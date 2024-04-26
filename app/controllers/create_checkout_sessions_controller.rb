@@ -349,5 +349,4 @@ class CreateCheckoutSessionsController < ApplicationController
     order.failed!
     puts "Emailing customer about payment failure for: #{checkout_session.inspect}"
   end
-
 end
