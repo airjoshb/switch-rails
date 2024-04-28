@@ -96,6 +96,8 @@ class CreateCheckoutSessionsController < ApplicationController
         process_order(checkout_session)
       end
     when 'payment_method.attached'
+      payment_method = event['data']['object']
+      attach_payment(payment_method)
     when 'customer.created'
       customer = event['data']['object']
 
@@ -280,6 +282,17 @@ class CreateCheckoutSessionsController < ApplicationController
     time_end = Time.at(stripe_invoice.period_end.to_i)
     order_invoice = Invoice.create_with(subscription_id: stripe_invoice.subscription, period_start: time_start, period_end: time_end,
       amount_due: stripe_invoice.amount_due, invoice_status: stripe_invoice.status).find_or_create_by(invoice_id: invoice, customer_order: order)
+  end
+
+  def attach_payment(payment_method)
+    payment = Stripe::PaymentMethod.retrieve(payment_method)
+    customer = Customer.find_by_stripe_id(payment.customer)
+    card = payment.card
+    pass_check = card.checks.cvc_check == "pass" ? true : false
+    order_payment = PaymentMethod.create_with(card_type: card.brand, 
+      cvc_check: pass_check, 
+      last_4: card.last4)
+    customer.payment_method << order_payment
   end
   
   def attach_subscription(subscription)
