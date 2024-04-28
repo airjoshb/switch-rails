@@ -269,6 +269,7 @@ class CreateCheckoutSessionsController < ApplicationController
   def update_customer(customer)
     stripe_customer = Stripe::Customer.retrieve(customer.id)
     order_customer = Customer.find_or_create_by(stripe_id: stripe_customer.id)
+    return unless stripe_customer.email != order_customer.email
     order_customer.update(email: stripe_customer.email, phone: stripe_customer.phone, name: stripe_customer.name)
     puts "Updated #{customer.name} for #{stripe_customer.inspect}"
   end
@@ -291,6 +292,7 @@ class CreateCheckoutSessionsController < ApplicationController
       order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true)
     end
     order.update(subscription_status: stripe_subscription.status)
+    
     puts "Updated Subscription"
   end
 
