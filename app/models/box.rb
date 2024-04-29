@@ -15,7 +15,7 @@ class Box < ApplicationRecord
     first_box = subscribers.where(last_box_date: nil)
     weekly_subscribers = subscribers.weekly.current_sub
     bimonthly_subscribers = subscribers.bimonthly.where.not(last_box_date: 2.weeks.ago + 1.day..self.date).current_sub
-    monthly_subscribers = subscribers.monthly.where.not(last_box_date:3.weeks - 1.day..self.date).current_sub
+    monthly_subscribers = subscribers.monthly.where.not(last_box_date: 3.weeks.ago - 1.day..self.date).current_sub
     active_subscribers = weekly_subscribers + bimonthly_subscribers + monthly_subscribers + first_box
     current_boxes = self.customer_orders.map { |x| x['id'] }
     active_subscribers = active_subscribers.map { |x| x['id'] }
