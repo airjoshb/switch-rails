@@ -129,7 +129,7 @@ class CreateCheckoutSessionsController < ApplicationController
       subscription = event['data']['object']
       
       update_subscription_status(subscription)
-    when 'customer.subscription.updated'
+    when 'customer.subscription.deleted'
       subscription = event['data']['object']
       
       cancel_subscription(subscription)
@@ -351,7 +351,7 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def pay_invoice(invoice)
     stripe_invoice = Stripe::Invoice.retrieve(invoice)
-    order_invoice = Invoice.find_by(invoice_id: stripe_invoice)
+    order_invoice = Invoice.find_by(invoice_id: invoice)
     intent = Stripe::PaymentIntent.retrieve(stripe_invoice.payment_intent)
     customer_order = order_invoice.customer_order
     create_payment_method(intent, customer_order) unless customer_order.payment_method.present?
