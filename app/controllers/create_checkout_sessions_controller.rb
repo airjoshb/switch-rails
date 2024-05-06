@@ -305,15 +305,16 @@ class CreateCheckoutSessionsController < ApplicationController
       variation = Variation.find_by_stripe_id(price)
       cart = Cart.create
       order.orderables.last.update(current: false) if order.orderables.size > 1
-      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: cart, current: true)
+      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: cart, current: true, subscription_id: stripe_subscription.id)
     end
-    order.update(subscription_status: stripe_subscription.status)
+    order.update(subscription_status: stripe_subscription.status, subscription_id: stripe_subscription.id)
     
     puts "Updated Subscription"
   end
 
   def update_subscription_status(subscription)
-    order = CustomerOrder.find_by_subscription_id(subscription.id)
+    orderable = Orderable.find_by_subscription_id(subscription.id)
+    order = orderable.customer_order
     return unless order.present?
     stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
     price = stripe_subscription.items.first.price.id
@@ -325,7 +326,7 @@ class CreateCheckoutSessionsController < ApplicationController
     unless order.variations.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
       order.orderables.last.update(current: false) if order.orderables.size > 1
-      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true)
+      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true, subscription_id: stripe_subscription.id)
     end
     order.update(subscription_status: sub_status)
     puts "Updated Subscription"
@@ -333,9 +334,10 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def cancel_subscription(subscription)
     stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
-    order = CustomerOrder.find_by_subscription_id(subscription.id)
+    orderable = Orderable.find_by_subscription_id(subscription.id)
+    order = orderable.customer_order
     order.update(subscription_status: stripe_subscription.status, canceled_at: stripe_subscription.canceled_at)
-    order.orderables.last.update(current: false)
+    orderable.update(current: false)
     puts "Cancel Subscription"
   end
 
