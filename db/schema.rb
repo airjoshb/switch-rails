@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_07_221425) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_06_031437) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -130,6 +130,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_07_221425) do
     t.string "fulfillment_method"
     t.string "subscription_status"
     t.datetime "last_box_date"
+    t.datetime "canceled_at"
     t.index ["customer_id"], name: "index_customer_orders_on_customer_id"
   end
 
