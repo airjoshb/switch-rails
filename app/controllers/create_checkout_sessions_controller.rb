@@ -296,8 +296,10 @@ class CreateCheckoutSessionsController < ApplicationController
   end
   
   def attach_subscription(subscription)
-    order = CustomerOrder.find_or_create_by(subscription_id: subscription.id)
     stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
+    stripe_customer = Stripe::Customer.retrieve(stripe_subscription.customer)
+    customer = Customer.find_by_stripe_id(stripe_customer.id)
+    order = CustomerOrder.find_by_customer_id(customer.id)
     price = stripe_subscription.items.first.price.id
     unless order.variations.exists?(stripe_id: price)
       variation = Variation.find_by_stripe_id(price)
