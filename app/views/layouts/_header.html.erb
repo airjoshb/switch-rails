@@ -1,6 +1,6 @@
 <div id='header'>
   <container size='large' spacing='min'>
-    <div class="header"">
+    <div class="header">
       <div class="linkContainer">
         <nav role='presentation'>
           <%= link_to "shop", shop_path, class: "navLink" %>
@@ -10,10 +10,6 @@
           <% end %>
           <%= link_to "updates", updates_path, class: "navLink" if Post.any? %>
         </nav>
-      </div>
-      <%= render "layouts/brand" %>
-      <div class="actionContainers">
-        <h3 class="location">central coast, california </h3>
         <button class="iconButton iconContainer bagIconContainer">
           <%= link_to cart_path, rel: 'nofollow' do %>
             <%= render "layouts/basket_icon" %>
@@ -21,6 +17,9 @@
           <%= render "cart/icon", cart: @cart %>
           <% end %>
         </button>
+      </div>
+      <%= render "layouts/brand" %>
+      <h3 class="location">central coast, california </h3>
       </div>
     </div>
   </container>

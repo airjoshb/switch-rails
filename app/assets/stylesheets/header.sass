@@ -31,9 +31,10 @@
 	display: grid 
 	grid-template-columns: repeat(3, 1fr) 
 	align-items: center 
-	padding: 24px 0 
+	padding: 24px
 	margin: 0 auto 
-	padding: 24px 
+.location
+	justify-self: end
 .headerMessageContainer 
 	background-color: $bg-grey 
 	padding: 8px 
@@ -154,7 +155,9 @@
 	display: none 
 	display: block 
 .bagIconContainer 
-	position: relative 
+	position: absolute
+	right: 10px
+	top: 35px
 .bagNotification 
 	position: absolute 
 	bottom: -5px 
@@ -172,6 +175,16 @@
 @media (max-width:800px) 
 	#header
 		box-shadow: none
+		.linkContainer
+			background: #F1F1F1
+			position: fixed
+			bottom: 0
+			height: 35px
+			width: 100%
+			display: flex
+			z-index: 500
+		.logo
+			display: none
 	.header
 		display: grid 
 		grid-template-columns: repeat(1, 1fr)
@@ -180,10 +193,12 @@
 		padding-bottom: 0
 		padding-left: 0
 		padding-right: 0
+	.bagIconContainer
+		position: relative
+		top: 0
 	.header > :nth-child(1)
 		order: 3
-		border-top: .5px solid $grey-crumb
-		border-bottom: 3px double $grey-crumb
+		border-top: 3px double $grey-crumb
 		text-align: center
 		margin-top: .5em
 		padding: .5em 0
