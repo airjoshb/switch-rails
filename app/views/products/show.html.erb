@@ -49,16 +49,14 @@
                   <div><small><i><% if variation.count_on_hand > 0 %>Only <%=variation.count_on_hand %> left <% else %>Sold Out<% end %> </i></small></div>
                   <% end %>
                 </span>
-                <span class="price">
-                  <span itemprop= "price" content="<%= @product.variations.first.amount / 100 %>">
+                <span class="price" itemprop= "price" content="<%= @product.variations.first.amount / 100 %>">
                   <%= display_price(variation.amount) %>
-                  <br />
                   <%= subscription_quantity(variation.interval, variation.interval_count) if variation.recurring? %>
                 </span>
                 <% if variation.in_stock? %>
+                  <span class="quantity">
                   <meta content= "InStock" itemprop="availability" />
                   <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
-                  <span class="quantity">
                     <%= f.number_field :quantity, value: 1, min: 1 %>
                   </span>
                   <span><%= f.submit "Add to Bag", class: "button primary" %></span>
