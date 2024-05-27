@@ -45,6 +45,9 @@
                   <% else %>
                     <%= variation.name %>
                   <% end %>
+                  <% if variation.trackable? %>
+                  <div><small><i><% if variation.count_on_hand > 0 %>Only <%=variation.count_on_hand %> left <% else %>Sold Out<% end %> </i></small></div>
+                  <% end %>
                 </span>
                 <span class="price">
                   <span itemprop= "price" content="<%= @product.variations.first.amount / 100 %>">
