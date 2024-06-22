@@ -8,6 +8,8 @@ class Post < ApplicationRecord
   
   has_rich_text :content
 
+  default_scope  { order(pub_date: :desc) }
+
   def thumbnail
     self.image.variant({thumbnail: '150x150^', gravity: 'center', extent: '150x150'})
   end
