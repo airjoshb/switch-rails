@@ -5,6 +5,6 @@ class MainController < ApplicationController
     @page = Page.find_by_slug("home")
     @categories = Category.active.categories.order(row_order: :asc)
     @all = Category.find_by_name("All")
-    @posts = Post.last(4)
+    @posts = Post.first(4)
   end
 end
