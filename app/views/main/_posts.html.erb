@@ -1,7 +1,7 @@
 <section id="gallery">
   <div class="gallery-grid">
     <div class="postGrid">
-      <% @posts.reverse.each do |post| %>
+      <% @posts.each do |post| %>
         <div class="flex">
         <%= link_to update_path(post) do %>
           <div class="imageContainer">
