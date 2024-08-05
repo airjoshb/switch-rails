@@ -7,6 +7,7 @@ class AddressResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
+  field :name, as: :text
   field :street_1, as: :text
   field :street_2, as: :text
   field :city, as: :text
