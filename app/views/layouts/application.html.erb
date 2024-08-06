@@ -13,6 +13,11 @@
   </head>
 
   <body>
+    <% if @admin.notice.present? %>
+      <div id="notice" class="center p-4 b1">
+        <%= @admin.notice %>
+      </div>
+    <% end %>
     <%= render "layouts/header" %>
     <main id="<%= controller_name %>" class="<%= action_name %>">
       <%= yield %>

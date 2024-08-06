@@ -6,8 +6,11 @@ html, body
 	font-family: $standard-header 
 	color: $standard-black 
 	font-size: 16px 
-	line-height: 1.5em 
+	// line-height: 1.5em
 	font-weight: 400 
+// body
+//   background: rgb(254,109,242)
+//   background: linear-gradient(0deg, rgba(254,109,242,1) 0%, rgba(255,214,28,1) 100%)
 * 
 	[data-button] 
 		cursor: pointer 
@@ -118,7 +121,7 @@ section
     object-fit: contain
 
 .center 
-  text-align: center
+  text-align: center !important
 
 .detailContent
   width: 85%
@@ -453,7 +456,10 @@ ol
 .disable-action 
   pointer-events: none 
   user-select: none 
-  cursor: not-allowed 
+  cursor: not-allowed
+.button.disable-action
+  background-color: $standard-grey
+  border-color: $standard-grey
 .standardSpan 
   font-weight: 500 
   font-size: 14px 

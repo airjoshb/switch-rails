@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
   def render_nav
     @pages = Page.all
     @nav = @pages.where(nav: true)
+    @admin = User.select("notice, mode").first
   end
 
   private

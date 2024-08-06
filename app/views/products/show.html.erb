@@ -53,7 +53,7 @@
                   <%= display_price(variation.amount) %>
                   <%= subscription_quantity(variation.interval, variation.interval_count) if variation.recurring? %>
                 </span>
-                <% if variation.in_stock? %>
+                <% if variation.in_stock? && @admin.full? %>
                   <span class="quantity">
                   <meta content= "InStock" itemprop="availability" />
                   <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
@@ -62,6 +62,7 @@
                   <span><%= f.submit "Add to Bag", class: "button primary" %></span>
                 <% else %>
                   <meta content= "OutOfStock" itemprop="availability" />
+                  <span class= "button primary disable-action center">Add to Bag</span>
                 <% end %>
               </div>
             <% end %> 
@@ -69,6 +70,7 @@
               <hr />
             <% end %>
           <% end %>
+          <% if !@admin.full? %><div class="center b1">We are not currently accepting online orders.</div><% end %>
         </div>
         <div class="detailContent">
           <%= @product.content %>
