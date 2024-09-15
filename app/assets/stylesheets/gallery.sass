@@ -10,50 +10,49 @@
     width: 100%
     .cardGrid, .postGrid
       display: grid
-      grid-template-columns: repeat(4, 1fr)
-      gap: 2px
-      a:hover
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+      grid-template-columns: repeat(2,1fr)
+      grid-row-gap: 15rem;
+      grid-column-gap: 3rem;
+      // a:hover
+      //   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
     .postGrid .imageContainer
       position: relative
       min-height: 350px
       min-width: 350px
-      img
-        z-index: 1
-        border-radius: 1px
-        position: absolute
-        height: 100% 
-        width: 100%
-        object-fit: cover 
-        top: 50%
-        transform: translateY(-50%)
-        mask-image: linear-gradient(to top, transparent 0%, black 50%)
-      &:after
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, transparent 65%, $standard-white 100%);
-      .shadowTitle
-        position: absolute
-        bottom: 0
-        left: 0
-        z-index: 20
-        padding: 20px
-        color: $standard-white
-        text-shadow: 1px 1px 5px $standard-dark-grey
+    .postItem
+      margin-left: 4.5%;
+      margin-right: auto;
+      h5
+        font-size: 1.26rem
+      &:hover
+        .imageContainer picture img
+          transform: scale(1.05)
+        h5
+          text-decoration-line: underline;
+          text-decoration-style: dashed;
+          text-underline-offset: 1px;
+          text-decoration-thickness: 1px;
     .imageContainer 
       width: 100%
-      line-height: normal
-
-
-    .imageContainer img 
+      line-height: 0
+      align-self: flex-start
+      // border-radius: 2px
+      box-shadow: 0 0.75rem 1rem -0.5rem hsla(0,0%,0%,0.4)
+      margin-bottom: 1rem
+      position: relative
+      transition: .3s ease
+      will-change: transform
+      
+    picture
+      display: block;
+      box-sizing: border-box
+      border: 0 solid
+    picture img 
       width: 100%
-      object-fit: cover
-
-
+      max-width: 100%
+      height: auto
+      object-fit: fill
+      object-position: center center
     .mobileSlider 
       display: none
 .categoryHero
@@ -78,8 +77,6 @@
   min-width: 0
   max-width: 25%
   overflow: hidden
-  img
-    width: auto
   .categoryName
     font-weight: 100
     font-family: $brand-font

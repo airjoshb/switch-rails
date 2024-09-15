@@ -23,6 +23,10 @@ class Product < ApplicationRecord
     self.active
   end
 
+  def subscription?
+    self.recurring
+  end
+
   private
 
   def product_change
