@@ -11,31 +11,42 @@
     .cardGrid, .postGrid
       display: grid
       grid-template-columns: repeat(2,1fr)
-      grid-row-gap: 15rem;
-      grid-column-gap: 3rem;
+      // grid-row-gap: 15rem;
+      grid-column-gap: 2rem;
+      width: 80%
+      margin: 0 auto
       // a:hover
       //   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
     .postGrid .imageContainer
       position: relative
-      min-height: 350px
-      min-width: 350px
+      border-radius: 8.34805px
+      overflow: hidden
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 29.218176px 33.3922px -20.870125px
     .postItem
-      margin-left: 4.5%;
-      margin-right: auto;
       h5
-        font-size: 1.26rem
+        font-size: 1.12rem
       &:hover
-        .imageContainer picture img
+        .imageContainer
           transform: scale(1.05)
         h5
           text-decoration-line: underline;
           text-decoration-style: dashed;
           text-underline-offset: 1px;
           text-decoration-thickness: 1px;
+      .horizontal
+        padding: 1.25rem 0 1.25rem 1.25rem
+        flex-grow: 1
+        h5
+          font-size: 25px
+      &.row
+        .imageContainer
+          width: 200px
     .imageContainer 
-      width: 100%
+      img
+        width: 100%
       line-height: 0
       align-self: flex-start
+      flex: 0 0 6rem
       // border-radius: 2px
       box-shadow: 0 0.75rem 1rem -0.5rem hsla(0,0%,0%,0.4)
       margin-bottom: 1rem

@@ -30,9 +30,10 @@ h2,
 	margin: 0 
 h3,
 .h3 
-	font-family: $standard-header 
+	font-family: $brand-font
 	font-size: 42px 
 	line-height: 49px 
+  font-wieght: 600
 	margin: 0 
 h3 
 	&.location 
@@ -52,8 +53,8 @@ h4,.h4
 h5, .h5
   font-weight: normal
   font-family: $standard-header
-  font-size: 25px
-  line-height: 35px
+  font-size: 22px
+  line-height: 125%
   margin: 0
 h6,
 .h6 
@@ -73,8 +74,9 @@ p
 	font-size: 20px 
 .b2 
 	font-size: 18px 
-.b3 
-	font-size: 16px 
+.b3
+  line-height: 18px
+  font-size: 16px
 .b4 
 	font-size: 14px 
 .buttonText 
@@ -98,7 +100,8 @@ hr
     top: -13px;
 section
   padding-bottom: 30px;
-
+.bg-white
+  background-color: $standard-white
 .bannerContainer 
   display: flex
   flex-direction: column
@@ -261,6 +264,8 @@ ol
   margin-bottom: 0px 
 .mb-4 
   margin-bottom: $space4
+.mb-5
+  margin-bottom: $space5
 .ml-3 
   margin-left: $space3
 .ml-4 

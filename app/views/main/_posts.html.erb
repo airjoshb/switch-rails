@@ -1,16 +1,33 @@
 <section id="gallery">
-  <div class="gallery-grid">
+  <div class="gallery-grid py-8">
     <div class="postGrid">
-      <% @posts.each do |post| %>
-        <div class="flex postItem">
-          <%= link_to update_path(post) do %>
-            <div class="imageContainer">
-              <picture><%= image_tag post.medium_image, alt: post.title %></picture>
+       <div>
+        <div class="postItem mb-5">
+            <%= link_to update_path(@post) do %>
+              <div class="imageContainer">
+                <picture><%= image_tag @post.image, alt: @post.title %></picture>
+              </div>
+            <% end %>
+            <div class="flex-start column">
+              <%= link_to update_path(@post) do %><h5 class="p-0"><%= @post.title %></h5><% end %>
             </div>
-          <% end %>
-          <%= link_to update_path(post) do %><h5 class="p-0"><%= post.title %></h5><% end %>
-        </div>
-      <% end %>
+          </div>
+      </div>
+      <div>
+        <h3 class="b3 mb-4">LATEST UPDATES</h3>
+        <% @posts.each do |post| %>
+          <div class="postItem row mb-4">
+            <div class="imageContainer">
+              <picture><%= image_tag post.thumbnail, alt: post.title %></picture>
+            </div>
+            <div class="flex-start horizontal">
+              <%= link_to update_path(post) do %>
+                <h5 class="p-0"><%= post.title %></h5>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </section>

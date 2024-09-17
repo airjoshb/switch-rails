@@ -11,7 +11,7 @@ class Post < ApplicationRecord
   default_scope  { order(created_at: :desc) }
 
   def thumbnail
-    self.image.variant({thumbnail: '150x150^', gravity: 'center', extent: '150x150'})
+    self.image.variant({thumbnail: '200x200^', gravity: 'center', extent: '200x200'})
   end
 
   def medium_image
