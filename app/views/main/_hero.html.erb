@@ -1,6 +1,10 @@
-<section id="hero">
-  <%= image_tag 'switch-bakery-gluten-free-bread.png', alt: "Gluten Free Bread Club Fox on Bike" %>
-  <div class="hero-content" style="">
-    <h2 class="title">Welcome to Bread Club</h2>
-  </div>
-</section>
+<h1 class="mb-3 mt-4">
+We make
+<%= raw @categories.map{ |c| link_to(c.name,products_path(c))}.to_sentence %>
+free from gluten, wheat, corn, soy, and seed oils.
+</br></br>
+Welcome to the Good GF Life!
+<div class="flex-center mt-5">
+<%= image_tag('switch-bakery-love-your-guts.png', class: "image")%>
+</div>
+</h1>

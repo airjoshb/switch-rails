@@ -18,14 +18,15 @@
 <% end %>
 
 
-<%= render "categories" %>
- <section id="pageContent">
-  <div class="pageContent"> 
-    <p><%= @page.description %></p>
-  </div>
- </section>
+<section id="hero">
+  <%= render "hero" %>
+</section>
+<section id="pageContent">
+<div class="pageContent"> 
+  <p><%= @page.description %></p>
+</div>
+</section>
 <% if @posts %><%= render "posts" %><% end %> 
-<%= render "hero" %>
 <%= render "quote" %>
 <h5 class="center mt-5 bg-white">Get the latest news, tips, and gluten-free recipes from the bakery</h5>
-<iframe src="https://switchbakery.substack.com/embed" width="100%" height="150" style="background: transparent;" frameborder="0" scrolling="no"></iframe><%= render "gallery" %>
+<iframe src="https://switchbakery.substack.com/embed" width="100%" height="150" style="" frameborder="0" scrolling="no"></iframe><%= render "gallery" %>

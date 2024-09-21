@@ -3,7 +3,7 @@
 html, body 
 	box-sizing: border-box 
 	margin: 0 
-	font-family: $standard-header 
+	font-family: $standard-font
 	color: $standard-black 
 	font-size: 16px 
 	// line-height: 1.5em
@@ -51,7 +51,8 @@ h4,.h4
 	line-height: 37px 
 	margin: 0 
 h5, .h5
-  font-weight: normal
+  font-weight: 400
+  font-style: normal
   font-family: $standard-header
   font-size: 22px
   line-height: 125%
@@ -272,12 +273,18 @@ ol
   margin-left: $space4 
 .mr-4 
   margin-right: $space4
+.mr-5
+  margin-right: $space5
+.mr-6
+  margin-right: $space6
 .mt-2 
   margin-top: $space2
 .mt-4 
   margin-top: $space4
 .mt-5 
   margin-top: $space5 
+.mt-6
+  margin-top: $space6 
 .mx-3 
   margin-left: $space3 
   margin-right: $space3 
@@ -474,6 +481,7 @@ ol
   padding: 30px 
   background-color: $bg-light-gray 
   text-align: center 
+
 @media screen and (min-width: 25em)
   html 
     font-size: calc( 16px + (24 - 16) * (100vw - 400px) / (800 - 400) )

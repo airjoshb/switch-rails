@@ -2,7 +2,7 @@
   <container size='large' spacing='min'>
     <div class="header">
       <div class="linkContainer">
-        <nav role='presentation'>
+        <nav role='presentation topText'>
           <%= link_to "shop", shop_path, class: "navLink" %>
           <%= link_to "bread club", product_path('gluten-free-bread-club'), class: "navLink" %>
           <% for page in @nav %>
@@ -19,7 +19,7 @@
         </button>
       </div>
       <%= render "layouts/brand" %>
-      <h3 class="location">central coast, california </h3>
+      <div class="topText location mr-6">central coast, california </div>
       </div>
     </div>
   </container>

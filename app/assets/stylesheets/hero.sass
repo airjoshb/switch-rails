@@ -3,18 +3,29 @@
 #hero
   margin-top: 1.2em
   width: 100%
-  // background-position: top center
-  // background-repeat: no-repeat
-  background-size: 28%
-  min-height: 80vh
-  // background-image: url('switch-bakery-gluten-free-bread.png')
-  display: flex
-  flex-direction: column
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),url('Seeded bread.png')
+  background-repeat: no-repeat
+  background-size: cover
+  background-position: center top
   align-items: center
-  justify-content: flex-end
-  color:   $standard-black
+  // justify-content: flex-end
+  color:   $standard-white
+  margin: 0 auto
+  padding: 1em 0
 
-
+  h1
+    padding: 2em 0
+    a
+      color: $standard-white
+      text-decoration-line: underline;
+      text-decoration-style: dashed;
+      text-underline-offset: 12px;
+      text-decoration-thickness: 3px; 
+      &:hover
+        color: $standard-gold
+        text-decoration-color: $standard-gold
+    width: 80%
+    margin: 0 auto
   .hero-content 
     display: flex
     flex-direction: column
@@ -23,7 +34,9 @@
     max-width: 1000px
     gap: 40px
 
-
+.image
+  width: 200px
+  height: 168px
   .title 
     color:   $standard-black
     font-size: 72px
