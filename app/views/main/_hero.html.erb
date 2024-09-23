@@ -1,9 +1,11 @@
-<h1 class="mb-3 mt-4 center">
+<div id="hero-image">
+<h1 class="mb-3 mt-4">
 Welcome to the Good GF Life!
 <div class="hero-small">We are an artisan gluten-free bakery making
 <%= raw @categories.map{ |c| link_to(c.name,products_path(c))}.to_sentence %>
 free from wheat, corn, soy, and seed oils.</div>
-<div class="flex-center mt-5">
+</h1>
+<div class="flex-start pb-4">
 <%= image_tag('switch-bakery-love-your-guts.png', class: "image")%>
 </div>
-</h1>
+</div>

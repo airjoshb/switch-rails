@@ -1,17 +1,20 @@
 @import 'variables'
 
 #hero
-  margin-top: 1.2em
-  width: 100%
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),url('https://santa-cruz-baking-co.s3.us-west-1.amazonaws.com/assets/switch-gluten-free-bakery-market.jpg')
-  background-repeat: no-repeat
-  background-size: cover
-  background-position: center top
-  align-items: center
-  // justify-content: flex-end
-  color:   $standard-white
-  margin: 0 auto
-  padding: 1em 0
+  background: $standard-white
+  padding: 4% 0
+  #hero-image
+    // margin-top: 1.2em
+    width: 92%
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),url('https://santa-cruz-baking-co.s3.us-west-1.amazonaws.com/assets/switch-gluten-free-bakery-market.jpg')
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: center top
+    // align-items: center
+    align-items: center
+    color:   $standard-white
+    margin: 0 auto
+    padding: 1em 0
 
   h1
     padding: 2em 0
@@ -40,8 +43,11 @@
     gap: 40px
 
 .image
-  width: 200px
-  height: 168px
+  width: 180px
+  height: 148px
+  position: relative
+  left: 75px
+  bottom: 0
   .title 
     color:   $standard-black
     font-size: 72px
