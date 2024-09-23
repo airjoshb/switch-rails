@@ -1,8 +1,7 @@
 <div class="content flex-row">
   <div class="footerLinks">
-    <%= link_to "shop", shop_path, class: "" %> ~
-    <%= @nav.map{ |c| link_to(c.slug, page_path(c.slug))}.join(" ~ ").html_safe %> ~
-    <%= link_to "updates", updates_path, class: "" if Post.any? %> ~
+    <%= link_to "Shop", shop_path, class: "" %> ~
+    <%= link_to "Updates", updates_path, class: "" if Post.any? %> ~
     <%= @pages.where.not(slug: "home").map{ |c| link_to(c.title, page_path(c.slug))}.join(" ~ ").html_safe %>
   </div>  
   <div class="copyrightContainer flex-end">
