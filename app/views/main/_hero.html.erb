@@ -1,9 +1,8 @@
 <h1 class="mb-3 mt-4 center">
 Welcome to the Good GF Life!
-</br>
-<span class="hero-small">We are an artisan gluten-free bakery making
+<div class="hero-small">We are an artisan gluten-free bakery making
 <%= raw @categories.map{ |c| link_to(c.name,products_path(c))}.to_sentence %>
-free from wheat, corn, soy, and seed oils.</span>
+free from wheat, corn, soy, and seed oils.</div>
 <div class="flex-center mt-5">
 <%= image_tag('switch-bakery-love-your-guts.png', class: "image")%>
 </div>
