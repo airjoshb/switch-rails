@@ -5,26 +5,28 @@
   flex-flow: row wrap
   margin-top: 2px
   justify-content: space-around
-  .gallery-grid, .categoryGrid
-    align-self: start
-    width: 100%
-    .cardGrid, .postGrid
-      display: grid
-      grid-template-columns: repeat(2,1fr)
-      // grid-row-gap: 15rem;
-      grid-column-gap: 2rem;
-      width: 80%
-      margin: 0 auto
-      // a:hover
-      //   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
-    .postGrid .imageContainer
-      position: relative
-      border-radius: 8.34805px
-      overflow: hidden
-      box-shadow: rgba(0, 0, 0, 0.4) 0px 29.218176px 33.3922px -20.870125px
+  .postGrid
+    display: grid
+    grid-template-columns: repeat(2,1fr)
+    // grid-row-gap: 15rem;
+    grid-column-gap: 2rem;
+    width: 80%
+    margin: 0 auto
     .postItem
       h5
         font-size: 1.12rem
+      .imageContainer 
+      img
+        width: 100%
+        line-height: 0
+        align-self: flex-start
+        flex: 0 0 6rem
+        // border-radius: 2px
+        box-shadow: 0 0.75rem 1rem -0.5rem hsla(0,0%,0%,0.4)
+        margin-bottom: 1rem
+        position: relative
+        transition: .3s ease
+        will-change: transform
       &:hover
         .imageContainer
           transform: scale(1.05)
@@ -41,6 +43,19 @@
       &.row
         .imageContainer
           width: 200px
+  .gallery-grid, .categoryGrid
+    align-self: start
+    width: 100%
+    
+    .cardGrid
+      display: grid
+      grid-template-columns: repeat(4,1fr)
+      // grid-row-gap: 15rem;
+      width: 100%
+      margin: 0 auto
+      // a:hover
+      //   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+  
     .imageContainer 
       img
         width: 100%
@@ -48,11 +63,10 @@
       align-self: flex-start
       flex: 0 0 6rem
       // border-radius: 2px
-      box-shadow: 0 0.75rem 1rem -0.5rem hsla(0,0%,0%,0.4)
-      margin-bottom: 1rem
-      position: relative
-      transition: .3s ease
-      will-change: transform
+      // box-shadow: 0 0.75rem 1rem -0.5rem hsla(0,0%,0%,0.4)
+      // position: relative
+      // transition: .3s ease
+      // will-change: transform
       
     picture
       display: block;

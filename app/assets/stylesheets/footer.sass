@@ -1,9 +1,11 @@
 
 @import 'variables'
+.newsletter 
+  padding-top: 24px
+  background: $standard-white
 
 footer 
-  background-color: $bg-dark
-  padding-bottom: 50px
+  background-color: rgba(0,0,0,.3)
   .content 
     padding-top: 72px
     padding-bottom: 40px
@@ -28,37 +30,44 @@ footer
     font-size: 14px
   
 
-  .linkList 
+  .footerLinks
     list-style-type: none
     margin: 0
     padding: 0
-    font-size: 14px
-  
+    color: $standard-white
+    a
+      color: $standard-white
+      margin-bottom: 12px  
+      font-size: 20px
+
+      &:hover
+        color: $standard-gold
+        text-decoration-color: $standard-gold
+        text-decoration-line: underline;
+        text-decoration-style: dashed;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 2px;
+    
 
   .link
     color: $standard-white
-    margin-bottom: 12px
-    display: inline-block
-  
+    margin-bottom: 12px  
+    color: $standard-white
+    font-size: 20px
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px; 
+    &:hover
+      color: $standard-gold
+      text-decoration-color: $standard-gold
 
   .linkTitle 
     font-size: 18px
     margin-bottom: 24px
-    display: block
     color: $standard-white
-  
+    flex-direction: row
 
-  .link::after 
-    content: ''
-    display: block
-    width: 0
-    height: 2px
-    background: $standard-white
-    transition: width 0.3s ease-in-out
-  
-
-  .link:hover::after 
-    width: 100%
   
 
   .promoMessage 
@@ -150,15 +159,14 @@ footer
 
   .copyrightContainer 
     display: flex
-    align-items: flex-end
-    flex-direction: column
-  
+    align-items: flex-start
+    font-family: $brand-font
 
   .copyrightContainer span
     color: $standard-white
     display: block
     margin-top: 32px
-    font-size: 12px
+    font-size: 16px
     line-height: 15px
   
 
@@ -195,10 +203,7 @@ footer
       grid-template-columns: 1fr
     
     
-    .newsLetter 
-      margin-top: 24px
-      display: flex
-      justify-content: start
+  
     
 
     .newsLetterContent 
