@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_06_164814) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_27_000226) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -232,6 +232,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_06_164814) do
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_posts_on_category_id"
   end
 
   create_table "preference_associations", force: :cascade do |t|
@@ -323,6 +325,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_06_164814) do
   add_foreign_key "orderables", "variations"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "payment_methods", "customer_orders"
+  add_foreign_key "posts", "categories"
   add_foreign_key "preference_associations", "customers"
   add_foreign_key "preference_associations", "preferences"
   add_foreign_key "preference_associations", "variations"

@@ -17,6 +17,7 @@ class PostResource < Avo::BaseResource
   # Fields generated from the model
   field :title, as: :text
   field :image, as: :file
+  field :category, as: :belongs_to
   field :content, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
 
   # add fields here

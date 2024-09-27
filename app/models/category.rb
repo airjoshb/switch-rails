@@ -1,5 +1,6 @@
 class Category < ApplicationRecord
   has_many :products
+  has_many :posts
   has_one_attached :image, dependent: :destroy
 
   extend FriendlyId
