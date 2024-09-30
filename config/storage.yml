@@ -23,6 +23,12 @@ amazon:
   region:            'us-west-1'
   bucket: <%= ENV.fetch('S3_BUCKET_NAME') %>
 
+development:
+  service: Mirror
+  primary: local
+  mirrors:
+    - cloudinary
+
 production:
   service: Mirror
   primary: amazon

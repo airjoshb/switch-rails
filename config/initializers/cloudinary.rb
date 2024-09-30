@@ -1,8 +1,7 @@
 
 require 'cloudinary'
 
+Cloudinary.config_from_url("cloudinary://ENV.fetch('CLOUDINARY_KEY_ID'):ENV.fetch('CLOUDINARY_ACCESS_KEY')@airjoshb")
 Cloudinary.config do |config|
-  config.cloud_name = 'airjoshb'
-  config.api_key = ENV.fetch('CLOUDINARY_KEY_ID')
-  config.api_secret = ENV.fetch('CLOUDINARY_ACCESS_KEY')
+  config.secure = true
 end
