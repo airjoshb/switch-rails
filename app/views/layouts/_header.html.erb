@@ -6,7 +6,7 @@
           <%= link_to "shop", shop_path, class: "navLink" %>
           <%= link_to "bread club", product_path('gluten-free-bread-club'), class: "navLink" %>
           <% for page in @nav %>
-            <%= link_to page.title.downcase, page_path(page.slug), class: "navLink" %>
+            <%= link_to page.slug, page_path(page.slug), class: "navLink" %>
           <% end %>
           <%= link_to "updates", updates_path, class: "navLink" if Post.any? %>
         </nav>
