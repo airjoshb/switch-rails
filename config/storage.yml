@@ -8,12 +8,6 @@ local:
 
 cloudinary:
   service: Cloudinary
-  cloud_name: airjoshb
-  api_key: <%= ENV.fetch('CLOUDINARY_KEY_ID') %>
-  api_secret: <%= ENV.fetch('CLOUDINARY_ACCESS_KEY') %>
-  secure: true
-  enhance_image_tag: true
-  static_file_support: false
   folder: switch-bakery
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)

@@ -1,6 +1,6 @@
 ---
 development:
-  cloud_name: airjoshb
+  cloud_name: <%= ENV.fetch('CLOUD_NAME') %>
   api_key: <%= ENV.fetch('CLOUDINARY_KEY_ID') %>
   api_secret: <%= ENV.fetch('CLOUDINARY_ACCESS_KEY') %>
   enhance_image_tag: true
