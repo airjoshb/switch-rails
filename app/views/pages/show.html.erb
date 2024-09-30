@@ -35,7 +35,7 @@
                   <%= link_to update_path(post) do %>
                     <h5 class="p-0"><%= post.title %></h5>
                   <% end %>
-                  <%= post.shortened_content(500)%>
+                  <p><%= post.shortened_content(500)%></p>
                 </div>
               </div>
             <% end %>
