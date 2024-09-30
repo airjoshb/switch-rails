@@ -14,7 +14,14 @@ trix-editor {
     line-height: 1.2;
     margin: 0;
   }
-
+  * {
+    line-height: 1.6;}
+  ul {
+    margin-left: 3em;
+    list-style: disc;
+    li {
+      margin-bottom: 5px; }
+  }
   h1 { font-size: 36px; }
   h2 { font-size: 26px; }
   h3 { font-size: 18px; }
