@@ -24,19 +24,23 @@
     <div class="pageContainer">
       <div class="detailContent">
         <%= @page.content %>
-        <% @posts.each do |post| %>
-          <div class="postItem mb-4 mt-5">
-            <div class="imageContainer">
-              <picture><%= image_tag post.thumbnail, alt: post.title %></picture>
-            </div>
-            <div class="">
-              <%= link_to update_path(post) do %>
-                <h5 class="p-0"><%= post.title %></h5>
-              <% end %>
-              <%= post.shortened_content(500)%>
-            </div>
+        <div id="gallery">
+          <div class="postGrid">
+            <% @posts.each do |post| %>
+              <div class="postItem ">
+                <div class="imageContainer">
+                  <picture><%= image_tag post.medium_image, alt: post.title %></picture>
+                </div>
+                <div class="">
+                  <%= link_to update_path(post) do %>
+                    <h5 class="p-0"><%= post.title %></h5>
+                  <% end %>
+                  <%= post.shortened_content(500)%>
+                </div>
+              </div>
+            <% end %>
           </div>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>
