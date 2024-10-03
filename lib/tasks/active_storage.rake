@@ -2,8 +2,8 @@ namespace :active_storage do
 
   desc 'Ensures all files are mirrored'
   task mirror_all: [:environment] do
-    ActiveStorage::Blob.find_each do |blob|
-      ActiveStorage::Blob.service.try(:mirror, blob.key, checksum: blob.checksum)
-    end && puts("Mirroring done!")
+    ActiveStorage::Blob.all.each do |blob|
+      blob.mirror_later
+    end
   end
 end

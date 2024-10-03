@@ -51,6 +51,7 @@ gem "aws-sdk-s3", require: false
 gem "cloudinary"
 gem "activestorage"
 gem "image_processing", "~> 1.2"
+gem "sidekiq"
 
 # Ecommerce
 gem 'stripe'

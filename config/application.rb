@@ -22,6 +22,7 @@ module SwitchRails
     # config.active_storage.service = :local
     config.active_storage.variant_processor = :mini_magick
     config.active_storage.track_variants = true
+    config.active_job.queue_adapter = :sidekiq
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     Koala.config.api_version = "v2.0"
   end

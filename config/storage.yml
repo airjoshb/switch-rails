@@ -26,11 +26,11 @@ amazon:
 
 development:
   service: Mirror
-  primary: local
+  primary: cloudinary
   mirrors:
-    - cloudinary
+    - local
 
-production:
+mirror:
   service: Mirror
   primary: amazon
   mirrors:
