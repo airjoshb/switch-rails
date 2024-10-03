@@ -1,4 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => "/sidekiq"
   mount Avo::Engine, at: Avo.configuration.root_path
   get  'sign_in', to: 'sessions#new'
   post 'sign_in', to: 'sessions#create'
