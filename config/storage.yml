@@ -26,9 +26,9 @@ amazon:
 
 development:
   service: Mirror
-  primary: cloudinary
+  primary: local
   mirrors:
-    - local
+    - cloudinary
 
 mirror:
   service: Mirror
