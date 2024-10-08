@@ -14,8 +14,8 @@ class Box < ApplicationRecord
     box_count = self.customer_boxes.size
     first_box = subscribers.where(last_box_date: nil)
     weekly_subscribers = subscribers.weekly.current_sub
-    bimonthly_subscribers = subscribers.bimonthly.where("last_box_date <= ?", self.date - 2.weeks).current_sub
-    monthly_subscribers = subscribers.monthly.where("last_box_date <= ?", self.date - 3.weeks).current_sub
+    bimonthly_subscribers = subscribers.bimonthly.where(last_box_date: ..self.date - 2.weeks).current_sub
+    monthly_subscribers = subscribers.monthly.where(last_box_date: ..today - 4.weeks).current_sub
     active_subscribers = weekly_subscribers + bimonthly_subscribers + monthly_subscribers + first_box
     current_boxes = self.customer_orders.map { |x| x['id'] }
     active_subscribers = active_subscribers.map { |x| x['id'] }
