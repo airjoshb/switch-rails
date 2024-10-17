@@ -1,0 +1,17 @@
+class ActiveStorage::MirrorJob < ApplicationJob
+  queue_as :default
+
+  def perform(blob, attachable)
+    # Custom behavior for mirroring
+    Rails.logger.info "Custom MirrorJob: Starting mirroring for #{blob.key}"
+
+    Cloudinary.config do |config|
+        config.cloud_name = ENV['CLOUDINARY_CLOUD_NAME']
+        config.api_key = ENV['CLOUDINARY_API_KEY']
+        config.api_secret = ENV['CLOUDINARY_API_SECRET']
+     end
+
+    # Call the original mirroring process
+    super if defined?(super)
+  end
+end
