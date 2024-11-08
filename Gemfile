@@ -19,7 +19,7 @@ gem "puma", "~> 6.0"
 gem "importmap-rails"
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
+gem "turbo-rails", "~> 1.3"
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
@@ -63,7 +63,8 @@ gem 'friendly_id', '~> 5.4.0'
 # Admin
 # Use Pwned to check if a password has been found in any of the huge data breaches [https://github.com/philnash/pwned]
 gem "pwned"
-gem "avo", '~> 2.42.2'
+gem "avo", '~> 2.53'
+gem "pagy", '~>8.0'
 gem 'ransack'
 # gem 'actionpack', '~> 7.1.0'
 gem 'koala'
