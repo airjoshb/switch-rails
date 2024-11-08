@@ -18,9 +18,15 @@ class CreateCheckoutSessionsController < ApplicationController
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     mode = cart.variations.recurring.any? ? "subscription" : "payment"
     customer_creation = "if_required" unless mode == "subscription"
-    shipping = [{label: 'Tuesday Market (Monterey)', value: 'tuesday'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Thursday Market (Carmel)', value: 'thursday'}, ]
+    shipping = [ {label: 'Tuesday Market (Monterey)', value: 'tuesday'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Thursday Market (Carmel)', value: 'thursday'}, ]
     if mode == 'payment'
-      shipping_rates = [{          shipping_rate_data: {            type: 'fixed_amount',            fixed_amount: {              amount: 0,              currency: 'usd',            },            display_name: 'Market Pickup',            delivery_estimate: {              minimum: {                unit: 'business_day',                value: 1,              },              maximum: {                unit: 'business_day',                value: 2,              },            },          },        },        {          shipping_rate_data: {            type: 'fixed_amount',            fixed_amount: {              amount: 600,              currency: 'usd',            },            display_name: 'Local Delivery or CA Ship',            delivery_estimate: {              minimum: {                unit: 'business_day',                value: 1,              },              maximum: {                unit: 'business_day',                value: 2,              },            },          },        },        {          shipping_rate_data: {            type: 'fixed_amount',            fixed_amount: {              amount: 1100,              currency: 'usd',            },            display_name: 'Outside CA',            delivery_estimate: {              minimum: {                unit: 'business_day',                value: 2,              },              maximum: {                unit: 'business_day',                value: 3,              },            },          },        }]  
+      shipping_rates = [
+        {
+          shipping_rate_data: {
+            
+          },
+        },
+      ]  
     else
       shipping_rates = []
     end
