@@ -23,10 +23,65 @@ class CreateCheckoutSessionsController < ApplicationController
       shipping_rates = [
         {
           shipping_rate_data: {
-            
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 0,
+              currency: 'usd',
+            },
+            display_name: 'Pickup',
+            delivery_estimate: {
+              minimum: {
+                unit: 'business_day',
+                value: 1,
+              },
+              maximum: {
+                unit: 'business_day',
+                value: 2,
+              },
+            },
           },
         },
-      ]  
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 500,
+              currency: 'usd',
+            },
+            display_name: 'Delivery / CA Ship',
+            delivery_estimate: {
+              minimum: {
+                unit: 'business_day',
+                value: 1,
+              },
+              maximum: {
+                unit: 'business_day',
+                value: 2,
+              },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 1100,
+              currency: 'usd',
+            },
+            display_name: 'Ship Outside CA',
+            delivery_estimate: {
+              minimum: {
+                unit: 'business_day',
+                value: 2,
+              },
+              maximum: {
+                unit: 'business_day',
+                value: 3,
+              },
+            },
+          },  
+        }
+      ]
     else
       shipping_rates = []
     end
@@ -41,9 +96,7 @@ class CreateCheckoutSessionsController < ApplicationController
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
-      shipping_options: [
-          shipping_rates
-      ],
+      shipping_options: shipping_rates,
       consent_collection: {
         promotions: 'auto',
       },
