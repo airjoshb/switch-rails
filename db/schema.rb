@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_18_195939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -87,10 +87,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "customer_order_id"
+    t.datetime "last_box_date"
     t.integer "box_id"
     t.string "type"
     t.boolean "email_sent"
     t.datetime "email_sent_date"
+    t.index ["created_at"], name: "index_boxes_on_created_at"
     t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
   end
 
@@ -126,11 +128,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
     t.string "stripe_checkout_id"
     t.boolean "receipt_sent"
     t.datetime "receipt_sent_date"
-    t.string "subscription_id"
     t.string "fulfillment_method"
+    t.string "subscription_id"
     t.string "subscription_status"
     t.datetime "last_box_date"
     t.datetime "canceled_at"
+    t.index ["created_at"], name: "index_customer_orders_on_created_at"
     t.index ["customer_id"], name: "index_customer_orders_on_customer_id"
   end
 
@@ -170,9 +173,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.bigint "customer_order_id"
-    t.decimal "amount_due"
-    t.decimal "amount_paid"
+    t.bigint "customer_order_id", null: false
+    t.decimal "amount_due", precision: 10, scale: 2
+    t.decimal "amount_paid", precision: 10, scale: 2
     t.boolean "attempted"
     t.string "subscription_id"
     t.string "invoice_id"
@@ -181,6 +184,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
     t.datetime "period_start"
     t.boolean "fulfilled"
     t.datetime "fulfilled_date"
+    t.boolean "refunded"
+    t.datetime "refunded_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "invoice_status", default: "open", enum_type: "state"
@@ -234,6 +239,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
     t.datetime "updated_at", null: false
     t.bigint "category_id"
     t.index ["category_id"], name: "index_posts_on_category_id"
+    t.index ["created_at"], name: "index_posts_on_created_at"
   end
 
   create_table "preference_associations", force: :cascade do |t|
@@ -266,6 +272,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_27_003530) do
     t.string "stripe_id"
     t.bigint "category_id"
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["created_at"], name: "index_products_on_created_at"
     t.index ["slug"], name: "index_products_on_slug", unique: true
   end
 
