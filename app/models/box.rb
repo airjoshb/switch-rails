@@ -7,6 +7,8 @@ class Box < ApplicationRecord
   has_one :email
   has_rich_text :note
 
+  default_scope { order(created_at: :desc) }
+
   # after_save :generate_customer_boxes
 
   def generate_customer_boxes
