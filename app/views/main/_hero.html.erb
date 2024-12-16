@@ -2,7 +2,7 @@
 <h1 class="mb-3 mt-4">
 Welcome to the Good GF Life!
 <div class="hero-small">We are an artisan gluten-free bakery making
-<%= raw @categories.map{ |c| link_to(c.name,products_path(c))}.to_sentence %>
+<%= raw @categories.map{ |c| link_to(c.name,products_path(category: c.name))}.to_sentence %>
 free from wheat, corn, soy, and seed oils.</div>
 </h1>
 <div class="flex-start pb-4">
