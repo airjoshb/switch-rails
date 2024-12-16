@@ -14,7 +14,7 @@ class PostResource < Avo::BaseResource
   # end
 
   field :id, as: :id
-  field :created_at, as: :date_time
+  field :created_at, as: :date_time, hide_on: [:new]
   # Fields generated from the model
   field :title, as: :text
   field :image, as: :file
