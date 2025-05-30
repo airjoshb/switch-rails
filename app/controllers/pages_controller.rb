@@ -9,7 +9,7 @@ class PagesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_page
       @page = Page.find_by_slug(params[:slug])
-      @posts = Post.joins(:category).where(categories: {name: @page.title})
+      @posts = Post.joins(:category).where(categories: {slug: @page.slug})
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

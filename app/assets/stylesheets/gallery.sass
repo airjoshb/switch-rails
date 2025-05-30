@@ -3,7 +3,6 @@
 #gallery 
   display: flex
   flex-flow: row wrap
-  margin-top: 2px
   justify-content: space-around
   .postGrid
     display: grid
@@ -42,6 +41,8 @@
       &.row
         .imageContainer
           width: 200px
+  .pageGrid
+    grid-template-columns: (75% 30%)
   .gallery-grid, .categoryGrid
     align-self: start
     width: 100%

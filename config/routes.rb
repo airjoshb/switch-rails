@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'cart/success', to: 'cart#success'
   post 'cart/add'
   post 'cart/remove'
+  resources :customers
   resources :charges, only: [:new]
   post 'charge', to: 'charges#charge'
   

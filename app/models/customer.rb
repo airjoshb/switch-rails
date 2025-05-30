@@ -1,6 +1,7 @@
 class Customer < ApplicationRecord
   has_many :customer_orders
   has_many :customer_emails
+  has_many :fan_comments
   has_many :customer_boxes, through: :customer_orders, inverse_of: :customer
   has_many :invoices, through: :customer_orders
   has_many :addresses, through: :customer_orders
@@ -8,6 +9,13 @@ class Customer < ApplicationRecord
   has_many :orderables, through: :customer_orders, inverse_of: :customer_orders
   has_many :preference_associations, dependent: :destroy, inverse_of: :customer
   has_many :preferences, through: :preference_associations
+
+  accepts_nested_attributes_for :fan_comments
+
+  def abbrev_name(name)
+    first, last = name.split(" ")
+    return "#{first[0]}. #{last}"
+  end
 
   def self.ransackable_attributes(auth_object = nil)
     ["email", "name", "stripe_id"]

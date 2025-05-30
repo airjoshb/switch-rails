@@ -1,0 +1,24 @@
+<%= form_for @customer, class: "inline" do |form| %>
+    <% if form.object.errors.any? %>
+    <div id="error_explanation">
+        <div class="mt-2 text-sm">
+            <% form.object.errors.full_messages.each do |message| %>
+                <p><%= message %></p>
+            <% end %>
+        </div>
+    </div>
+    <% else %>
+        <%= form.text_field :name, class: "form-input", placeholder: "Name" %>
+        <%= form.text_field :email, class: "form-input", placeholder: "Email" %>
+        <%= form.hidden_field :promotion_consent, value: true %>
+        <%= form.hidden_field :fan, value: true %>
+        <%= form.fields_for :fan_comments do |comment| %>
+            <p>Want to leave a comment for other's to see about why you're a fan of Switch Bakery?
+            <%= comment.text_area :comment %>
+        <% end %>
+        <div>
+        <%= form.submit "Count me in!", class: "button primary button-text" %>
+        </div>
+    <% end %>
+    <%= invisible_captcha :subtitle %>
+<% end %>

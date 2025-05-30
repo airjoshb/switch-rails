@@ -23,22 +23,49 @@
   <div class="container">
     <div class="pageContainer">
       <div class="detailContent">
-        <%= @page.content %>
-        <div id="gallery">
+        <% if @page.slug == "fans" %>
+          <div id="gallery">
+            <div class="postGrid pageGrid">
+              <div class="">
+                  <%= @page.content %>
+              </div>
+              <div class="">
+                <%= turbo_frame_tag Customer.new do %>
+                  <%= link_to "I want to be a fan!", new_customer_path, class: "button secondary" %>
+                <% end %>
+                <% unless FanComment.none? %>
+                  <div class="mt-6">
+                    <% FanComment.all.each do |fan_comment|%>
+                      <h5 class="mb-4"><%= fan_comment.comment %>  - <%= fan_comment.customer.abbrev_name(fan_comment.customer.name) %></h5>
+                      <hr class="black" />
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% else %>
+         <div  class=""><%= @page.content %></div>
+        <% end %>
+        <div id="gallery" class="mt-6">
           <div class="postGrid">
             <% @posts.each do |post| %>
               <div class="postItem ">
-                <div class="imageContainer">
-                  <picture><%= image_tag post.medium_image, alt: post.title %></picture>
-                </div>
+                <% unless !post.image.present? %>
+                  <div class="imageContainer">
+                    <picture><%= image_tag post.medium_image, alt: post.title %></picture>
+                  </div>
+                <% end %>
                 <div class="">
                   <%= link_to update_path(post) do %>
                     <h5 class="p-0"><%= post.title %></h5>
                   <% end %>
                   <p><%= post.shortened_content(500)%></p>
+                  
                 </div>
               </div>
             <% end %>
+            
           </div>
         </div>
       </div>

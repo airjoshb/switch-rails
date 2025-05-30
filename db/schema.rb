@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_18_195939) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_30_183556) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -145,6 +145,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_18_195939) do
     t.string "phone"
     t.string "stripe_id"
     t.boolean "promotion_consent"
+    t.boolean "fan"
   end
 
   create_table "email_verification_tokens", force: :cascade do |t|
@@ -159,6 +160,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_18_195939) do
     t.datetime "updated_at", null: false
     t.bigint "box_id"
     t.index ["box_id"], name: "index_emails_on_box_id"
+  end
+
+  create_table "fan_comments", force: :cascade do |t|
+    t.string "comment"
+    t.bigint "customer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_fan_comments_on_customer_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -326,6 +335,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_18_195939) do
   add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "emails", "boxes"
+  add_foreign_key "fan_comments", "customers"
   add_foreign_key "invoices", "customer_orders"
   add_foreign_key "orderables", "carts"
   add_foreign_key "orderables", "customer_orders"

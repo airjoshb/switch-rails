@@ -10,6 +10,8 @@ class CustomerResource < Avo::BaseResource
   field :name, as: :text
   field :email, as: :text
   field :phone, as: :text
+  field :promotion_consent, as: :boolean
+  field :fan, as: :boolean
   field :preferences, as: :has_many
   field :stripe_id, as: :text
   field :customer_orders, as: :has_many
