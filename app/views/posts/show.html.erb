@@ -28,14 +28,14 @@
 <section id="post">
   <div class="container">
     <div class="postContainer">
-      <div class="content">
+      <div class="content ">
         <div class="postTitle">
           <%= image_tag 'switch-bakery-gluten-free-bread.png', width: 50, alt: "Gluten Free Bread Delivery Fox on a Bike" %>
           <h1><%= @post.title %></h1>
           <div class="postDate"><%= time_ago_in_words @post.created_at %> ago</div>
           <hr/>
         </div>
-        <%= @post.content %>
+        <div class="reading-frame"><%= @post.content %></div>
       </div>
     </div>
   </div>
