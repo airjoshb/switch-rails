@@ -31,7 +31,7 @@
               </div>
               <div class="">
                 <%= turbo_frame_tag Customer.new do %>
-                  <%= link_to "I want to be a fan!", new_customer_path, class: "button secondary" %>
+                  <%= link_to "Make me an insider!", new_customer_path, class: "button primary button-text" %>
                 <% end %>
                 <% unless FanComment.none? %>
                   <div class="mt-6">

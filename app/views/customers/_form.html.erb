@@ -8,13 +8,18 @@
         </div>
     </div>
     <% else %>
+        <%= form.label :name, class:"small" %>
+        <br />
         <%= form.text_field :name, class: "form-input", placeholder: "Name" %>
+        <br />
+        <%= form.label :email, class:"small" %>
+        <br />
         <%= form.text_field :email, class: "form-input", placeholder: "Email" %>
         <%= form.hidden_field :promotion_consent, value: true %>
         <%= form.hidden_field :fan, value: true %>
         <%= form.fields_for :fan_comments do |comment| %>
-            <p>Want to leave a comment for other's to see about why you're a fan of Switch Bakery?
-            <%= comment.text_area :comment %>
+            <p>Want to leave a comment for other's to see about why you're a fan of Switch Bakery?</p>
+            <%= form.label "Comment:", class:"small" %><br /><%= comment.text_area :comment %>
         <% end %>
         <div>
         <%= form.submit "Count me in!", class: "button primary button-text" %>
