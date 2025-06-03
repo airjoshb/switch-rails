@@ -8,6 +8,6 @@ class FanCommentResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :comment, as: :text
-  field :customer, as: :text
+  field :customer, as: :has_one
   # add fields here
 end

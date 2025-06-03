@@ -10,7 +10,9 @@ class Customer < ApplicationRecord
   has_many :preference_associations, dependent: :destroy, inverse_of: :customer
   has_many :preferences, through: :preference_associations
 
-  accepts_nested_attributes_for :fan_comments
+  accepts_nested_attributes_for :fan_comments, allow_destroy: true, 
+  reject_if: :all_blank
+  
 
   def abbrev_name(name)
     first, last = name.split(" ")
