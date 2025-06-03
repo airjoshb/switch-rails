@@ -35,7 +35,7 @@
                 <% end %>
                 <% unless FanComment.none? %>
                   <div class="mt-6">
-                    <% FanComment.all.each do |fan_comment|%>
+                    <% FanComment.not_blank.each do |fan_comment|%>
                       <h5 class="mb-4"><%= fan_comment.comment %>  - <%= fan_comment.customer.abbrev_name(fan_comment.customer.name) %></h5>
                       <hr class="black" />
                     <% end %>
