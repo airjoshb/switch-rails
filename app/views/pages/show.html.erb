@@ -22,14 +22,14 @@
 <section id="page">
   <div class="container">
     <div class="pageContainer">
-      <div class="detailContent">
+      <div class="detailContent" >
         <% if @page.slug == "fans" %>
           <div id="gallery">
             <div class="postGrid pageGrid">
-              <div class="reading-frame">
+              <div class="reading-frame mb-5">
                   <%= @page.content %>
               </div>
-              <div class="">
+              <div class="center">
                 <%= turbo_frame_tag Customer.new do %>
                   <%= link_to "Make me an insider!", new_customer_path, class: "button primary button-text" %>
                 <% end %>
