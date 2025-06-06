@@ -31,6 +31,11 @@
               <%= link_to update_path(post) do %>
                 <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
                 <div class="">
+                  <% if post.category.present? %>
+                    <h3 class="capsule uppercase b3 mb-4">
+                      <%= post.category.name %>
+                    </h3>
+                  <% end %>
                   <h5><%= post.title %></h5>
                 </div>
               <% end %>

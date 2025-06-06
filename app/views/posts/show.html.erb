@@ -32,7 +32,7 @@
         <div class="postTitle">
           <%= image_tag 'switch-bakery-gluten-free-bread.png', width: 50, alt: "Gluten Free Bread Delivery Fox on a Bike" %>
           <h1><%= @post.title %></h1>
-          <div class="postDate"><%= time_ago_in_words @post.created_at %> ago</div>
+          <div class="postDate"><%= time_ago_in_words @post.created_at %> ago in <% if post.category.present? %><%= post.category.name %><% end %></div>
           <hr/>
         </div>
         <div class="reading-frame"><%= @post.content %></div>
