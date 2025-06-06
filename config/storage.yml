@@ -32,9 +32,9 @@ development:
 
 mirror:
   service: Mirror
-  primary: cloudinary
+  primary: amazon
   mirrors:
-    - amazon
+    - cloudinary
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
