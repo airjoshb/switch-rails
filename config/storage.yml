@@ -15,8 +15,6 @@ cloudinary:
   secure: true
   enhance_image_tag: true
   static_file_support: false
-  mirrors:
-    - amazon
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
