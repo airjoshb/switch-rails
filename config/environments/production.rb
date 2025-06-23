@@ -73,16 +73,13 @@ Rails.application.configure do
 
   # ActionMailer Config
   config.action_mailer.delivery_method = :smtp
-
-
   config.action_mailer.smtp_settings = {
-    domain:         'notpie.com',
-    address:        'smtp.sendgrid.net',
-    port:           2525,
-    user_name:      'apikey',
-    password:       ENV.fetch('SENDGRID_API_KEY'),
-    authentication: :plain,
-    enable_starttls_auto: true
+    user_name: 'api',
+    password: ENV["MAILTRAP_API"],
+    address: 'bulk.smtp.mailtrap.io',
+    host: 'bulk.smtp.mailtrap.io',
+    port: '587',
+    authentication: :login
   }
   config.action_mailer.perform_caching = false
 
