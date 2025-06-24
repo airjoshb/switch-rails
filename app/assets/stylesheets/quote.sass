@@ -5,8 +5,17 @@
   flex-direction: column
   align-items: center
   justify-content: center
-  padding: 100px 32px
   // background-color: $standard-light-grey
+  .pageContent
+    width: 75%
+    h1
+     font-family: $brand-font
+    .trix-content
+      img
+        padding: 0
+  hr
+    ::before
+      background-image: image-url("trix_horizontal_rule.svg")
 
   span 
     font-weight: 500
@@ -16,7 +25,6 @@
     display: block
     margin-bottom: 40px
     text-align: center
-
   p 
     font-family: $standard-header
     font-weight: normal
