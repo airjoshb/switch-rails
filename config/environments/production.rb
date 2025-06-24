@@ -76,8 +76,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     user_name: 'api',
     password: ENV["MAILTRAP_API"],
-    address: 'bulk.smtp.mailtrap.io',
-    host: 'bulk.smtp.mailtrap.io',
+    address: 'live.smtp.mailtrap.io',
+    host: 'live.smtp.mailtrap.io',
     port: '587',
     authentication: :login
   }
