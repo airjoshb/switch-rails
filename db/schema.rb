@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_30_183556) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_23_212800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -94,6 +94,31 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_30_183556) do
     t.datetime "email_sent_date"
     t.index ["created_at"], name: "index_boxes_on_created_at"
     t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
+  end
+
+  create_table "campaign_customers", force: :cascade do |t|
+    t.bigint "campaigns_id", null: false
+    t.bigint "customers_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaigns_id"], name: "index_campaign_customers_on_campaigns_id"
+    t.index ["customers_id"], name: "index_campaign_customers_on_customers_id"
+  end
+
+  create_table "campaign_emails", force: :cascade do |t|
+    t.bigint "campaigns_id", null: false
+    t.bigint "emails_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaigns_id"], name: "index_campaign_emails_on_campaigns_id"
+    t.index ["emails_id"], name: "index_campaign_emails_on_emails_id"
+  end
+
+  create_table "campaigns", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "carts", force: :cascade do |t|
@@ -332,6 +357,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_30_183556) do
   add_foreign_key "box_variations", "boxes"
   add_foreign_key "box_variations", "variations"
   add_foreign_key "boxes", "customer_orders"
+  add_foreign_key "campaign_customers", "campaigns", column: "campaigns_id"
+  add_foreign_key "campaign_customers", "customers", column: "customers_id"
+  add_foreign_key "campaign_emails", "campaigns", column: "campaigns_id"
+  add_foreign_key "campaign_emails", "emails", column: "emails_id"
   add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "emails", "boxes"

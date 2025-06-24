@@ -1,6 +1,7 @@
 class Customer < ApplicationRecord
   has_many :customer_orders
   has_many :customer_emails
+  has_and_belongs_to_many :campaigns
   has_many :fan_comments
   has_many :customer_boxes, through: :customer_orders, inverse_of: :customer
   has_many :invoices, through: :customer_orders

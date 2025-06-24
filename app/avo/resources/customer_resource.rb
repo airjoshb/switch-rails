@@ -16,6 +16,7 @@ class CustomerResource < Avo::BaseResource
   field :stripe_id, as: :text
   field :customer_orders, as: :has_many
   field :customer_boxes, as: :has_many, through: :customer_orders
+  field :campaigns, as: :has_and_belongs_to_many
   field :invoices, as: :has_many, through: :customer_orders
   field :addresses, as: :has_many, through: :customer_orders
   field :payment_methods, as: :has_many, through: :customer_orders
