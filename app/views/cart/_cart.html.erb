@@ -12,17 +12,7 @@
                   <%= render 'prices', variation: orderable.variation %>
                   <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
                   <span class= "close" ><%= f.submit "remove" %></span>
-                  <% if @bread_orderable %>
-                      Choose your flavors:
-                      <% @bread_orderable.variation.unit_quantity.times do |i| %>
-                          <select class="bread-choice-select">
-                            <option value="">Choose bread</option>
-                            <% Cart::BREAD_CHOICES.each do |choice| %>
-                              <option value="<%= choice %>"><%= choice %></option>
-                            <% end %>
-                          </select>
-                      <% end %>
-                  <% end %>
+                  
               <% end %> 
           <% end %>
         <% end %>
@@ -41,6 +31,15 @@
                   <%= f.hidden_field 'cart_id', value: @cart.id %>
                   <%= f.hidden_field 'shipping', value: ENV.fetch('PICKUP') %>
                   <% if @bread_orderable %>
+                      Choose your flavors:
+                      <% @bread_orderable.variation.unit_quantity.times do |i| %>
+                          <select class="bread-choice-select">
+                            <option value="">Choose bread</option>
+                            <% Cart::BREAD_CHOICES.each do |choice| %>
+                              <option value="<%= choice %>"><%= choice %></option>
+                            <% end %>
+                          </select>
+                      <% end %>
                     <%= hidden_field_tag "notes", "", id: "bread-notes" %>
                   <% end %>
                   <%= f.submit "Checkout", class: "button primary alternate", id: "checkout-button" %>
