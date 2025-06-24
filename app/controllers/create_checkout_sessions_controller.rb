@@ -13,6 +13,14 @@ class CreateCheckoutSessionsController < ApplicationController
   def create
     cart = Cart.find(params[:cart_id])
     prices = cart.orderables.joins(:variation).pluck('variations.stripe_id', 'quantity')
+    if params[:notes].present?
+      # Find the correct orderable in the cart (the one with recurring/unit_quantity > 1)
+      bread_orderable = cart.orderables.find { |o| o.variation.recurring? && o.variation.unit_quantity > 1 }
+      if bread_orderable
+        bread_orderable.notes = params[:notes]
+        bread_orderable.save
+      end
+    end
     # prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
     adjustable = Hash(enabled: true, minimum: 1, maximum: 10)
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
@@ -116,6 +124,7 @@ class CreateCheckoutSessionsController < ApplicationController
       cancel_url:  cart_cancel_url,
     })
     order = CustomerOrder.create(stripe_checkout_id: checkout_session.id)
+    # Assign bread selection (if any) to the correct orderable's notes
     order.orderables << cart.orderables
     reset_session
     redirect_to checkout_session.url, allow_other_host: true, status: 303

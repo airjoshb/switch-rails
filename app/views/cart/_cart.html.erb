@@ -6,13 +6,23 @@
           <h4 class="center">Add something delicious to your cart!</h2>
         <% else %>
           <% for orderable in @cart.orderables %>
-              <%= form_with(url: cart_remove_path) do |f| %>
+              <%= form_with(url: cart_remove_path, id:"checkout-form") do |f| %>
                 <%= f.hidden_field :id, value: @cart.orderables.first.id %>
                 <div class="priceContainer">
                   <%= render 'prices', variation: orderable.variation %>
                   <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
                   <span class= "close" ><%= f.submit "remove" %></span>
-                </div>
+                  <% if @bread_orderable %>
+                      Choose your flavors:
+                      <% @bread_orderable.variation.unit_quantity.times do |i| %>
+                          <select class="bread-choice-select">
+                            <option value="">Choose bread</option>
+                            <% Cart::BREAD_CHOICES.each do |choice| %>
+                              <option value="<%= choice %>"><%= choice %></option>
+                            <% end %>
+                          </select>
+                      <% end %>
+                  <% end %>
               <% end %> 
           <% end %>
         <% end %>
@@ -30,6 +40,9 @@
                 <%= form_with url: checkout_session_path, method: :post, data: {turbo: false} do |f| %>
                   <%= f.hidden_field 'cart_id', value: @cart.id %>
                   <%= f.hidden_field 'shipping', value: ENV.fetch('PICKUP') %>
+                  <% if @bread_orderable %>
+                    <%= hidden_field_tag "notes", "", id: "bread-notes" %>
+                  <% end %>
                   <%= f.submit "Checkout", class: "button primary alternate", id: "checkout-button" %>
                 <% end %>
               </div>
@@ -47,3 +60,20 @@
     </div>
   <% end %>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById('checkout-form');
+  if(form) {
+    form.addEventListener('submit', function(event) {
+      const selects = document.querySelectorAll('.bread-choice-select');
+      if (selects.length > 0) {
+        const choices = Array.from(selects).map(s => s.value).filter(v => v !== "");
+        const notesField = document.getElementById('bread-notes');
+        if (notesField) {
+          notesField.value = choices.join(', ');
+        }
+      }
+    });
+  }
+});
+</script>

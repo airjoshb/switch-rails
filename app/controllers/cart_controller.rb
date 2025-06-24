@@ -4,6 +4,7 @@ class CartController < ApplicationController
   def show
     # @render_cart = false
     @add_ons = Variation.active.add_ons
+    @bread_orderable = @cart.orderables.find { |o| o.variation.recurring? && o.variation.unit_quantity > 1 }
   end
 
   def success
@@ -28,9 +29,9 @@ class CartController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to cart_path }
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace('cart', partial: 'cart/icon', locals: {cart: @cart})
-      end
+      # format.turbo_stream do
+      #   render turbo_stream: turbo_stream.replace('cart', partial: 'cart/icon', locals: {cart: @cart})
+      # end
     end
   end
 
