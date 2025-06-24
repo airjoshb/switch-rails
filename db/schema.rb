@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_24_172900) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_24_190125) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -246,6 +246,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_24_172900) do
     t.bigint "customer_order_id"
     t.boolean "current"
     t.string "subscription_id"
+    t.string "notes"
     t.index ["cart_id"], name: "index_orderables_on_cart_id"
     t.index ["customer_order_id"], name: "index_orderables_on_customer_order_id"
     t.index ["variation_id"], name: "index_orderables_on_variation_id"
