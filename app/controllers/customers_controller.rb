@@ -1,5 +1,6 @@
 class CustomersController < ApplicationController
   invisible_captcha only: [:create], honeypot: :subtitle
+  before_action :set_customer, only: [:unsubscribe]
   def new
     @customer = Customer.new
     @customer.fan_comments.build
@@ -15,7 +16,15 @@ class CustomersController < ApplicationController
     end
   end
 
+  def unsubscribe
+    @customer.update(promotion_consent: false, fan: false)
+  end
+
   private
+    def set_customer
+      @customer = Customer.find(params[:id])
+    end
+
     def customer_params
       params.require(:customer).permit(:email, :name, :promotion_consent, :fan, fan_comments_attributes: [:comment])
     end

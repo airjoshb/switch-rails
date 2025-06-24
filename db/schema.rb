@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_23_212800) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_24_172900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,29 +96,29 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_23_212800) do
     t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
   end
 
-  create_table "campaign_customers", force: :cascade do |t|
-    t.bigint "campaigns_id", null: false
-    t.bigint "customers_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["campaigns_id"], name: "index_campaign_customers_on_campaigns_id"
-    t.index ["customers_id"], name: "index_campaign_customers_on_customers_id"
-  end
-
-  create_table "campaign_emails", force: :cascade do |t|
-    t.bigint "campaigns_id", null: false
-    t.bigint "emails_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["campaigns_id"], name: "index_campaign_emails_on_campaigns_id"
-    t.index ["emails_id"], name: "index_campaign_emails_on_emails_id"
-  end
-
   create_table "campaigns", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "campaigns_customers", force: :cascade do |t|
+    t.bigint "campaign_id", null: false
+    t.bigint "customer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_campaigns_customers_on_campaign_id"
+    t.index ["customer_id"], name: "index_campaigns_customers_on_customer_id"
+  end
+
+  create_table "campaigns_emails", force: :cascade do |t|
+    t.bigint "campaign_id", null: false
+    t.bigint "email_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_campaigns_emails_on_campaign_id"
+    t.index ["email_id"], name: "index_campaigns_emails_on_email_id"
   end
 
   create_table "carts", force: :cascade do |t|
@@ -136,6 +136,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_23_212800) do
     t.integer "row_order"
     t.boolean "active"
     t.index ["name"], name: "index_categories_on_name", unique: true
+  end
+
+  create_table "customer_emails", force: :cascade do |t|
+    t.bigint "email_id", null: false
+    t.bigint "customer_id", null: false
+    t.boolean "email_sent"
+    t.datetime "sent_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_customer_emails_on_customer_id"
+    t.index ["email_id"], name: "index_customer_emails_on_email_id"
   end
 
   create_table "customer_orders", force: :cascade do |t|
@@ -357,10 +368,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_23_212800) do
   add_foreign_key "box_variations", "boxes"
   add_foreign_key "box_variations", "variations"
   add_foreign_key "boxes", "customer_orders"
-  add_foreign_key "campaign_customers", "campaigns", column: "campaigns_id"
-  add_foreign_key "campaign_customers", "customers", column: "customers_id"
-  add_foreign_key "campaign_emails", "campaigns", column: "campaigns_id"
-  add_foreign_key "campaign_emails", "emails", column: "emails_id"
+  add_foreign_key "campaigns_customers", "campaigns"
+  add_foreign_key "campaigns_customers", "customers"
+  add_foreign_key "campaigns_emails", "campaigns"
+  add_foreign_key "campaigns_emails", "emails"
+  add_foreign_key "customer_emails", "customers"
+  add_foreign_key "customer_emails", "emails"
   add_foreign_key "customer_orders", "customers"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "emails", "boxes"
