@@ -31,6 +31,7 @@
                   <%= f.hidden_field 'cart_id', value: @cart.id %>
                   <%= f.hidden_field 'shipping', value: ENV.fetch('PICKUP') %>
                   <% if @bread_orderable %>
+                    <div class="details h5">
                       Choose your flavors:
                       <% @bread_orderable.variation.unit_quantity.times do |i| %>
                           <select class="bread-choice-select">
@@ -40,7 +41,8 @@
                             <% end %>
                           </select>
                       <% end %>
-                    <%= hidden_field_tag "notes", "", id: "bread-notes" %>
+                      <%= hidden_field_tag "notes", "", id: "bread-notes" %>
+                    </div>
                   <% end %>
                   <%= f.submit "Checkout", class: "button primary alternate", id: "checkout-button" %>
                 <% end %>
