@@ -18,7 +18,7 @@
                 </span>
               </div>
                 <% if orderable.variation.preferences.any? && orderable.variation.preferences.any?{ |a| a.options.present? } %>
-                  <div id="orderable_<%= orderable.id %>" data-controller="orderables" class="details p-4 h5">
+                  <div id="orderable_<%= orderable.id %>" data-controller="orderables" >
                     <%= render 'orderables/update_notes', orderable: orderable %>
                   </div>
                 <% end %> 
