@@ -5,15 +5,24 @@
         <% unless @cart %>
           <h4 class="center">Add something delicious to your cart!</h2>
         <% else %>
-          <% for orderable in @cart.orderables %>
-              <%= form_with(url: cart_remove_path) do |f| %>
-                <%= f.hidden_field :id, value: @cart.orderables.first.id %>
-                <div class="priceContainer">
-                  <%= render 'prices', variation: orderable.variation %>
-                  <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
-                  <span class= "close" ><%= f.submit "remove" %></span>
-                  
-              <% end %> 
+          <% for orderable in @cart.orderables %> 
+            <div class="m-5">
+              <div class="priceContainer">
+                <%= render 'prices', variation: orderable.variation %>
+                <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
+                <span class= "close" >
+                  <%= form_with(url: cart_remove_path) do |f| %>
+                    <%= f.hidden_field :id, value: @cart.orderables.first.id %>
+                    <%= f.submit "remove" %>
+                  <% end %> 
+                </span>
+              </div>
+                <% if orderable.variation.preferences.any? && orderable.variation.preferences.any?{ |a| a.options.present? } %>
+                  <div id="orderable_<%= orderable.id %>" data-controller="orderables" class="details p-4 h5">
+                    <%= render 'orderables/update_notes', orderable: orderable %>
+                  </div>
+                <% end %> 
+            </div>
           <% end %>
         <% end %>
       </div>
@@ -30,20 +39,6 @@
                 <%= form_with url: checkout_session_path, method: :post, data: {turbo: false}, id: "checkout-form" do |f| %>
                   <%= f.hidden_field 'cart_id', value: @cart.id %>
                   <%= f.hidden_field 'shipping', value: ENV.fetch('PICKUP') %>
-                  <% if @bread_orderable %>
-                    <div class="details h5">
-                      Choose your flavors:
-                      <% @bread_orderable.variation.unit_quantity.times do |i| %>
-                          <select class="bread-choice-select">
-                            <option value="">Choose bread</option>
-                            <% Cart::BREAD_CHOICES.each do |choice| %>
-                              <option value="<%= choice %>"><%= choice %></option>
-                            <% end %>
-                          </select>
-                      <% end %>
-                      <%= hidden_field_tag "notes", "", id: "bread-notes" %>
-                    </div>
-                  <% end %>
                   <%= f.submit "Checkout", class: "button primary alternate", id: "checkout-button" %>
                 <% end %>
               </div>
@@ -61,7 +56,7 @@
     </div>
   <% end %>
 </div>
-<script>
+<%# <script>
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById('checkout-form');
   if(form) {
@@ -77,4 +72,4 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
-</script>
+</script> %>

@@ -294,13 +294,24 @@
   background-color: $standard-black
   text-transform: uppercase
   font-weight: 500
+
+.tertiary
+  border: none
+  color: green
+  background-color: $standard-white
+  text-transform: uppercase
+  font-family: $standard-header
+  padding: 12px 5px
+  line-height: 10px
+  border-radius: 20px
+  font-size: .6em
   
-
-
 @media (hover: hover) 
-  .primary:hover 
+  .primary:hover, .secondary:hover  
       border: 2px solid $standard-dark-grey
       background-color: $standard-dark-grey
+  .tertiary:hover
+    background-color: $standard-gold
 
 .secondary 
   border: 2px solid $standard-black

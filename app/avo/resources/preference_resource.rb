@@ -14,5 +14,6 @@ class PreferenceResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :name, as: :text
+  field :options, as: :text
   # add fields here
 end

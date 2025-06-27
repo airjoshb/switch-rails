@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   get 'cart/success', to: 'cart#success'
   post 'cart/add'
   post 'cart/remove'
+  resources :orderables do
+    member do
+      patch :update_notes
+    end
+  end
   resources :customers, only: [:new, :create]
   get 'customers/unsubscribe'
   patch 'customers/unsubscribe'

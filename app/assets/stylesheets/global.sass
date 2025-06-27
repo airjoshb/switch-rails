@@ -50,7 +50,7 @@ h4,.h4
 	font-size: 32px 
 	line-height: 37px 
 	margin: 0 
-h5, .h5, select
+h5, .h5
   font-weight: 400
   font-style: normal
   font-family: $standard-header
@@ -68,6 +68,16 @@ h6,
 	font-size: 42px 
 	line-height: 49px 
 	margin: 0 
+select
+  font-size: 15px
+  padding: 5px
+  font-family: $standard-font
+  appearance: none
+  cursor: pointer
+  -webkit-appearance: none /* For Safari */
+  -moz-appearance: none
+  &:hover
+    background-color: $standard-grey
 p
   line-height: 1.5
 .b1 
@@ -301,6 +311,9 @@ ol
 .mx-3 
   margin-left: $space3 
   margin-right: $space3 
+.m-5 
+  margin-top: $space5 
+  margin-bottom: $space5
 .row 
   display: flex 
 .flex-center 

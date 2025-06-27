@@ -1,0 +1,21 @@
+<!-- filepath: app/views/orderables/_update_notes.html.erb -->
+<% orderable.variation.preferences.each_with_index do |preference, pref_idx| %>
+  <% if preference.options.present? %>
+    <label><%= preference.name %>:</label>
+    <% orderable.variation.unit_quantity.times do |unit_idx| %>
+      <select
+        class="bread-choice-select"
+        data-action="change->orderables#updateNotes"
+        data-orderables-orderable-id-param="<%= orderable.id %>"
+        data-orderables-preference-name-param="<%= preference.name %>"
+        data-orderables-pref-idx-param="<%= pref_idx %>"
+        data-orderables-unit-idx-param="<%= unit_idx %>"
+      >
+        <option value="">Select</option>
+        <% preference.options.split(',').each do |option| %>
+          <option value="<%= option.strip %>" <%= orderable.notes&.split(';')&.[](pref_idx * orderable.variation.unit_quantity + unit_idx)&.strip == option.strip ? 'selected' : '' %>><%= option.strip %></option>
+        <% end %>
+      </select>
+    <% end %>
+  <% end %>
+<% end %>

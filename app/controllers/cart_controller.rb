@@ -4,7 +4,7 @@ class CartController < ApplicationController
   def show
     # @render_cart = false
     @add_ons = Variation.active.add_ons
-    @bread_orderable = @cart.present? ? @cart.orderables.find { |o| o.variation.recurring? && o.variation.unit_quantity > 1 } : nil
+    @bread_orderable = @cart.present? ? @cart.orderables.find { |o| o.variation.preferences.any? && o.variation.preferences.any?{ |a| a.options.present? } } : nil
   end
 
   def success
