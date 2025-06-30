@@ -1,8 +1,14 @@
 
 <% content_for :head do %>
-  <title>Order <%=@product.name.pluralize %> fresh from Switch Bakery</title>
+  <% meta_title = if @product.variations.any?(&:recurring?)
+      "Sign up for the #{@product.name} fresh from Switch Bakery"
+    else
+      "Order #{@product.name.pluralize} fresh from Switch Bakery"
+    end
+  %>
+  <title><%= meta_title %></title>
   <meta name="description" content="<%= @product.description %>" />
-  <meta property="og:title", content="Order <%=@product.name.pluralize %> fresh from Switch Bakery" />
+  <meta property="og:title", content=<%= meta_title %> />
   <meta property="og:site_name", content="Switch Bakery" />
   <meta property="og:description", content="<%= @product.description %>" />
   <meta property="og:type", content="product" />
@@ -10,7 +16,7 @@
   <meta property="og:image", content="<%=@product.image.url if @product.image.attached? %>" />
   <meta property="product:price:currency", content="USD" />
   <meta property="product:price:amount", content="<%= @product.variations.map(&:amount).min / 100 if @product.variations.exists? %>" />
-  <meta name="twitter:title", content="Order <%=@product.name.pluralize %> fresh from Switch Bakery" />
+  <meta name="twitter:title", content=<%= meta_title %> />
   <meta name="twitter:description", content="<%= @product.description %>" />
   <meta name="twitter:image", content="<%=@product.image.url if @product.image.attached? %>" />
   <meta name="twitter:card", content="summary" />
