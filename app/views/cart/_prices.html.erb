@@ -5,8 +5,12 @@
 <% end %>
 <span class="variation">
   <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
-      <%= variation.unit_quantity %> - 
-      <%= variation.name.pluralize %>
+      <% if variation.recurring? %>
+        <%= variation.name %>
+      <% else %>
+        <%= variation.unit_quantity %> - 
+        <%= variation.name.pluralize %>
+      <% end %>
   <% else %>
     <%= variation.name %>
   <% end %>

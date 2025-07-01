@@ -9,6 +9,7 @@ class OrderableResource < Avo::BaseResource
   # Fields generated from the model
   field :current, as: :boolean
   field :subscription_id, as: :text
+  field :delivery_method, as: :select, enum: { 'Pickup' => 'pickup', 'Delivery' => 'delivery', 'Shipping' => 'shipping' }
   field :notes, as: :text
   field :quantity, as: :number
   field :variation, as: :belongs_to

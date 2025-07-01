@@ -20,7 +20,7 @@ class ProductsController < ApplicationController
   end
 
   def show
-
+    @recurring_variations = @product.variations.active.select(&:recurring?).group_by(&:name)
   end
 
   def new

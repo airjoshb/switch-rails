@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_27_142856) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_01_182522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -71,6 +71,31 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_27_142856) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.index ["customer_order_id"], name: "index_addresses_on_customer_order_id"
+  end
+
+  create_table "artifacts", force: :cascade do |t|
+    t.string "name"
+    t.string "url"
+    t.bigint "category_id", null: false
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "description"
+    t.index ["category_id"], name: "index_artifacts_on_category_id"
+  end
+
+  create_table "artifacts_posts", id: false, force: :cascade do |t|
+    t.bigint "artifact_id", null: false
+    t.bigint "post_id", null: false
+    t.index ["artifact_id", "post_id"], name: "index_artifacts_posts_on_artifact_id_and_post_id"
+    t.index ["post_id", "artifact_id"], name: "index_artifacts_posts_on_post_id_and_artifact_id"
+  end
+
+  create_table "artifacts_products", id: false, force: :cascade do |t|
+    t.bigint "artifact_id", null: false
+    t.bigint "product_id", null: false
+    t.index ["artifact_id", "product_id"], name: "index_artifacts_products_on_artifact_id_and_product_id"
+    t.index ["product_id", "artifact_id"], name: "index_artifacts_products_on_product_id_and_artifact_id"
   end
 
   create_table "box_variations", force: :cascade do |t|
@@ -247,6 +272,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_27_142856) do
     t.boolean "current"
     t.string "subscription_id"
     t.string "notes"
+    t.string "delivery_method"
     t.index ["cart_id"], name: "index_orderables_on_cart_id"
     t.index ["customer_order_id"], name: "index_orderables_on_customer_order_id"
     t.index ["variation_id"], name: "index_orderables_on_variation_id"
@@ -361,12 +387,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_27_142856) do
     t.enum "interval", enum_type: "interval_type"
     t.integer "interval_count"
     t.string "slug"
+    t.boolean "shippable"
+    t.boolean "deliverable"
+    t.boolean "pickupable"
+    t.text "description"
     t.index ["product_id"], name: "index_variations_on_product_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "customer_orders"
+  add_foreign_key "artifacts", "categories"
   add_foreign_key "box_variations", "boxes"
   add_foreign_key "box_variations", "variations"
   add_foreign_key "boxes", "customer_orders"

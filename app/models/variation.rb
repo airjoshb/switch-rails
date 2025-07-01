@@ -8,6 +8,8 @@ class Variation < ApplicationRecord
   has_many :boxes, through: :box_variations
   has_many :customer_boxes, through: :box_variations, foreign_key: :box_id
   
+  has_rich_text :desc
+
   enum inventory_type: {infinite: 'infinite', trackable: 'trackable'}
   enum interval: { day: 'day', week: 'week', month: 'month', year: 'year'}, _prefix: true
 
@@ -30,15 +32,31 @@ class Variation < ApplicationRecord
   scope :preference, -> (preference) { joins(:preferences).where(preferences: { name: preference }) }
 
   def available?
-    self.active
+    active
   end
 
   def add_on?
-    self.add_on
+    add_on
   end
 
   def recurring?
-    self.recurring
+    recurring
+  end
+
+  def shippable?
+    shippable
+  end
+
+  def deliverable?
+    deliverable
+  end
+
+  def pickupable?
+    pickupable
+  end
+
+  def pickup_locations
+    [ {label: 'Scotts Valley @ Cruise Coffee', value: 'cruise'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
   end
 
   def preference_filter(preference)

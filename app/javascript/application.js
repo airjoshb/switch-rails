@@ -2,5 +2,6 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "controllers/orderables_controller"
+import "controllers/recurring_variation_controller"
 // import "trix"
 // import "@rails/actiontext"

@@ -33,47 +33,136 @@
 <section id="product">
   <div class="product-container" itemscope itemtype= "http://schema.org/Offer">
     <div class="content">
-      <div class="imageContainer" itemprop="image">
-        <%= image_tag @product.image.variant(resize_to_limit: [800, 800]) if @product.image.attached? %>
+      <div id="visual-content">
+        <div class="imageContainer" itemprop="image">
+          <%= image_tag @product.image.variant(resize_to_limit: [800, 800]) if @product.image.attached? %>
+        </div>
+        <% if @product.artifacts.present? %>
+          <h2 class="mt-6 center">What's in Your Delivery?</h2>
+          <hr />
+          <div class="artifacts ">
+            <% @product.artifacts.each do |artifact| %>
+              <div class="artifact my-4">
+                <% if artifact.image.attached? %>
+                  <div class="artifact-image mr-4">
+                    <%= image_tag artifact.image.variant(rotate: 90,resize_to_limit: [nil, 200]), alt: artifact.name %>              
+                  </div>
+                <% end %>
+                <div class=artifact-content">
+                  <h3><%= artifact.name %></h3>
+                  <% if artifact.description? %><%= artifact.description %><% end %>
+                  <% if artifact.url? %><%= link_to "Product Details »", artifact.url %><% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
       <div class="details" itemprop="offers">
         <h1><%= @product.name %></h1>
         <p class="description"><%= @product.description %></p>
         <div class="variations">
-          <% for variation in @product.variations.active.order(row_order: :asc) %>
-            <%= form_with(url: cart_add_path) do |f| %>
-              <%= f.hidden_field :id, value: variation.id %>
-              <div class="priceContainer">
-                <span class="variation">
-                  <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
-                      <%= variation.unit_quantity %> - 
-                      <%= variation.name.pluralize %>
-                  <% else %>
-                    <%= variation.name %>
+          <% if @recurring_variations.present? %>
+            <% @recurring_variations.each do |name, variations, description| %>
+              <div class="recurring-variation-group recurringContainer mt-3" data-controller="recurring-variation" data-recurring-variation-variations-value="<%= variations.to_json(only: [:id, :interval, :interval_count, :shippable, :deliverable, :pickupable]) %>">                
+                <div class="mr-4">
+                  <h5><%= name %></h5>
+                  <% if (desc = variations.find(&:description)) && desc.description.present? %>
+                    <%= desc.description.html_safe %>
                   <% end %>
-                  <% if variation.trackable? %>
-                  <div><small><i><% if variation.count_on_hand > 0 %>Only <%=variation.count_on_hand %> left <% else %>Sold Out<% end %> </i></small></div>
-                  <% end %>
-                </span>
-                <span class="price" itemprop= "price" content="<%= @product.variations.first.amount / 100 %>">
-                  <%= display_price(variation.amount) %>
-                  <%= subscription_quantity(variation.interval, variation.interval_count) if variation.recurring? %>
-                </span>
-                <% if variation.in_stock? && @admin.full? %>
-                  <span class="quantity">
-                  <meta content= "InStock" itemprop="availability" />
-                  <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
-                    <%= f.number_field :quantity, value: 1, min: 1 %>
-                  </span>
-                  <span><%= f.submit "Add to Bag", class: "button primary" %></span>
-                <% else %>
-                  <meta content= "OutOfStock" itemprop="availability" />
-                  <span class= "button primary disable-action center">Add to Bag</span>
-                <% end %>
+                  <div class="flex-around">
+                    <div class="mr-4">
+                      <%# Delivery Method %>
+                      <% methods = [] %>
+                      <% methods << ["Ship", "ship"] if variations.any?(&:shippable?) %>
+                      <% methods << ["Local Delivery", "delivery"] if variations.any?(&:deliverable?) %>
+                      <% methods << ["Pickup at a Market", "pickup"] if variations.any?(&:pickupable?) %>
+
+                      <label>Delivery Method:</label>
+                      <% if methods.size == 1 %>
+                        <span><%= methods.first[0] %></span>
+                        <input type="hidden" data-recurring-variation-target="deliveryMethod" value="<%= methods.first[1] %>">
+                      <% else %>
+                        <select data-recurring-variation-target="deliveryMethod" data-action="change->recurring-variation#checkReady">
+                          <option value="">Choose</option>
+                          <% methods.each do |label, value| %>
+                            <option value="<%= value %>"><%= label %></option>
+                          <% end %>
+                        </select>
+                      <% end %>
+                    </div>
+                    <div class="w-full"><%# Frequency %>
+                      <% unique_frequencies = variations.uniq { |v| [v.interval, v.interval_count] } %>
+                      <label>Frequency:</label>
+                      <% if unique_frequencies.size == 1 %>
+                        <% variation = unique_frequencies.first %>
+                        <% interval = variation.interval %>
+                        <% count = variation.interval_count %>
+                        <% freq_label = count == 1 ? interval.singularize.titleize : "#{count} #{interval.pluralize.titleize}" %>
+                        <span>Every <%= freq_label %></span>
+                        <input type="hidden" data-recurring-variation-target="frequency" value="<%= variation.id %>">
+                      <% else %>
+                        <select data-recurring-variation-target="frequency" data-action="change->recurring-variation#checkReady">
+                          <option value="">Choose</option>
+                          <% unique_frequencies.each do |variation| %>
+                            <% interval = variation.interval %>
+                            <% count = variation.interval_count %>
+                            <% freq_label = count == 1 ? interval.singularize.titleize : "#{count} #{interval.pluralize.titleize}" %>
+                            <option value="<%= variation.id %>">Every <%= freq_label %></option>
+                          <% end %>
+                        </select>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button class="button primary sale disable-action",
+                  data-action="click->recurring-variation#addToCart",
+                  data-recurring-variation-product-id="<%= @product.id %>",
+                  data-recurring-variation-target="submit",
+                  disabled
+                  >
+                    Sign Me Up!
+                  </button>
+                </div>
               </div>
-            <% end %> 
-            <% unless variation == @product.variations.last %>
-              <hr />
+            <% end %>
+          <% else %>
+            <% for variation in @product.variations.active.order(row_order: :asc) %>
+              <%= form_with(url: cart_add_path) do |f| %>
+                <%= f.hidden_field :id, value: variation.id %>
+                <div class="priceContainer">
+                  <span class="variation">
+                    <% if variation.unit_quantity.present? && variation.unit_quantity > 1 %>
+                        <%= variation.unit_quantity %> - 
+                        <%= variation.name.pluralize %>
+                    <% else %>
+                      <%= variation.name %>
+                    <% end %>
+                    <% if variation.trackable? %>
+                    <div><small><i><% if variation.count_on_hand > 0 %>Only <%=variation.count_on_hand %> left <% else %>Sold Out<% end %> </i></small></div>
+                    <% end %>
+                  </span>
+                  <span class="price" itemprop= "price" content="<%= @product.variations.first.amount / 100 %>">
+                    <%= display_price(variation.amount) %>
+                    <%= subscription_quantity(variation.interval, variation.interval_count) if variation.recurring? %>
+                  </span>
+                  <% if variation.in_stock? && @admin.full? %>
+                    <span class="quantity">
+                    <meta content= "InStock" itemprop="availability" />
+                    <link itemprop= "itemCondition" href= "http://schema.org/NewCondition" />
+                      <%= f.number_field :quantity, value: 1, min: 1 %>
+                    </span>
+                    <span><%= f.submit "Add to Bag", class: "button primary" %></span>
+                  <% else %>
+                    <meta content= "OutOfStock" itemprop="availability" />
+                    <span class= "button primary disable-action center">Add to Bag</span>
+                  <% end %>
+                </div>
+              <% end %> 
+              <% unless variation == @product.variations.last %>
+                <hr />
+              <% end %>
             <% end %>
           <% end %>
           <% if !@admin.full? %><div class="center b1">We are not currently accepting online orders.</div><% end %>

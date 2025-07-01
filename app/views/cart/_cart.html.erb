@@ -9,7 +9,14 @@
             <div class="m-5">
               <div class="priceContainer">
                 <%= render 'prices', variation: orderable.variation %>
-                <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
+                <% if orderable.variation.recurring? %>
+                  <% interval = orderable.variation.interval %>
+                  <% count = orderable.variation.interval_count %>
+                  <% freq_label = count == 1 ? interval.singularize.titleize : "#{count} #{interval.pluralize.titleize}" %>
+                  <span class="price">Every <%= freq_label %> @ <%= display_price(orderable.variation.amount) %></span>
+                <% else %>
+                  <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
+                <% end %>
                 <span class= "close" >
                   <%= form_with(url: cart_remove_path) do |f| %>
                     <%= f.hidden_field :id, value: @cart.orderables.first.id %>

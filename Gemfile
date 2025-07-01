@@ -50,7 +50,7 @@ gem "sassc-rails"
 gem "aws-sdk-s3", require: false
 gem "cloudinary"
 gem "activestorage"
-gem "image_processing", "~> 1.2"
+gem "image_processing"
 gem "sidekiq"
 # gem "ffi", "~> 1.17"
 

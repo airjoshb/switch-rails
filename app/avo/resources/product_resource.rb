@@ -24,6 +24,7 @@ class ProductResource < Avo::BaseResource
   field :active, as: :boolean
   field :variations, as: :has_many
   field :category, as: :belongs_to
+  field :artifacts, as: :has_and_belongs_to_many
   field :stripe_id, as: :text, hide_on: [:new]
 
   # add fields here

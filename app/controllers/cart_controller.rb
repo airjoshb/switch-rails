@@ -19,7 +19,7 @@ class CartController < ApplicationController
     session[:cart_id] = @cart.id
     @variation = Variation.find_by(id: params[:id])
     quantity = params[:quantity].to_i
-    @cart.orderables.create(variation: @variation, quantity: quantity)
+    @cart.orderables.create(variation: @variation, quantity: quantity, delivery_method: params[:delivery_method]) if @variation.present? && quantity > 0
     # current_orderable = @cart.orderables.find_by(variation_id: @variation.id)
     # if quantity <= 0
     #   current_orderable.destroy

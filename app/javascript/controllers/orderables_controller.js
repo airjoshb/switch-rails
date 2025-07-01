@@ -1,9 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  connect() {
-    console.log("Orderables Stimulus controller connected!");
-  }
   updateNotes(event) {
     const orderableId = event.target.dataset.orderablesOrderableIdParam;
     const selects = Array.from(this.element.querySelectorAll('select.bread-choice-select'));

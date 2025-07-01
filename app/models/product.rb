@@ -2,7 +2,7 @@ class Product < ApplicationRecord
 
   has_many :variations, -> {order('variations.row_order')}
   belongs_to :category, optional: true
-
+  has_and_belongs_to_many :artifacts
   accepts_nested_attributes_for :variations, allow_destroy: true
   
   extend FriendlyId
