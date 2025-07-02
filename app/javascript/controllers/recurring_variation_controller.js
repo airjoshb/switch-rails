@@ -2,11 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 
 export default class extends Controller {
-  static targets = ["deliveryMethod", "frequency", "submit"]
+  static targets = ["deliveryMethod", "frequency", "submit", "price"]
   static values = { variations: Array }
 
 
   connect() {
+    this.updatePrice();
     this.checkReady();
   }
 
@@ -31,13 +32,35 @@ export default class extends Controller {
 
     // Enable button only if both have a value
     this.submitTarget.disabled = !(delivery && freq);
-
+    this.updatePrice();
     // Optionally, toggle a class for styling
     if (delivery && freq) {
       this.submitTarget.classList.remove("disable-action");
     } else {
       this.submitTarget.classList.add("disable-action");
     }
+  }
+  updatePrice() {
+    let variationId = "";
+    if (this.hasFrequencyTarget) {
+      variationId = this.frequencyTarget.value;
+    } else {
+      const hiddenFreq = this.element.querySelector('input[data-recurring-variation-target="frequency"]');
+      if (hiddenFreq) variationId = hiddenFreq.value;
+    }
+
+    // Find the variation
+    let variation = this.variationsValue.find(v => String(v.id) === String(variationId));
+    if (variation && this.hasPriceTarget) {
+      // Assuming amount is in cents
+      this.priceTarget.textContent = this.formatPrice(variation.amount);
+    } else if (this.hasPriceTarget) {
+      this.priceTarget.textContent = "";
+    }
+  }
+  formatPrice(amount) {
+    // Adjust this if your currency is not USD or not in cents
+    return `$${(amount / 100).toFixed(2)}`;
   }
 
   addToCart(event) {

@@ -64,8 +64,8 @@
         <div class="variations">
           <% if @recurring_variations.present? %>
             <% @recurring_variations.each do |name, variations, description| %>
-              <div class="recurring-variation-group recurringContainer mt-3" data-controller="recurring-variation" data-recurring-variation-variations-value="<%= variations.to_json(only: [:id, :interval, :interval_count, :shippable, :deliverable, :pickupable]) %>">                
-                <div class="mr-4">
+              <div class="recurring-variation-group recurringContainer mt-3" data-controller="recurring-variation" data-recurring-variation-variations-value="<%= variations.to_json(only: [:id, :interval, :interval_count, :shippable, :deliverable, :pickupable, :amount]) %>">                
+                <div class="variation-info">
                   <h5><%= name %></h5>
                   <% if (desc = variations.find(&:description)) && desc.description.present? %>
                     <%= desc.description.html_safe %>
@@ -115,7 +115,8 @@
                     </div>
                   </div>
                 </div>
-                <div>
+                <div class="variation-actions">
+                  <span class="variation-price price mr-2" data-recurring-variation-target="price"></span>
                   <button class="button primary sale disable-action",
                   data-action="click->recurring-variation#addToCart",
                   data-recurring-variation-product-id="<%= @product.id %>",

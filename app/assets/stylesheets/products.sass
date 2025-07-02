@@ -29,7 +29,7 @@
         line-height: 38px
         margin-bottom: 16px 
         padding: 20px 0 0 20px
-      .priceContainer, .recurringContainer
+      .priceContainer, .recurring-variation-group
           font-family: $brand-font
           letter-spacing: 0.01em
           display: flex !important
@@ -55,10 +55,35 @@
               font-size: .83em
           span:last-of-type
             text-align: end
-      .recurringContainer
-        grid-template-columns: repeat(2, 1fr)
+      .recurring-variation-group
+        display: grid
+        grid-template-columns: 1fr auto
+        padding: .33rem 0
+        height: unset
         &:first-child
-          margin-bottom: $space6
+          border-bottom: 3px double $grey-crumb
+          padding-bottom: $space5
+        .variation-info
+          display: flex
+          flex-direction: column
+          gap: 0.25rem
+
+        .variation-actions
+          // Right column: price and button
+          display: flex
+          flex-direction: row
+          align-items: center
+          gap: 0.5rem
+          min-width: 200px // adjust as needed
+          justify-content: flex-end
+          .variation-price
+            font-size: 1.2em
+            font-weight: bold
+            color: #086782
+
+          .button
+            min-width: 120px
+      
       .variations
         padding: 20px
         background-color: $standard-light-grey
