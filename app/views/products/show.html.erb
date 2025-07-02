@@ -38,7 +38,7 @@
           <%= image_tag @product.image.variant(resize_to_limit: [800, 800]) if @product.image.attached? %>
         </div>
         <% if @product.artifacts.present? %>
-          <h2 class="mt-6 center">What's in Your Delivery?</h2>
+          <h2 class="mt-6 center">What You Might Find in Your Delivery</h2>
           <hr />
           <div class="artifacts ">
             <% @product.artifacts.each do |artifact| %>
