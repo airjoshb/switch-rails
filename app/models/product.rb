@@ -12,7 +12,7 @@ class Product < ApplicationRecord
   has_many_attached :trix_attachments
   
   has_rich_text :content
-  has_rich_text
+  has_rich_text :description
 
   default_scope { order(row_order: :asc) }
   scope :active, -> { where(active: true)}
