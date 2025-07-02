@@ -41,23 +41,46 @@ export default class extends Controller {
     }
   }
   updatePrice() {
-    let variationId = "";
-    if (this.hasFrequencyTarget) {
-      variationId = this.frequencyTarget.value;
-    } else {
-      const hiddenFreq = this.element.querySelector('input[data-recurring-variation-target="frequency"]');
-      if (hiddenFreq) variationId = hiddenFreq.value;
-    }
-
-    // Find the variation
-    let variation = this.variationsValue.find(v => String(v.id) === String(variationId));
-    if (variation && this.hasPriceTarget) {
-      // Assuming amount is in cents
-      this.priceTarget.textContent = this.formatPrice(variation.amount);
-    } else if (this.hasPriceTarget) {
-      this.priceTarget.textContent = "";
-    }
+  // Get selected delivery method
+  let delivery = "";
+  if (this.hasDeliveryMethodTarget) {
+    delivery = this.deliveryMethodTarget.value;
+  } else {
+    const hiddenDelivery = this.element.querySelector('input[data-recurring-variation-target="deliveryMethod"]');
+    if (hiddenDelivery) delivery = hiddenDelivery.value;
   }
+
+  // Get selected frequency (variation id)
+  let variationId = "";
+  if (this.hasFrequencyTarget) {
+    variationId = this.frequencyTarget.value;
+  } else {
+    const hiddenFreq = this.element.querySelector('input[data-recurring-variation-target="frequency"]');
+    if (hiddenFreq) variationId = hiddenFreq.value;
+  }
+
+  // Find the variation that matches BOTH delivery and frequency
+  let variation = this.variationsValue.find(v => {
+    // Delivery method match
+    let deliveryMatch = false;
+    if (delivery === "ship" && v.shippable) deliveryMatch = true;
+    if (delivery === "delivery" && v.deliverable) deliveryMatch = true;
+    if (delivery === "pickup" && v.pickupable) deliveryMatch = true;
+    // Frequency match (variation id)
+    return deliveryMatch && String(v.id) === String(variationId);
+  });
+
+  // If not found, fall back to frequency only
+  if (!variation) {
+    variation = this.variationsValue.find(v => String(v.id) === String(variationId));
+  }
+
+  if (variation && this.hasPriceTarget) {
+    this.priceTarget.textContent = this.formatPrice(variation.amount);
+  } else if (this.hasPriceTarget) {
+    this.priceTarget.textContent = "";
+  }
+}
   formatPrice(amount) {
     // Adjust this if your currency is not USD or not in cents
     return `$${(amount / 100).toFixed(2)}`;
