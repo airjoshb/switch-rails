@@ -68,8 +68,9 @@
                 <div class="variation-info">
                   <h5>
                     <% if (desc = variations.find(&:unit_quantity)) && desc.unit_quantity.present? %>
-                        <%= desc.unit_quantity %> - <%= name %>
+                        <%= desc.unit_quantity %> - 
                     <% end %>
+                    <%= name %>
                     </h5>
                   <% if (desc = variations.find(&:description)) && desc.description.present? %>
                     <%= desc.description.html_safe %>
