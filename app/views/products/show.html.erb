@@ -63,10 +63,14 @@
         <p class="description"><%= @product.description %></p>
         <div class="variations">
           <% if @recurring_variations.present? %>
-            <% @recurring_variations.each do |name, variations, description| %>
+            <% @recurring_variations.each do |name, variations, description, unit_quantity| %>
               <div class="recurring-variation-group recurringContainer mt-3" data-controller="recurring-variation" data-recurring-variation-variations-value="<%= variations.to_json(only: [:id, :interval, :interval_count, :shippable, :deliverable, :pickupable, :amount]) %>">                
                 <div class="variation-info">
-                  <h5><%= name %></h5>
+                  <h5>
+                    <% if (desc = variations.find(&:unit_quantity)) && desc.unit_quantity.present? %>
+                        <%= desc.unit_quantity %> - <%= name %>
+                    <% end %>
+                    </h5>
                   <% if (desc = variations.find(&:description)) && desc.description.present? %>
                     <%= desc.description.html_safe %>
                   <% end %>
