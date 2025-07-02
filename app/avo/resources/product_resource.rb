@@ -17,7 +17,7 @@ class ProductResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :name, as: :text
-  field :description, as: :textarea
+  field :description, as: :trix, through: :action_text_rich_texts
   field :content, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
   field :image, as: :file
   field :row_order, as: :number
