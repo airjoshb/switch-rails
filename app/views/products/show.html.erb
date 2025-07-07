@@ -88,7 +88,10 @@
                         <span><%= methods.first[0] %></span>
                         <input type="hidden" data-recurring-variation-target="deliveryMethod" value="<%= methods.first[1] %>">
                       <% else %>
-                        <select data-recurring-variation-target="deliveryMethod" data-action="change->recurring-variation#checkReady">
+                          <select
+                            data-recurring-variation-target="deliveryMethod"
+                            data-action="change->recurring-variation#onDeliveryChange"
+                          >
                           <option value="">Choose</option>
                           <% methods.each do |label, value| %>
                             <option value="<%= value %>"><%= label %></option>

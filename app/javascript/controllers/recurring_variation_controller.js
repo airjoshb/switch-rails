@@ -40,6 +40,48 @@ export default class extends Controller {
       this.submitTarget.classList.add("disable-action");
     }
   }
+
+  onDeliveryChange(event) {
+    // Get the selected delivery method
+    const delivery = event.target.value;
+
+    // Find all frequency options (assumes select, adjust if using hidden input)
+    if (this.hasFrequencyTarget) {
+      const frequencySelect = this.frequencyTarget;
+      const currentValue = frequencySelect.value;
+
+      // Remove all options except the "Choose" option
+      const chooseOption = frequencySelect.querySelector('option[value=""]');
+      frequencySelect.innerHTML = "";
+      if (chooseOption) frequencySelect.appendChild(chooseOption);
+
+      // Add only options that match the selected delivery method
+      this.variationsValue.forEach(v => {
+        let deliveryMatch = false;
+        if (delivery === "ship" && v.shippable) deliveryMatch = true;
+        if (delivery === "delivery" && v.deliverable) deliveryMatch = true;
+        if (delivery === "pickup" && v.pickupable) deliveryMatch = true;
+        if (deliveryMatch) {
+          // Build the label as in your view
+          let freqLabel = v.interval_count === 1
+            ? v.interval.charAt(0).toUpperCase() + v.interval.slice(1)
+            : `${v.interval_count} ${v.interval.charAt(0).toUpperCase() + v.interval.slice(1)}s`;
+          const option = document.createElement("option");
+          option.value = v.id;
+          option.textContent = `Every ${freqLabel}`;
+          frequencySelect.appendChild(option);
+        }
+      });
+
+      // If the current value is not valid for the new delivery method, reset to ""
+      const validOption = Array.from(frequencySelect.options).some(opt => opt.value === currentValue);
+      frequencySelect.value = validOption ? currentValue : "";
+
+      // Trigger price and button update
+      this.checkReady();
+    }
+  }
+
   updatePrice() {
   // Get selected delivery method
   let delivery = "";
