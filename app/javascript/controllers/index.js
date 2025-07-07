@@ -3,8 +3,7 @@
 import { application } from "controllers/application"
 import OrderablesController from "controllers/orderables_controller"
 application.register("orderables", OrderablesController)
-import RecurringVariationController from "controllers/recurring_variation_controller"
-application.register("variations", RecurringVariationController)
+
 
 // Eager load all controllers defined in the import map under controllers/**/*_controller
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
