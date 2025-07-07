@@ -1,3 +1,7 @@
+<% content_for :head do %>
+    <meta name="robots" content="noindex" />
+    <meta name="googlebot" content="noindex" />
+<% end %>
 <%= turbo_frame_tag @customer do %>
     <%= render "form" %>
 <% end %>
