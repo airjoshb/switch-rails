@@ -60,7 +60,7 @@
       </div>
       <div class="details" itemprop="offers">
         <h1><%= @product.name %></h1>
-        <p class="description"><%= @product.description %></p>
+        <%= @product.description %>
         <div class="variations">
           <% if @recurring_variations.present? %>
             <% @recurring_variations.each do |name, variations, description, unit_quantity| %>
