@@ -7,22 +7,22 @@
     end
   %>
   <title><%= meta_title %></title>
-  <meta name="description" content="<%= @product.description %>" />
+  <meta name="description" content=<%= @product.description %> />
   <meta property="og:title", content=<%= meta_title %> />
   <meta property="og:site_name", content="Switch Bakery" />
-  <meta property="og:description", content="<%= @product.description %>" />
+  <meta property="og:description", content=<%= @product.description %> />
   <meta property="og:type", content="product" />
   <meta property="og:url", content="<%=product_url %>" />
   <meta property="og:image", content="<%=@product.image.url if @product.image.attached? %>" />
   <meta property="product:price:currency", content="USD" />
   <meta property="product:price:amount", content="<%= @product.variations.map(&:amount).min / 100 if @product.variations.exists? %>" />
   <meta name="twitter:title", content=<%= meta_title %> />
-  <meta name="twitter:description", content="<%= @product.description %>" />
+  <meta name="twitter:description", content=<%= @product.description %> />
   <meta name="twitter:image", content="<%=@product.image.url if @product.image.attached? %>" />
   <meta name="twitter:card", content="summary" />
   <meta name="twitter:url", content="<%=product_url %>" />
   <meta itemprop="name", content="<%=@product.name %>" />
-  <meta itemprop="description", content="<%= @product.description %>" />
+  <meta itemprop="description", content=<%= @product.description %> />
   <meta itemprop="image", content="<%=@product.image.url if @product.image.attached? %>" />
   <link rel="canonical" href="<%= product_url %>" />
 <% end %>
