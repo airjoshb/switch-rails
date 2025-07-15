@@ -1,12 +1,14 @@
  <section id="quote">
   <div class="quoteContent">
    <div class="center"> 
-    <p><%= Page.find_by_title("Where to Find Us").description %></p>
-    <%= link_to "Where To Find Us", page_path(17), class: "ctaButton button primary" %>
+    <% page = Page.find_by_slug("where-to-find-us") %>
+    <p><%= page.description %></p>
+    <%= link_to "Where To Find Us", page_path(page), class: "ctaButton button primary" %>
   </div>
 
   <div class="center">
-    <p><%= Product.find_by_slug("where-to-find-us").description %></p>
-    <%= link_to "Sign up for Bread Club", product_path('gluten-free-bread-club'), class: "ctaButton button primary" %>
+    <% product = Product.find_by_slug("gluten-free-bread-club") %>
+    <p><%= product.description %></p>
+    <%= link_to "Sign up for Bread Club", product_path(product), class: "ctaButton button primary" %>
   </div> 
 </section>
