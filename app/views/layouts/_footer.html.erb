@@ -1,9 +1,13 @@
 <div class="content flex-row">
+  <div>
+    <p>Switch Bakery is a small team, artisan gluten-free bakery based in Santa Cruz, CA. We’re passionate about making the best good-for-your-gut food, custom cakes, and artisan bread shipped directly to your door.
+    100% satisfaction guaranteed!</p>
+  </div> 
   <div class="footerLinks">
     <%= link_to "Shop", shop_path, class: "" %> ~
     <%= link_to "Updates", updates_path, class: "" if Post.any? %> ~
     <%= @pages.where.not(slug: "home").map{ |c| link_to(c.title, page_path(c.slug))}.join(" ~ ").html_safe %>
-  </div>  
+  </div>
   <div class="copyrightContainer flex-end">
     <span>
       &copy; A Frazley Adventures, LLC joint <%= Date.today.year %>
