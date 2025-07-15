@@ -16,6 +16,14 @@
         img
           padding: 0
           margin: 1rem
+  .quoteContent
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    div
+      flex: 1
+      justify-content: center
+      padding: 20px
   hr
     ::before
       background-image: image-url("trix_horizontal_rule.svg")
@@ -38,7 +46,11 @@
 
 
 @media (max-width: 600px) 
-  #quote p 
-    font-size: 22px
-    line-height: 32px
+  #quote 
+    p 
+      font-size: 22px
+      line-height: 32px
+    .quoteContent div
+      width: 100%
+      flex: initial
     
