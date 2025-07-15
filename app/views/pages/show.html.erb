@@ -1,13 +1,13 @@
 <% content_for :head do %>
   <title><%=@page.title %> | Switch Bakery</title>
-  <meta name="description" content="<%= @page.description %>" />
+  <meta name="description" content="<%= @page.description.to_plain_text.truncate(300) %>" />
   <meta property="og:title", content="<%=@page.title %> | Switch Bakery" />
   <meta property="og:site_name", content="Switch Bakery" />
-  <meta property="og:description", content="<%= @page.description %>" />
+  <meta property="og:description", content="<%= @page.description.to_plain_text.truncate(300) %>" />
   <meta property="og:type", content="website" />
   <meta property="og:url", content="<%= page_url %>" />
   <meta itemprop="headline", content="<%=@page.title %>" />
-  <meta itemprop="description", content="<%= @page.description %>" />
+  <meta itemprop="description", content="<%= @page.description.to_plain_text.truncate(300) %>" />
   <meta itemprop="datePublished", content="<%=@page.created_at.to_time.iso8601 %>" />
   <link rel="canonical" href="<%= page_url %>" />
 <% end %>
