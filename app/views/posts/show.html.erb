@@ -35,7 +35,17 @@
           <div class="postDate"><%= time_ago_in_words @post.created_at %> ago in <% if @post.category.present? %><%= @post.category.name %><% end %></div>
           <hr/>
         </div>
-        <div class="reading-frame"><%= @post.content %></div>
+        <div class="reading-frame"><%= @post.content %>
+        <% if @post.artifacts.embeds.any? %>
+          <div class="detailContent">
+          <div class="flex-center wrap m-6 p-4">
+            <% for artifact in @post.artifacts.embeds %>
+                <%= artifact.embed.html_safe %>
+            <% end %>
+          </div>
+        </div>
+        <% end %>
+        </div>
       </div>
     </div>
   </div>

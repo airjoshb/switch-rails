@@ -15,11 +15,11 @@ class Post < ApplicationRecord
   end
 
   def thumbnail
-    self.image.variant({thumbnail: '200x200^', gravity: 'center', extent: '200x200'})
+    self.image.variant(resize_to_fill: [200, 200, {crop: :centre}])
   end
 
   def medium_image
-    self.image.variant({resize: "300x300", gravity: "center" })
+    self.image.variant(resize_to_fill: [300, 300, {crop: :centre}])
   end
 
   # def thumbnail
