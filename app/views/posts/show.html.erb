@@ -7,11 +7,6 @@
   <meta property="og:type", content="article" />
   <meta property="og:url", content="<%= update_url %>" />
   <meta property="og:image", content="<%=@post.image.url if @post.image.attached? %>" />
-  <meta name="twitter:title", content="<%=@post.title %> | Switch Bakery in Monterey" />
-  <meta name="twitter:description", content="<%= @post.content.to_plain_text.truncate(300) %>" />
-  <meta name="twitter:image", content="<%=@post.image.url if @post.image.attached? %>" />
-  <meta name="twitter:card", content="summary" />
-  <meta name="twitter:url", content="<%=update_url %>" />
   <meta itemprop="headline", content="<%=@post.title %>" />
   <meta itemprop="description", content="<%= @post.content.to_plain_text.truncate(300) %>" />
   <meta itemprop="image", content="<%=@post.image.url if @post.image.attached? %>" />

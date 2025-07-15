@@ -7,11 +7,6 @@
   <meta property="og:type", content="articles" />
   <meta property="og:url", content="<%= updates_url %>" />
   <meta property="og:image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
-  <meta name="twitter:title", content="the latest updates from Switch Bakery" />
-  <meta name="twitter:description", content="" />
-  <meta name="twitter:image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
-  <meta name="twitter:card", content="summary" />
-  <meta name="twitter:url", content="<%=updates_url %>" />
   <meta itemprop="image", content="<%=@posts.first.image.url if @posts.first.image.attached? %>" />
   <link rel="canonical" href="<%= updates_url %>" />
 <% end %>
