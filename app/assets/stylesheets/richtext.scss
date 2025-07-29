@@ -15,7 +15,10 @@ trix-editor {
     margin: 0;
   }
   * {
-    line-height: 1.6;}
+    line-height: 30px;
+    letter-spacing: .01rem;
+    font-size: 18px;
+  }
   ul {
     margin-left: 3em;
     list-style: disc;
