@@ -1,7 +1,7 @@
 
 <% content_for :head do %>
   <% meta_title = if @product.variations.any?(&:recurring?)
-      "Sign up for the #{@product.name} fresh from Switch Bakery"
+      "#{@product.name} sent fresh from Switch Bakery in Santa Cruz"
     else
       "Order #{@product.name.pluralize} fresh from Switch Bakery"
     end
