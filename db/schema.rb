@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_15_182625) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_180914) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -321,7 +321,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_15_182625) do
     t.bigint "variation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "customer_order_id"
     t.index ["customer_id"], name: "index_preference_associations_on_customer_id"
+    t.index ["customer_order_id"], name: "index_preference_associations_on_customer_order_id"
     t.index ["preference_id"], name: "index_preference_associations_on_preference_id"
     t.index ["variation_id"], name: "index_preference_associations_on_variation_id"
   end
@@ -419,6 +421,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_15_182625) do
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "payment_methods", "customer_orders"
   add_foreign_key "posts", "categories"
+  add_foreign_key "preference_associations", "customer_orders"
   add_foreign_key "preference_associations", "customers"
   add_foreign_key "preference_associations", "preferences"
   add_foreign_key "preference_associations", "variations"

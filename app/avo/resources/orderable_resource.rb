@@ -15,5 +15,6 @@ class OrderableResource < Avo::BaseResource
   field :variation, as: :belongs_to
   field :cart, as: :belongs_to
   field :customer_order , as: :belongs_to
+  field :preferences, as: :has_many
   # add fields here
 end

@@ -24,6 +24,7 @@ class CustomerOrderResource < Avo::BaseResource
   field :payment_method, as: :has_one, hide_on: [:index]
   field :address, as: :has_one, hide_on: [:index]
   field :customer, as: :belongs_to, sortable: true
+  field :preferences, as: :has_many
   field :orderables, as: :has_many
   field :invoices, as: :has_many
   field :description, as: :textarea

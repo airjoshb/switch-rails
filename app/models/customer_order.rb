@@ -6,6 +6,8 @@ class CustomerOrder < ApplicationRecord
   has_many :customer_boxes
   has_one :address, dependent: :destroy
   has_one :payment_method, dependent: :destroy
+  has_many :preference_associations, dependent: :destroy, inverse_of: :customer_order
+  has_many :preferences, through: :preference_associations
 
   enum order_status: {pending: 'pending', processed: 'processed', failed: 'failed', fulfilled: 'fulfilled', refunded: 'refunded'}
   SUBSCRIPTION_STATUS = %i[active canceled paused].freeze

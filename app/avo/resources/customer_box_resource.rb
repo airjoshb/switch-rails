@@ -15,6 +15,8 @@ class CustomerBoxResource < Avo::BaseResource
   field :customer, as: :has_one
   field :address, as: :has_one
   field :customer_order, as: :belongs_to
+  field :orderable_notes, as: :text
+  field :order_preferences, as: :text
   field :note, as: :trix
   field :email_sent, as: :boolean
   field :email_sent_date, as: :date_time
