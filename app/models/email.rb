@@ -4,6 +4,7 @@ class Email < ApplicationRecord
   has_many :customer_emails
   has_many :customers, through: :customer_emails
   has_rich_text :body
+  has_many_attached :trix_attachments
 
   def generate_customer_emails(campaign)
     campaign.customers.each do |customer|
