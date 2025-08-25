@@ -6,4 +6,5 @@ class PreferenceAssociation < ApplicationRecord
 
   validates :customer_id, uniqueness: { scope: :preference_id }, allow_nil: true
   validates :variation_id, uniqueness: { scope: :preference_id }, allow_nil: true
+  validates :customer_order_id, uniqueness: { scope: :preference_id }, allow_nil: true
 end
