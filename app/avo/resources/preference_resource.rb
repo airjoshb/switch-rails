@@ -15,8 +15,5 @@ class PreferenceResource < Avo::BaseResource
   # Fields generated from the model
   field :name, as: :text
   field :options, as: :text
-  field :customer_order, as: :has_many
-  field :customer, as: :has_many
-  field :variation, as: :has_many
   # add fields here
 end
