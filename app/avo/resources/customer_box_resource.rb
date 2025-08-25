@@ -18,8 +18,8 @@ class CustomerBoxResource < Avo::BaseResource
   field :orderable_notes, as: :text do |orderable|
     orderable.orderable_notes
   end
-  field :order_preferences, as: :text do |order|
-    order.order_preferences
+  field :order_preferences, as: :text do |customer_order|
+    customer_order.order_preferences
   end
   field :note, as: :trix
   field :email_sent, as: :boolean
