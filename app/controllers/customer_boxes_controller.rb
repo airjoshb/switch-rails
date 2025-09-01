@@ -45,14 +45,17 @@ class CustomerBoxesController < ApplicationController
       @order.save!
 
       respond_to do |format|
-        format.turbo_stream do
-          Rails.logger.info "Rendering turbo_stream for order: #{@order.id}, orderables count: #{@order.orderables.count}"
-          render turbo_stream: turbo_stream.replace(
-            "customer_box_summary",
-            partial: "customer_boxes/summary",
-            locals: { order: @order }
-          )
-        end
+        # format.turbo_stream do
+        #   Rails.logger.info "Rendering turbo_stream for order: #{@order.id}, orderables count: #{@order.orderables.count}"
+          # render turbo_stream: turbo_stream.replace(
+          #   "customer_box_summary",
+          #   partial: "customer_boxes/summary",
+          #   locals: { order: @order }
+          # )
+        # end
+        # format.turbo_stream do
+        #   render turbo_stream: turbo_stream.replace('customer_box_summary', partial: 'summary', locals: { order: @order })
+        # end
         format.html { redirect_to customer_box_path(@customer_box), notice: "Item added!" }
       end
     end

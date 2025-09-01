@@ -4,7 +4,7 @@ class Customer < ApplicationRecord
   has_many :fan_comments
   has_many :customer_emails
   has_many :emails, through: :customer_emails
-  has_many :customer_boxes, through: :customer_orders, inverse_of: :customer
+  has_many :customer_boxes, through: :customer_orders, inverse_of: :customer_orders
   has_many :invoices, through: :customer_orders
   has_many :addresses, through: :customer_orders
   has_many :payment_methods, through: :customer_orders

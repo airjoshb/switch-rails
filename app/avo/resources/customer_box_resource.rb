@@ -19,6 +19,9 @@ class CustomerBoxResource < Avo::BaseResource
   field :customer_order_address, as: :text do |customer_order|
     customer_order.address
   end
+  field :variations, as: :text do |customer_box|
+    customer_box.customer_orders.flat_map(&:variations).map(&:name).join(", ")
+  end
   field :orderable_notes, as: :text do |orderable|
     orderable.orderable_notes
   end

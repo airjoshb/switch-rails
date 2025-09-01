@@ -1,6 +1,6 @@
 class CustomerBox < Box
   belongs_to :box, foreign_key: :box_id
-  has_and_belongs_to_many :customer_orders, join_table: :boxes_customer_orders, foreign_key: :box_id
+  has_and_belongs_to_many :customer_orders, join_table: :boxes_customer_orders, foreign_key: :box_id, inverse_of: :customer_boxes
   has_one :customer_email
   has_many :orderables, through: :customer_orders
   has_one :address, through: :customer_orders
