@@ -18,7 +18,7 @@
         <td class="center"><%= display_price(orderable.quantity * orderable.variation.amount) %></td>
         <td>
           <span class="close">
-            <%= form_with(url: remove_orderable_path(orderable), method: :post) do |f| %>
+            <%= form_with(url: remove_orderable_path(orderable, customer_box_id: @customer_box), method: :post) do |f| %>
               <%= f.submit "remove" %>
             <% end %>
           </span>          

@@ -6,19 +6,15 @@ class CustomerBoxesController < ApplicationController
   Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
   def show
     @customer_box = CustomerBox.find(params[:id])
-    # if params[:token].present? && @customer_box.access_token == params[:token]
-    #   @add_ons = @customer_box.box.variations
-    #   order_id = session["customer_box_#{@customer_box.id}_order_id"]
-    #   @order = CustomerOrder.find_by(id: order_id) ||CustomerOrder.new
-    #   render layout: "customer"    
-    # else
-    #   redirect_to root_path, alert: "Access denied."
-    # end
-    @customer = @customer_box.customer
-    @add_ons = @customer_box.box.variations
-    order_id = session["customer_box_#{@customer_box.id}_order_id"]
-    @order = CustomerOrder.find_by(id: order_id) ||CustomerOrder.new
-    render layout: "customer" 
+    if params[:token].present? && @customer_box.access_token == params[:token]
+      @customer = @customer_box.customer
+      @add_ons = @customer_box.box.variations
+      order_id = session["customer_box_#{@customer_box.id}_order_id"]
+      @order = CustomerOrder.find_by(id: order_id) ||CustomerOrder.new
+      render layout: "customer" 
+    else
+      redirect_to root_path, alert: "Access denied."
+    end
   end
 
   def update_add_ons
@@ -62,20 +58,21 @@ class CustomerBoxesController < ApplicationController
   end
 
   def remove
+    @customer_box = CustomerBox.find(params[:customer_box_id])
     orderable = Orderable.find_by(id: params[:id])
     order = orderable.customer_order
     orderable.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        Rails.logger.info "Rendering turbo_stream for order: #{order.id}, orderables count: #{order.orderables.count}"
-        render turbo_stream: turbo_stream.replace(
-          "customer_box_summary",
-          partial: "customer_boxes/summary",
-          locals: { order: order }
-        )
-      end
-      format.html { redirect_to customer_box_path(order.customer_box) }
+    #   format.turbo_stream do
+    #     Rails.logger.info "Rendering turbo_stream for order: #{order.id}, orderables count: #{order.orderables.count}"
+    #     render turbo_stream: turbo_stream.replace(
+    #       "customer_box_summary",
+    #       partial: "customer_boxes/summary",
+    #       locals: { order: order }
+    #     )
+    #   end
+      format.html { redirect_to customer_box_path(@customer_box), notice: "Item removed!" }
     end
   end
 
@@ -112,7 +109,7 @@ class CustomerBoxesController < ApplicationController
       )
       @order.update(order_status: "processed", stripe_id: charge.id, amount: amount, payment_method: switch_payment_method)
       @order.deliver_order_confirmation
-      redirect_to customer_box_path(@customer_box), notice: "Order confirmed and charged!"
+      redirect_to cart_success_path, notice: "Order confirmed and charged!"
     rescue Stripe::CardError => e
       redirect_to customer_box_path(@customer_box), alert: "Payment failed: #{e.message}"
     end
