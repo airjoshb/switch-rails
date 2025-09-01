@@ -3,7 +3,7 @@ class CustomerOrder < ApplicationRecord
   has_many :orderables, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :variations, through: :orderables
-  has_and_belongs_to_many :customer_boxes, join_table: :boxes_customer_orders, foreign_key: :customer_order_id
+  has_and_belongs_to_many :customer_boxes, join_table: :boxes_customer_orders,:association_foreign_key => :box_id, foreign_key: :customer_order_id
   has_one :address, dependent: :destroy
   has_one :payment_method, dependent: :destroy
   has_many :preference_associations, dependent: :destroy, inverse_of: :customer_order
