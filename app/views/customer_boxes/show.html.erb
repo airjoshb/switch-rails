@@ -9,7 +9,7 @@
             <% @add_ons.each do |variation| %>
                 <%= form_with url: add_ons_customer_box_path(@customer_box), method: :patch, data: { turbo_frame: "variation_#{variation.id}" }, class: "add-on-form" do |f| %>
                   <div class="m-5">
-                    <div class="priceContainer d-flex align-items-center">
+                    <div class="priceContainer d-flex">
                       <%= render partial: "/cart/prices", locals: { variation: variation } %>
                       <span class="price ml-3">
                         <%= hidden_field_tag "variation_id", variation.id %>

@@ -13,4 +13,6 @@
   <% else %>
     <%= variation.name %>
   <% end %>
+  <br >
+  <%= variation.description.html_safe unless variation.description.blank? %>
 </span>
