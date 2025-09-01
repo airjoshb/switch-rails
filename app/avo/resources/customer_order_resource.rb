@@ -31,5 +31,6 @@ class CustomerOrderResource < Avo::BaseResource
   field :completed_at, as: :date_time, hide_on: [:index]
   field :receipt_sent, as: :boolean
   field :receipt_sent_date, as: :date_time
+  field :customer_boxes, as: :has_and_belongs_to_many, hide_on: [:index]
   # add fields here
 end
