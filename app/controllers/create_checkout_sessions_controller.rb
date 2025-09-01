@@ -373,9 +373,9 @@ class CreateCheckoutSessionsController < ApplicationController
       variation = Variation.find_by_stripe_id(price)
       cart = Cart.create
       order.orderables.last.update(current: false) if order.orderables.size > 1
-      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: cart, current: true, subscription_id: stripe_subscription.id)
+      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: cart, current: true, subscription_id: subscription.id)
     end
-    order.update(subscription_status: stripe_subscription.status, subscription_id: stripe_subscription.id)
+    order.update(subscription_status: stripe_subscription.status, subscription_id: subscription.id)
     
     puts "Updated Subscription"
   end
@@ -399,7 +399,7 @@ class CreateCheckoutSessionsController < ApplicationController
         previous_order.update(current: false)
       end
     end
-    order.update(subscription_status: sub_status)
+    order.update(subscription_status: sub_status, current: true)
     puts "Updated Subscription"
   end
 

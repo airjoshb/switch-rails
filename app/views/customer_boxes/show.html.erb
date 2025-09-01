@@ -1,0 +1,44 @@
+<section id="cart" class="mt-6">
+  <div class="cartContainer">
+      <div class="content ">
+        Hello <%= @customer.name.split(" ").first %>,
+        <p>Your subscription for the week of <%= @customer_box.date.strftime("%B %d, %Y") %> is being prepared. Here are a few things you can add to your order today.</p>
+        <div class="items">
+          <% if @add_ons.present? %>
+            <!-- filepath: /Users/joshua/Sites/switch-rails/app/views/customer_boxes/show.html.erb -->
+            <% @add_ons.each do |orderable| %>
+              <turbo-frame id="orderable_<%= orderable.id %>">
+                <%= form_with url: add_ons_customer_box_path(@customer_box), method: :patch, data: { turbo_frame: "orderable_#{orderable.id}" }, class: "add-on-form" do |f| %>
+                  <div class="m-5">
+                    <div class="priceContainer d-flex align-items-center">
+                      <%= render partial: "/cart/prices", locals: { variation: orderable } %>
+                      <span class="price ml-3">
+                        <%= hidden_field_tag "variation_id", orderable.id %>
+                        <%= hidden_field_tag "order_id", @order.id %>
+                        <%= number_field_tag "quantity", 1, min: 0, class: "form-control d-inline-block", style: "width: 80px;" %>
+                        @ <%= display_price(orderable.amount) %>
+                      </span>
+                      <span class="close"><%= f.submit "Add Item", class: "btn btn-primary ml-2" %></span>
+                    </div>
+                  </div>
+                <% end %>
+              </turbo-frame>
+            <% end %>
+            <turbo-frame id="customer_box_summary">
+              <%= render partial: "customer_boxes/summary", locals: { order: @order } %>
+            </turbo-frame>
+            <% if @order.orderables.any? %>
+              <div class="mt-4">
+              <turbo-frame id="customer_box_confirm">
+                <%= button_to "Confirm Order", complete_order_customer_box_path(@customer_box), method: :post, class: "button primary alternate right", data: { turbo_frame: "customer_box_confirm" } %>
+              </turbo-frame>
+              </div>
+            <% end %>
+          <% else %>
+            <p>No add-ons available for this subscription.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

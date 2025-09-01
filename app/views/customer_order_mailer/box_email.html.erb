@@ -24,6 +24,24 @@
                       <%= @box.email.body %>
                     <% end %>
                     <br />
+                    <% if @customer_box.box.variations.any? %>
+                      <hr>
+                      <h2 style="color: #333333; font-size: 18px; font-weight: bold;">Add-ons Available!</h2>
+                      <p style="font-size: 16px; color: #51545E;">
+                        You can add these items to your upcoming box:
+                        <ul style="margin: 0 0 1em 1em; padding: 0;">
+                          <% @customer_box.box.variations.each do |variation| %>
+                            <li><%= variation.name %></li>
+                          <% end %>
+                        </ul>
+                        Click below to add these to your box:
+                      </p>
+                      <p style="text-align: center; margin: 1em 0;">
+                        <a href="<%= customer_box_url(@customer_box, token: @customer_box.access_token) %>" style="background: #28a745; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                          Add Items to Your Box
+                        </a>
+                      </p>
+                    <% end %>
                     <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">Cheers,
                       <br />Amanda & Joshua</p>
                     

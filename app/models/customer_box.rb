@@ -1,17 +1,28 @@
 class CustomerBox < Box
   belongs_to :box, foreign_key: :box_id
-  belongs_to :customer_order
+  has_and_belongs_to_many :customer_orders, join_table: :boxes_customer_orders, foreign_key: :box_id
   has_one :customer_email
-  has_one :customer, through: :customer_order, foreign_key: :box_id
-  has_one :address, through: :customer_order
-  has_many :orderables, through: :customer_order
+  has_many :orderables, through: :customer_orders
+  has_one :address, through: :customer_orders
+
+  def customers
+    customer_orders.includes(:customer).map(&:customer).uniq
+  end
+
+  def customer
+    customers.first
+  end
+
+  def address
+    customer_orders.includes(:address).map(&:address).compact.first&.full_address
+  end
 
   def orderable_notes_map
     orderables.map(&:notes).compact
   end
 
   def order_preferences_map
-    customer_order.preferences.map(&:name).compact
+    customer_orders.flat_map { |order| order.preferences.map(&:name) }.compact
   end
 
   def order_preferences

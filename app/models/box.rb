@@ -1,7 +1,7 @@
 class Box < ApplicationRecord
   belongs_to :box, foreign_key: :box_id, optional: true
   has_many :customer_boxes, foreign_key: :box_id, inverse_of: :box
-  has_many :customer_orders, through: :customer_boxes, source: :customer_order
+  has_and_belongs_to_many :customer_orders, join_table: :boxes_customer_orders, foreign_key: :box_id
   has_many :box_variations, dependent: :destroy
   has_many :variations, through: :box_variations
   has_one :email
@@ -10,6 +10,7 @@ class Box < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   # after_save :generate_customer_boxes
+  before_create :set_access_token
 
   def generate_customer_boxes
     subscribers = CustomerOrder.active.processed
@@ -24,7 +25,8 @@ class Box < ApplicationRecord
     customer_orders = active_subscribers - current_boxes
     customer_orders.each do |customer|
       subscriber = CustomerOrder.find(customer) 
-      box = self.customer_boxes.create(date: self.date, customer_order: subscriber)
+      box = self.customer_boxes.create(date: self.date)
+      box.customer_orders << subscriber
       subscriber.update(last_box_date: self.date)
     end
     'add variations from parent box that matches customer preferences'
@@ -33,10 +35,16 @@ class Box < ApplicationRecord
   def send_email
     self.customer_boxes.each do |box|
       next box if box.email_sent?
-      customer_order = box.customer_order
+      customer_order = box.customer_orders.first
       CustomerOrderMailer.box_email(self, customer_order, box).deliver
       box.update(email_sent: true, email_sent_date: Time.zone.now )
     end
+  end
+  
+  private
+
+  def set_access_token
+    self.access_token ||= SecureRandom.hex(20)
   end
 
 

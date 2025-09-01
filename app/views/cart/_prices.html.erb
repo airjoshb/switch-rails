@@ -8,8 +8,7 @@
       <% if variation.recurring? %>
         <%= variation.name %>
       <% else %>
-        <%= variation.unit_quantity %> - 
-        <%= variation.name.pluralize %>
+        <%= variation.name %> - <%= variation.unit_quantity %> pack 
       <% end %>
   <% else %>
     <%= variation.name %>

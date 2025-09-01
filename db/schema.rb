@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_180914) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_26_205043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,8 +118,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_180914) do
     t.string "type"
     t.boolean "email_sent"
     t.datetime "email_sent_date"
+    t.string "access_token"
+    t.index ["access_token"], name: "index_boxes_on_access_token", unique: true
     t.index ["created_at"], name: "index_boxes_on_created_at"
     t.index ["customer_order_id"], name: "index_boxes_on_customer_order_id"
+  end
+
+  create_table "boxes_customer_orders", id: false, force: :cascade do |t|
+    t.bigint "box_id", null: false
+    t.bigint "customer_order_id", null: false
+    t.index ["box_id", "customer_order_id"], name: "index_boxes_orders_on_box_and_order", unique: true
+    t.index ["box_id"], name: "index_boxes_customer_orders_on_box_id"
+    t.index ["customer_order_id"], name: "index_boxes_customer_orders_on_customer_order_id"
   end
 
   create_table "campaigns", force: :cascade do |t|
@@ -265,7 +275,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_180914) do
 
   create_table "orderables", force: :cascade do |t|
     t.bigint "variation_id", null: false
-    t.bigint "cart_id", null: false
+    t.bigint "cart_id"
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -404,6 +414,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_180914) do
   add_foreign_key "box_variations", "boxes"
   add_foreign_key "box_variations", "variations"
   add_foreign_key "boxes", "customer_orders"
+  add_foreign_key "boxes_customer_orders", "boxes"
+  add_foreign_key "boxes_customer_orders", "customer_orders"
   add_foreign_key "campaigns_customers", "campaigns"
   add_foreign_key "campaigns_customers", "customers"
   add_foreign_key "campaigns_emails", "campaigns"

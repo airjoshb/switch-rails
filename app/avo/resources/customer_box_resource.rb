@@ -12,9 +12,13 @@ class CustomerBoxResource < Avo::BaseResource
   # Fields generated from the model
   field :date, as: :date_time
   field :box, as: :belongs_to
-  field :customer, as: :has_one
-  field :address, as: :has_one
-  field :customer_order, as: :belongs_to
+  field :customer_orders, as: :has_and_belongs_to_many
+  field :customer_name, as: :text do |order|
+    order.customer.name
+  end
+  field :customer_order_address, as: :text do |customer_order|
+    customer_order.address
+  end
   field :orderable_notes, as: :text do |orderable|
     orderable.orderable_notes
   end

@@ -3,11 +3,14 @@ class CustomerOrder < ApplicationRecord
   has_many :orderables, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :variations, through: :orderables
-  has_many :customer_boxes
+  has_and_belongs_to_many :customer_boxes, join_table: :boxes_customer_orders, foreign_key: :customer_order_id
   has_one :address, dependent: :destroy
   has_one :payment_method, dependent: :destroy
   has_many :preference_associations, dependent: :destroy, inverse_of: :customer_order
   has_many :preferences, through: :preference_associations
+
+  accepts_nested_attributes_for :orderables
+
 
   enum order_status: {pending: 'pending', processed: 'processed', failed: 'failed', fulfilled: 'fulfilled', refunded: 'refunded'}
   SUBSCRIPTION_STATUS = %i[active canceled paused].freeze

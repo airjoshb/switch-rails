@@ -20,6 +20,13 @@ Rails.application.routes.draw do
       patch :update_notes
     end
   end
+  resources :customer_boxes, only: [:show] do
+    member do
+      patch :add_ons, to: "customer_boxes#update_add_ons"
+      post :complete_order, to: "customer_boxes#complete_order"
+    end
+  end
+  post 'orderables/:id/remove', to: 'customer_boxes#remove', as: :remove_orderable
   resources :customers, only: [:new, :create]
   get 'customers/unsubscribe'
   patch 'customers/unsubscribe'
