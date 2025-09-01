@@ -29,6 +29,7 @@
               <div class="mt-4">
                 <%= button_to "Confirm Order", complete_order_customer_box_path(@customer_box), method: :post, class: "button primary alternate right" %>
               </div>
+              <small class="center m-2">The payment method used for your subscription will be charged for these additional items.</small>
             <% end %>
           <% else %>
             <p>No add-ons available for this subscription.</p>
