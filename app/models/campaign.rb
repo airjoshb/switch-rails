@@ -3,9 +3,7 @@ class Campaign < ApplicationRecord
   has_and_belongs_to_many :customers
 
   def send_email
-    self.emails.last do |email|
-      email.generate_customer_emails(self)       
-    end
+    self.emails.last.generate_customer_emails(self)       
   end
 
   def add_all_fans
