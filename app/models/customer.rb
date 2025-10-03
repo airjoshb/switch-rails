@@ -15,6 +15,8 @@ class Customer < ApplicationRecord
   accepts_nested_attributes_for :fan_comments, allow_destroy: true, 
   reject_if: :all_blank
   
+  after_create :add_to_fan_campaign
+ 
   def emailable?
     promotion_consent?
   end
@@ -30,5 +32,14 @@ class Customer < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     ["email", "name", "stripe_id"]
+  end
+
+
+  private
+
+  def add_to_fan_campaign
+    return unless self.fan?
+    campaign = Campaign.find_by(id: 2)
+    self.campaigns << campaign if campaign && !self.campaigns.exists?(id: 2)
   end
 end
