@@ -4,7 +4,6 @@ class Campaign < ApplicationRecord
 
   def send_email
     self.emails.last do |email|
-      next email if self.customers.length == email.customers.length
       email.generate_customer_emails(self)       
     end
   end
