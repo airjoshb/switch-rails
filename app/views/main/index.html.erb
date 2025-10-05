@@ -1,7 +1,7 @@
 
 <% content_for :head do %>
   <title>Gluten-free Bread & Pastries Baked Fresh in Santa Cruz</title>
-  <meta name="description" content="<%= @page.description %>" />
+  <meta name="description" content="<%= @page.description.to_plain_text.truncate(300) %>" />
   <meta property="og:title", content="Gluten-free Bread & Pastries Baked Fresh in Santa Cruz<" />
   <meta property="og:site_name", content="Switch Bakery" />
   <meta property="og:description", content="<%= @page.description.to_plain_text.truncate(300) %>" />
