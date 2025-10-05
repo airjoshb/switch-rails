@@ -15,7 +15,7 @@ class PageResource < Avo::BaseResource
   field :id, as: :id
   # Fields generated from the model
   field :title, as: :text
-  field :description, as: :textarea
+  field :description, as: :trix
   field :nav, as: :boolean
   field :content, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
   # add fields here
