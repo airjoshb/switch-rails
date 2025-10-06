@@ -14,7 +14,7 @@
   "http://schema.org/Articles"
 <% end %>
 
-<%= render "/main/banner", image: nil, title: "the latest updates from the bakery", subtitle: "" %>
+<%= render "/main/banner", image: nil, title: "the latest <%= @category? ?  "#{@category.name} updates" : "updates" %> from the bakery", subtitle: "" %>
 <section id="post">
   <div class="container">
     <div class="postContainer">
@@ -29,7 +29,7 @@
                   <div class="">
                     <% if post.category.present? %>
                       <h3 class="capsule uppercase b3 mb-4">
-                        <%= link_to category_updates_path(category: post.category.slug), post.category.name %>
+                        <%= link_to post.category.name, category_updates_path(category: post.category.slug) %>
                       </h3>
                     <% end %>
                     <h5><%= post.title %></h5>
