@@ -15,6 +15,7 @@ class ArtifactResource < Avo::BaseResource
   field :name, as: :text
   field :url, as: :text
   field :image, as: :file
+  field :media, as: :file
   field :posts, as: :has_and_belongs_to_many
   field :products, as: :has_and_belongs_to_many
   field :category, as: :belongs_to
