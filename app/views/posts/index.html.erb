@@ -19,24 +19,31 @@
   <div class="container">
     <div class="postContainer">
       <div class="content">
-        <% @posts.group_by {|t| t.created_at.beginning_of_month }.each do |date, posts| %>
-          <div class="date"><%= date.strftime("%B, %Y") %></div>
-          <% for post in posts.reverse %>
-            <div class="post">
-              <%= link_to update_path(post) do %>
-                <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
-                <div class="">
-                  <% if post.category.present? %>
-                    <h3 class="capsule uppercase b3 mb-4">
-                      <%= post.category.name %>
-                    </h3>
-                  <% end %>
-                  <h5><%= post.title %></h5>
-                </div>
-              <% end %>
-            </div>
+        <% if @posts.any? %>
+          <% @posts.group_by { |t| t.created_at.beginning_of_month }.each do |date, posts| %>
+            <div class="date"><%= date.strftime("%B, %Y") %></div>
+            <% posts.reverse.each do |post| %>
+              <div class="post">
+                <%= link_to update_path(post) do %>
+                  <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
+                  <div class="">
+                    <% if post.category.present? %>
+                      <h3 class="capsule uppercase b3 mb-4">
+                        <%= link_to category_updates_path(category: post.category.slug), post.category.name %>
+                      </h3>
+                    <% end %>
+                    <h5><%= post.title %></h5>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
           <% end %>
-        <% end %>
+        <% else %>
+          <div class="no-posts">
+            <p>No updates found in <%= @category.name %>.</p>
+            <%= link_to "View All Updates", updates_path, class: "btn btn-primary" %>
+          </div>
+        <% end %>           
       </div>
     </div>
   </div>

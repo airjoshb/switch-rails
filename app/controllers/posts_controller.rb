@@ -2,7 +2,12 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show]
 
   def index
-    @posts= Post.all
+    if params[:category]
+      @category = Category.find_by_slug(params[:category])
+      @posts = Post.where(category_id: @category.id) if @category
+    else
+      @posts= Post.all
+    end
   end
 
   def show
@@ -11,6 +16,13 @@ class PostsController < ApplicationController
 
   def feed
     @posts = Post.all.order(created_at: :desc).limit(20)
+    respond_to do |format|
+      format.rss { render layout: false }
+    end
+  end
+
+  def podcast_feed
+    @posts = Post.joins(:category).where(categories: { name: "Podcasts" }).includes(:artifacts)
     respond_to do |format|
       format.rss { render layout: false }
     end

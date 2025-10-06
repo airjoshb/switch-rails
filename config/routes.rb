@@ -45,10 +45,15 @@ Rails.application.routes.draw do
   get "/sitemap" => redirect("tools/sitemap")
   get "/tools/sitemap" => "sitemap#index", :as => :sitemap_tools, :defaults => {:format => :xml}
   resources :products 
-  resources :updates, controller: :posts
+  resources :updates, controller: :posts do
+    collection do
+      get 'category/:category', to: 'posts#index', as: :category
+    end
+  end
   get "p/Home" => redirect("/")
   get "p/home" => redirect("/")
   get '/feed', to: 'posts#feed', as: :feed
+  get '/podcast_feed', to: 'posts#podcast_feed', as: :podcast_feed
   get '/p/:slug', to: 'pages#show', as: :page
   get '/shop', to: 'products#index', as: 'shop'
   post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'
