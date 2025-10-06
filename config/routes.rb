@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   resources :updates, controller: :posts
   get "p/Home" => redirect("/")
   get "p/home" => redirect("/")
+  get '/feed', to: 'posts#feed', as: :feed
   get '/p/:slug', to: 'pages#show', as: :page
   get '/shop', to: 'products#index', as: 'shop'
   post '/create-checkout-session', to: 'create_checkout_sessions#create', as: 'checkout-session'
