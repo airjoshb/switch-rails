@@ -29,12 +29,13 @@
           <h1><%= @post.title %></h1>
           <div class="postDate"><%= time_ago_in_words @post.created_at %> ago in <% if @post.category.present? %><%= @post.category.name %><% end %></div>
           <hr/>
-          <% if @post.artifacts.media.any? %>
-            <% if @post.artifact.media.content_type.start_with?('audio') %>
-              <audio controls class="w-full">
-                <source src="<%= @post.artifact.media.url %>" type="<%= @post.artifact.media.content_type %>">
-                Your browser does not support the audio element.
-              </audio>
+          <% if @post.artifacts.with_media.any? %>
+            <% @post.artifacts.with_media.each do |artifact| %>
+              <% if artifact.media.content_type&.start_with?('audio') %>
+                <audio controls class="w-full">
+                  <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
+                  Your browser does not support the audio element.
+                </audio>
             <% end %>
           <% end %>
         </div>
