@@ -48,13 +48,8 @@
                   <% if artifact.embed.present? %>
                     <%= artifact.embed.html_safe %>
                   <% elsif artifact.media.attached? %>
-                    <% if artifact.media.content_type.start_with?('audio') %>
-                      <audio controls="controls" style="width: 100%;">
-                        <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
-                        Your browser does not support the audio element.
-                      </audio>
-                    <% elsif artifact.media.content_type.start_with?('video') %>
-                      <video controls width="600">
+                    <% if artifact.media.content_type.start_with?('video') %>
+                      <video controls="controls" width="600">
                         <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
                         Your browser does not support the video element.
                       </video>
