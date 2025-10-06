@@ -29,10 +29,10 @@
           <h1><%= @post.title %></h1>
           <div class="postDate"><%= time_ago_in_words @post.created_at %> ago in <% if @post.category.present? %><%= @post.category.name %><% end %></div>
           <hr/>
-          <% if artifact.media.attached? %>
-            <% if artifact.media.content_type.start_with?('audio') %>
+          <% if @post.artifact.media.any? %>
+            <% if @post.artifact.media.content_type.start_with?('audio') %>
               <audio controls class="w-full">
-                <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
+                <source src="<%= @post.artifact.media.url %>" type="<%= @post.artifact.media.content_type %>">
                 Your browser does not support the audio element.
               </audio>
             <% end %>

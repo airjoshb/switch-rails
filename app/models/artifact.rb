@@ -11,6 +11,7 @@ class Artifact < ApplicationRecord
   has_one_attached :media, dependent: :destroy
   
   scope :embeds, -> {where.not( embed: [nil, ""])}
+  scope :media, -> {where.not( embed: [nil, ""])}
   scope :not_embeds, -> {where( embed: [nil, ""])}
   scope :upcoming, -> {where( 'artifact_date >= ?', Date.today )}
 
