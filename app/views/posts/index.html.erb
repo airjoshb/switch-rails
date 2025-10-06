@@ -21,13 +21,13 @@
       <div class="content">
         <% if @posts.any? %>
           <% @posts.group_by { |t| t.created_at.beginning_of_month }.each do |date, posts| %>
-            <h2 class="date"><%= date.strftime("%B, %Y") %></h2>
+            <h4 class="date"><%= date.strftime("%B, %Y") %></h4>
             <% posts.reverse.each do |post| %>
-              <div class="post">
+              <div class="post flex-row mb-3 items-top">
                 <%= link_to update_path(post) do %>
                   <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
                 <% end %>
-                <div class="">
+                <div>
                   <% if post.category.present? %>
                     <h3 class="capsule uppercase b3 mb-4">
                       <%= link_to post.category.name, category_updates_path(category: post.category.slug) %>
