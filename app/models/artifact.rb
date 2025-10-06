@@ -8,6 +8,7 @@ class Artifact < ApplicationRecord
   
   has_rich_text :description
   has_one_attached :image, dependent: :destroy
+  has_one_attached :media, dependent: :destroy
   
   scope :embeds, -> {where.not( embed: [nil, ""])}
   scope :not_embeds, -> {where( embed: [nil, ""])}

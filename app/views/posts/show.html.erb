@@ -31,15 +31,30 @@
           <hr/>
         </div>
         <div class="reading-frame"><%= @post.content %>
-        <% if @post.artifacts.embeds.any? %>
-          <div class="detailContent">
-          <div class="flex-center wrap m-6 p-4">
-            <% for artifact in @post.artifacts.embeds %>
-                <%= artifact.embed.html_safe %>
-            <% end %>
-          </div>
-        </div>
-        <% end %>
+        <div class="reading-frame"><%= @post.content %>
+          <% if @post.artifacts.any? %>
+            <div class="detailContent">
+              <div class="flex-center wrap m-6 p-4">
+                <% @post.artifacts.each do |artifact| %>
+                  <% if artifact.embed.present? %>
+                    <%= artifact.embed.html_safe %>
+                  <% elsif artifact.media.attached? %>
+                    <% if artifact.media.content_type.start_with?('audio') %>
+                      <audio controls>
+                        <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
+                        Your browser does not support the audio element.
+                      </audio>
+                    <% elsif artifact.media.content_type.start_with?('video') %>
+                      <video controls width="600">
+                        <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
+                        Your browser does not support the video element.
+                      </video>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
