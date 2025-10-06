@@ -3,7 +3,7 @@ xml.rss :version => "2.0" do
   xml.channel do
     xml.title "Switch Bakery from Santa Cruz"
     xml.description "A gluten-free bakery, specializing in bread, cake, and pastries. Come visit our bistro."
-    xml.link posts_url
+    xml.link updates_url
     xml.language "en-US"
 	  xml.updatePeriod "hourly"
 	  xml.updateFrequency "1"
