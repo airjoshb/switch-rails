@@ -13,7 +13,7 @@ xml.rss :version => "2.0" do
         xml.title article.title
         xml.image_url article.image.url
         xml.description article.content
-        xml.pubDate article.pub_date.to_s
+        xml.pubDate article.created_date.to_s
         xml.link update_url(article)
         xml.guid update_url(article)
       end
