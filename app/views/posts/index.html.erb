@@ -14,27 +14,27 @@
   "http://schema.org/Articles"
 <% end %>
 
-<%= render "/main/banner", image: nil, title: "the latest #{@category.name if @category} updates from the bakery", subtitle: "" %>
+<%= render "/main/banner", image: nil, title: "the latest #{@category.name.singularize.downcase if @category} updates from the bakery", subtitle: "" %>
 <section id="post">
   <div class="container">
     <div class="postContainer">
       <div class="content">
         <% if @posts.any? %>
           <% @posts.group_by { |t| t.created_at.beginning_of_month }.each do |date, posts| %>
-            <div class="date"><%= date.strftime("%B, %Y") %></div>
+            <h2 class="date"><%= date.strftime("%B, %Y") %></h2>
             <% posts.reverse.each do |post| %>
               <div class="post">
                 <%= link_to update_path(post) do %>
                   <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
-                  <div class="">
-                    <% if post.category.present? %>
-                      <h3 class="capsule uppercase b3 mb-4">
-                        <%= link_to post.category.name, category_updates_path(category: post.category.slug) %>
-                      </h3>
-                    <% end %>
-                    <h5><%= post.title %></h5>
-                  </div>
                 <% end %>
+                <div class="">
+                  <% if post.category.present? %>
+                    <h3 class="capsule uppercase b3 mb-4">
+                      <%= link_to post.category.name, category_updates_path(category: post.category.slug) %>
+                    </h3>
+                  <% end %>
+                  <h5><%= post.title %></h5>
+                </div>
               </div>
             <% end %>
           <% end %>
