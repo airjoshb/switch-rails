@@ -1,13 +1,14 @@
  <section id="quote">
   <div class="quoteContent">
    <div class="center"> 
-    <% artifact = Artifact.find(12)%>
+    <% artifact = Artifact.find(12) %>
     <%= artifact.description %>
-    <%= link_to "Order on Amazon", artifact, class: "ctaButton button primary" %>
+    <%= link_to "Order on Amazon", artifact.url, class: "ctaButton button primary" %>
   </div>
   <div class="center">
     <%= image_tag(artifact.image.url) if artifact.image.attached?, class: "w-50 mb-4" %>
   </div>
+  <hr />
   <div class="quoteContent">
    <div class="center"> 
     <% page = Page.find_by_slug("where-to-find-us") %>
