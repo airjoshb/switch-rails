@@ -16,6 +16,9 @@ class ArtifactResource < Avo::BaseResource
   field :url, as: :text
   field :image, as: :file
   field :media, as: :file
+  field :duration, as: :number
+  field :season, as: :number
+  field :episode, as: :number
   field :posts, as: :has_and_belongs_to_many
   field :products, as: :has_and_belongs_to_many
   field :category, as: :belongs_to
