@@ -3,7 +3,7 @@
     <div class=""> 
       <% artifact = Artifact.find_by_slug("the-crohn-s-disease-aip-cookbook") %>
       <%= artifact.description %>
-      <%= link_to "Order on Amazon", artifact.url, class: "ctaButton button primary" %>
+      <span class="center"> <%= link_to "Order on Amazon", artifact.url, class: "ctaButton button primary" %></span>
     </div>
     <div class="center">
       <%= image_tag(artifact.image.url, class: "w-80 mb-4") if artifact.image.attached? %>
