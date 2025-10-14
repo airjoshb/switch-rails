@@ -66,6 +66,7 @@ gem "pwned"
 gem "avo", '~> 2.53'
 gem "pagy", '~>8.0'
 gem 'prawn'
+gem 'prawn-table'
 gem 'ransack'
 # gem 'actionpack', '~> 7.1.0'
 gem 'koala'
