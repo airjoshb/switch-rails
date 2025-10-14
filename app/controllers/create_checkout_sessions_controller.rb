@@ -400,7 +400,8 @@ class CreateCheckoutSessionsController < ApplicationController
         previous_order.update(current: false)
       end
     end
-    order.update(subscription_status: sub_status, current: true)
+    order.update(subscription_status: sub_status)
+    orderable.update(current: true)
     puts "Updated Subscription"
   end
 
