@@ -65,6 +65,7 @@ gem 'friendly_id', '~> 5.4.0'
 gem "pwned"
 gem "avo", '~> 2.53'
 gem "pagy", '~>8.0'
+gem 'prawn'
 gem 'ransack'
 # gem 'actionpack', '~> 7.1.0'
 gem 'koala'
