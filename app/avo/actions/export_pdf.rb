@@ -5,10 +5,11 @@ class ExportPdf < Avo::BaseAction
   def handle(models:, resource:, **)
     require 'prawn'
     require 'prawn/table'
-    
+
     pdf = Prawn::Document.new
 
     models.each do |order|
+      pdf.text order.created_at.strftime("%B %d, %Y %l:%M %p")
       pdf.text "Customer Name: #{order.customer&.name || 'N/A'}", style: :bold
       pdf.text "Fulfillment Method: #{order.fulfillment_method || 'N/A'}"
       pdf.text "Address: #{order.address&.full_address || 'N/A'}"
@@ -28,6 +29,6 @@ class ExportPdf < Avo::BaseAction
       pdf.move_down 20
     end
 
-    send_data pdf.render, filename: "customer_orders.pdf", type: "application/pdf"
+    download pdf.render, "customer_orders.pdf"
   end
 end
