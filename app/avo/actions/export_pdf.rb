@@ -4,7 +4,8 @@ class ExportPdf < Avo::BaseAction
 
   def handle(models:, resource:, **)
     require 'prawn'
-
+    require 'prawn/table'
+    
     pdf = Prawn::Document.new
 
     models.each do |order|
