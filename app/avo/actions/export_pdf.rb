@@ -30,9 +30,9 @@ class ExportPdf < Avo::BaseAction
         pdf.text "No orderables."
       end
 
-      pdf.move_down 20
+      pdf.move_down 5
       pdf.stroke_horizontal_rule
-      pdf.move_down 20
+      pdf.move_down 5
     end
 
     download pdf.render, "customer_orders.pdf"
