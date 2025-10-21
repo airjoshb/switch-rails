@@ -1,9 +1,13 @@
 class CustomerOrderResource < Avo::BaseResource
   self.title = :guid
   self.includes = []
-  # self.search_query = -> do
-  #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
-  # end
+  self.search_query = -> do
+    scope.ransack(id_eq: params[:q], m: "or").result(distinct: false).merge(scope.recent)
+  end
+
+  self.resolve_query_scope = ->(model_class:) do
+    model_class.recent
+  end
 
   action MarkComplete
   action FetchInvoices
@@ -13,6 +17,7 @@ class CustomerOrderResource < Avo::BaseResource
   filter IntervalFilter
   
   field :id, as: :id
+  field :created_at, as: :date_time, sortable: true
   # Fields generated from the model
   field :guid, as: :text
   field :order_status, as: :select, enum: CustomerOrder.order_statuses

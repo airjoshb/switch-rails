@@ -2,7 +2,10 @@ class BoxResource < Avo::BaseResource
   self.title = :date
   self.includes = []
   self.search_query = -> do
-    scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
+    scope.ransack(id_eq: params[:q], m: "or").result(distinct: false).merge(scope.recent)
+  end
+  self.resolve_query_scope = ->(model_class:) do
+    model_class.recent
   end
   self.link_to_child_resource = true
 
@@ -12,7 +15,7 @@ class BoxResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
-  field :date, as: :date_time
+  field :date, as: :date_time, sortable: true
   field :type, as: :select, name: "Type", options: { CustomerBox: "CustomerBox" }, include_blank: true
   field :note, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
   field :variations, as: :has_many

@@ -9,7 +9,7 @@ class Box < ApplicationRecord
 
   # remove: default_scope { order(created_at: :desc) }
   # add:
-  scope :recent, -> { order(created_at: :desc) }
+  scope :recent, -> { order(date: :desc) }
 
   # after_save :generate_customer_boxes
   before_create :set_access_token
