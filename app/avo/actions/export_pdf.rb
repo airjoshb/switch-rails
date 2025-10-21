@@ -17,7 +17,7 @@ class ExportPdf < Avo::BaseAction
 
       if order.orderables.any?
         data = [["Quantity", ""]]
-        data += order.orderables.map { |o| [o.variation&.unit_quantity || 'N/A', o.variation&.name || 'N/A'] }
+        data += order.orderables.map { |o| [o.quantity || 'N/A', o.variation&.unit_quantity + o.variation&.name || 'N/A'] }
         pdf.table(data, header: false, width: 300)
       else
         pdf.text "No orderables."
