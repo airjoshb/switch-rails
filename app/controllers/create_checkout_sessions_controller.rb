@@ -363,22 +363,78 @@ class CreateCheckoutSessionsController < ApplicationController
       last_4: card.last4)
     customer.payment_method << order_payment
   end
-  
+
   def attach_subscription(subscription)
     stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
-    stripe_customer = Stripe::Customer.retrieve(stripe_subscription.customer)
-    customer = Customer.find_by_stripe_id(stripe_customer.id)
-    order = CustomerOrder.find_by_customer_id(customer.id)
-    price = stripe_subscription.items.first.price.id
-    unless order.variations.exists?(stripe_id: price)
-      variation = Variation.find_by_stripe_id(price)
-      cart = Cart.create
-      order.orderables.last.update(current: false) if order.orderables.size > 1
-      order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: cart, current: true, subscription_id: subscription.id)
+    stripe_customer_id = stripe_subscription.customer
+    price_id = stripe_subscription.items.data.first&.price&.id
+    quantity = stripe_subscription.items.data.first&.quantity || 1
+
+    unless stripe_customer_id && price_id
+      Rails.logger.warn("attach_subscription: missing customer or price on subscription #{subscription.id}")
+      return
     end
-    order.update(subscription_status: stripe_subscription.status, subscription_id: subscription.id)
-    
-    puts "Updated Subscription"
+
+    customers = Customer.where(stripe_id: stripe_customer_id)
+    if customers.blank?
+      Rails.logger.warn("attach_subscription: no Customer with stripe_id=#{stripe_customer_id}")
+      return
+    end
+
+    customers.each do |customer|
+      # Try to find an order already tied to this subscription
+      order = CustomerOrder.find_by(subscription_id: stripe_subscription.id)
+
+      # If not found, try to find the checkout-created order that contains the matching variation/price
+      if order.nil?
+        order = customer.customer_orders
+                      .joins(orderables: :variation)
+                      .where(variations: { stripe_id: price_id })
+                      .order('customer_orders.created_at DESC')
+                      .distinct
+                      .first
+      end
+
+      # Fallback: most recent order for the customer
+      order ||= customer.customer_orders.order(created_at: :desc).first
+
+      unless order
+        Rails.logger.warn("attach_subscription: no CustomerOrder found for customer #{customer.id}")
+        next
+      end
+
+      # Ensure the order references the subscription and status
+      order.update(subscription_id: stripe_subscription.id, subscription_status: stripe_subscription.status)
+
+      variation = Variation.find_by(stripe_id: price_id)
+      unless variation
+        Rails.logger.warn("attach_subscription: no Variation found for stripe price #{price_id}")
+        next
+      end
+
+      # Find or create the orderable for this variation on this order
+      orderable = order.orderables.joins(:variation).find_by(variations: { stripe_id: price_id })
+
+      if orderable
+        orderable.update(quantity: quantity, subscription_id: stripe_subscription.id, current: true)
+      else
+        cart = Cart.create
+        orderable = order.orderables.create!(
+          variation: variation,
+          quantity: quantity,
+          cart: cart,
+          current: true,
+          subscription_id: stripe_subscription.id
+        )
+      end
+
+      # Optionally ensure only this orderable is marked current
+      order.orderables.where.not(id: orderable.id).update_all(current: false)
+
+      Rails.logger.info "attach_subscription: attached subscription #{stripe_subscription.id} to customer #{customer.id} order #{order.id} orderable #{orderable.id}"
+    end
+  rescue Stripe::StripeError => e
+    Rails.logger.error "attach_subscription Stripe error: #{e.message}"
   end
 
   def update_subscription_status(subscription)
