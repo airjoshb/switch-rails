@@ -26,7 +26,9 @@ class CustomerOrder < ApplicationRecord
   scope :invoices, -> { joins(:invoices).where(invoices: { invoice_status: :paid })}
   scope :last_week, -> {where(created_at: Date.today..1.week )}
   scope :two_weeks, -> {where(created_at: Date.today <= 2.weeks.ago )}
-  default_scope { order(created_at: :desc) }
+  #default_scope { order(created_at: :desc) }
+  scope :recent, -> { order(created_at: :desc) }
+
 
 
   after_initialize  :populate_guid, if: Proc.new { |p| p.guid.blank? }

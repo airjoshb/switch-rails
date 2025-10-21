@@ -7,44 +7,64 @@ class Box < ApplicationRecord
   has_one :email
   has_rich_text :note
 
-  default_scope { order(created_at: :desc) }
+  # remove: default_scope { order(created_at: :desc) }
+  # add:
+  scope :recent, -> { order(created_at: :desc) }
 
   # after_save :generate_customer_boxes
   before_create :set_access_token
 
   def generate_customer_boxes
     subscribers = CustomerOrder.active.processed
-    box_count = self.customer_boxes.size
-    first_box = subscribers.where(last_box_date: nil).pluck(:id)
-    weekly_subscribers = subscribers.weekly.current_sub.distinct.pluck(:id)
-    bimonthly_subscribers = subscribers.bimonthly.where(last_box_date: ..self.date - 13.days).current_sub.distinct.pluck(:id)
-    monthly_subscribers = subscribers.monthly.where(last_box_date: ..self.date - 4.weeks).current_sub.distinct.pluck(:id)
-    
-    # Combine and deduplicate
+
+    # First-time subscribers (never had a box)
+    first_box_ids = subscribers.where(last_box_date: nil).pluck(:id)
+
+    # Weekly: include only those whose last_box_date is at least 7 days before this box date
+    weekly_ids = subscribers.weekly.current_sub
+                            .where.not(last_box_date: nil)
+                            .where('last_box_date <= ?', self.date - 7.days)
+                            .pluck(:id)
+
+    # Bimonthly: last_box_date at least 13 days before this box date
+    bimonthly_ids = subscribers.bimonthly.current_sub
+                                  .where('last_box_date <= ?', self.date - 13.days)
+                                  .pluck(:id)
+
+    # Monthly: last_box_date at least 4 weeks before this box date
+    monthly_ids = subscribers.monthly.current_sub
+                              .where('last_box_date <= ?', self.date - 4.weeks)
+                              .pluck(:id)
+
+    # Combine and dedupe
     active_subscriber_ids = (first_box_ids + weekly_ids + bimonthly_ids + monthly_ids).uniq
 
-    # IDs of customer_orders already attached to this box
+    # IDs of customer_orders already attached to this Box (any existing customer_box)
     current_box_order_ids = self.customer_orders.pluck(:id)
 
     # Orders that need to be added
     to_add_ids = active_subscriber_ids - current_box_order_ids
-
     return if to_add_ids.empty?
-    
-    # Create boxes and associate orders
-    # Optionally wrap in transaction if you want atomic behavior
+
     ActiveRecord::Base.transaction do
       to_add_ids.each do |order_id|
         subscriber = CustomerOrder.find_by(id: order_id)
         next unless subscriber
 
+        # Defensive: skip if this exact subscriber is already attached to a customer_box
+        # for this Box and date (protects against race conditions or previous runs).
+        next if self.customer_boxes
+                  .joins(:customer_orders)
+                  .where(date: self.date, customer_orders: { id: subscriber.id })
+                  .exists?
+
+        # Create a new CustomerBox for this subscriber and associate the order
         box = self.customer_boxes.create!(date: self.date)
         box.customer_orders << subscriber
         subscriber.update!(last_box_date: self.date)
       end
     end
 
-    # Return something descriptive if you like
     "created #{to_add_ids.size} customer_boxes"
   end
 
