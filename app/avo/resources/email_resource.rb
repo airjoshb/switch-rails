@@ -4,10 +4,14 @@ class EmailResource < Avo::BaseResource
   # self.search_query = -> do
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
   # end
+  # 
+  self.resolve_query_scope = ->(model_class:) do
+    model_class.order(id: :desc)
+  end
 
   field :id, as: :id
   # Fields generated from the model
-  field :date_sent, as: :date_time
+  field :date_sent, as: :date_time, sortable: true
   field :subject, as: :text
   field :campaigns, as: :has_and_belongs_to_many
   field :customer_emails, as: :has_many

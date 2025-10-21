@@ -10,7 +10,7 @@ class CampaignResource < Avo::BaseResource
   # Fields generated from the model
   field :name, as: :text
   field :description, as: :textarea
-  field :emails, as: :has_and_belongs_to_many
+  field :emails, as: :has_and_belongs_to_many, order: { date_sent: :desc }
   field :customers, as: :has_and_belongs_to_many
   # add fields here
 end

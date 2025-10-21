@@ -52,9 +52,9 @@ Avo.configure do |config|
   config.resource_controls_placement = :left
   # config.model_resource_mapping = {}
   # config.default_view_type = :table
-  # config.per_page = 24
+  config.per_page = 24
   # config.per_page_steps = [12, 24, 48, 72]
-  # config.via_per_page = 8
+  config.via_per_page = 24
   # config.id_links_to_resource = true
   # config.cache_resources_on_index_view = true
   ## permanent enable or disable cache_resource_filters, default value is false

@@ -3,7 +3,7 @@ class PostResource < Avo::BaseResource
   self.model_class = 'Post'
   self.includes = []
   self.resolve_query_scope = ->(model_class:) do
-    model_class.order(created_at: :asc)
+    model_class.order(created_at: :desc)
   end
 
   self.find_record_method = ->(model_class:, id:, params:) {
