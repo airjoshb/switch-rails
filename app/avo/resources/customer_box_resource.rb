@@ -10,7 +10,6 @@ class CustomerBoxResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
-  field :date, as: :date_time
   field :box, as: :belongs_to
   field :customer_orders, as: :has_and_belongs_to_many
   field :customer_name, as: :text do |order|
