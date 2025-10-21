@@ -18,6 +18,7 @@ class CustomerBoxResource < Avo::BaseResource
   field :customer_order_address, as: :text do |customer_order|
     customer_order.address
   end
+  field :note, as: :trix
   field :variations, as: :text do |customer_box|
     customer_box.customer_orders.flat_map(&:variations).map(&:name).join(", ")
   end
@@ -27,7 +28,6 @@ class CustomerBoxResource < Avo::BaseResource
   field :order_preferences, as: :text do |customer_order|
     customer_order.order_preferences
   end
-  field :note, as: :trix
   field :email_sent, as: :boolean
   field :email_sent_date, as: :date_time
   # add fields here
