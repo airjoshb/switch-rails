@@ -15,7 +15,7 @@ class BoxResource < Avo::BaseResource
 
   field :id, as: :id
   # Fields generated from the model
-  field :date, as: :date_time, sortable: true
+  # field :date, as: :date_time, sortable: true
   field :type, as: :select, name: "Type", options: { CustomerBox: "CustomerBox" }, include_blank: true
   field :note, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
   field :variations, as: :has_many
