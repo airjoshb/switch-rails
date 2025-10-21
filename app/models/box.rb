@@ -15,21 +15,37 @@ class Box < ApplicationRecord
   def generate_customer_boxes
     subscribers = CustomerOrder.active.processed
     box_count = self.customer_boxes.size
-    first_box = subscribers.where(last_box_date: nil)
-    weekly_subscribers = subscribers.weekly.current_sub
-    bimonthly_subscribers = subscribers.bimonthly.where(last_box_date: ..self.date - 13.days).current_sub
-    monthly_subscribers = subscribers.monthly.where(last_box_date: ..self.date - 4.weeks).current_sub
-    active_subscribers = weekly_subscribers + bimonthly_subscribers + monthly_subscribers + first_box
-    current_boxes = self.customer_orders.map { |x| x['id'] }
-    active_subscribers = active_subscribers.map { |x| x['id'] }
-    customer_orders = active_subscribers - current_boxes
-    customer_orders.each do |customer|
-      subscriber = CustomerOrder.find(customer) 
-      box = self.customer_boxes.create(date: self.date)
-      box.customer_orders << subscriber
-      subscriber.update(last_box_date: self.date)
+    first_box = subscribers.where(last_box_date: nil).pluck(:id)
+    weekly_subscribers = subscribers.weekly.current_sub.distinct.pluck(:id)
+    bimonthly_subscribers = subscribers.bimonthly.where(last_box_date: ..self.date - 13.days).current_sub.distinct.pluck(:id)
+    monthly_subscribers = subscribers.monthly.where(last_box_date: ..self.date - 4.weeks).current_sub.distinct.pluck(:id)
+    
+    # Combine and deduplicate
+    active_subscriber_ids = (first_box_ids + weekly_ids + bimonthly_ids + monthly_ids).uniq
+
+    # IDs of customer_orders already attached to this box
+    current_box_order_ids = self.customer_orders.pluck(:id)
+
+    # Orders that need to be added
+    to_add_ids = active_subscriber_ids - current_box_order_ids
+
+    return if to_add_ids.empty?
+    
+    # Create boxes and associate orders
+    # Optionally wrap in transaction if you want atomic behavior
+    ActiveRecord::Base.transaction do
+      to_add_ids.each do |order_id|
+        subscriber = CustomerOrder.find_by(id: order_id)
+        next unless subscriber
+
+        box = self.customer_boxes.create!(date: self.date)
+        box.customer_orders << subscriber
+        subscriber.update!(last_box_date: self.date)
+      end
     end
-    'add variations from parent box that matches customer preferences'
+
+    # Return something descriptive if you like
+    "created #{to_add_ids.size} customer_boxes"
   end
 
   def send_email
