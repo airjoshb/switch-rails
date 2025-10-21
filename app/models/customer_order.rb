@@ -13,7 +13,7 @@ class CustomerOrder < ApplicationRecord
 
 
   enum order_status: {pending: 'pending', processed: 'processed', failed: 'failed', fulfilled: 'fulfilled', refunded: 'refunded'}
-  SUBSCRIPTION_STATUS = %i[active canceled paused past_due unpaid].freeze
+  SUBSCRIPTION_STATUS = %i[active canceled incomplete paused past_due unpaid].freeze
   validates_uniqueness_of :guid
 
   scope :monthly, -> { joins(:variations).where(variations: { interval: :month })}
