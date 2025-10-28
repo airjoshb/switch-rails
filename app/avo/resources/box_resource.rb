@@ -10,6 +10,7 @@ class BoxResource < Avo::BaseResource
   self.link_to_child_resource = true
 
   action CreateCustomerBoxes
+  action ExportShipping
   action SendBoxEmail
   action ExportCsv
 
