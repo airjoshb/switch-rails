@@ -11,6 +11,7 @@ class CustomerOrderResource < Avo::BaseResource
 
   action MarkComplete
   action FetchInvoices
+  action ExportShipping
   action ExportPdf
 
   filter SubscriptionFilter
