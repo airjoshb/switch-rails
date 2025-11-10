@@ -36,16 +36,12 @@ class ExportPdf < Avo::BaseAction
     orders.each do |order|
       next unless order.present?
 
-      # Eager access: orderables should have been eager_loaded by extract_orders_from_record
       orderables = order.respond_to?(:orderables) ? order.orderables.to_a : []
 
-      # Find the active subscription orderable: prefer orderable with subscription_id and (if present) marked current
       active_subscription = orderables.find do |o|
         o.respond_to?(:subscription_id) && o.subscription_id.present? &&
           ( !o.respond_to?(:current) || o.current )
       end
-
-      # Fallback: any orderable with a subscription_id
       active_subscription ||= orderables.find { |o| o.respond_to?(:subscription_id) && o.subscription_id.present? }
 
       subscription_label = if active_subscription
@@ -57,18 +53,14 @@ class ExportPdf < Avo::BaseAction
                            end
 
       name = "#{order.customer&.name || 'N/A'} — #{subscription_label}"
-
       address = format_address(order.address)
-
       fulfillment = order.fulfillment_method || "N/A"
 
-      # Additional variations = any orderables on the same order that are NOT the active subscription and NOT subscription-type
       addl = orderables.reject do |o|
         o == active_subscription || (o.respond_to?(:subscription_id) && o.subscription_id.present?)
       end.map { |o| o.variation&.name }.compact.uniq.join(", ")
       addl = addl.presence || ""
 
-      # Notes: combine order.description and any orderable-level notes
       notes_parts = []
       notes_parts << order.description if order.respond_to?(:description) && order.description.present?
       if orderables.any?
@@ -80,12 +72,42 @@ class ExportPdf < Avo::BaseAction
       data << [name, address, fulfillment, addl, notes]
     end
 
-    # Use tight column widths to fit a page; allow the table to wrap text
+    # Default proportional column widths (points) — these are just proportions we scale.
+    default_widths = [140.0, 180.0, 80.0, 110.0, 120.0]
+    available = pdf.bounds.width.to_f
+    total = default_widths.sum
+
+    scaled_widths = if total > 0
+      if total > available
+        ratio = available / total
+        widths = default_widths.map { |w| (w * ratio).floor }
+        # distribute any remainder to columns to ensure sum == available (avoid off-by-one)
+        rem = (available - widths.sum).to_i
+        i = 0
+        while rem > 0
+          widths[i % widths.length] += 1
+          i += 1
+          rem -= 1
+        end
+        widths
+      else
+        # if there's more room than the defaults, use defaults but expand last column to fill available
+        extra = (available - total).to_i
+        widths = default_widths.map(&:to_i)
+        widths[-1] += extra
+        widths
+      end
+    else
+      # fallback: evenly distribute
+      count = headers.size
+      Array.new(count, (available / count).floor)
+    end
+
     table_options = {
       header: true,
       row_colors: ["FFFFFF", "F7F7F7"],
-      cell_style: { inline_format: false, size: 9 },
-      column_widths: [140, 180, 80, 110, 120]
+      cell_style: { inline_format: false, size: 9, overflow: :truncate },
+      column_widths: scaled_widths
     }
 
     # If there are no rows besides the header, add a placeholder
