@@ -39,13 +39,16 @@ class ExportPdf < Avo::BaseAction
     orders.each do |order|
       next unless order.present?
 
-      orderables = order.respond_to?(:orderables) ? order.orderables.to_a : []
+      all_orderables = order.respond_to?(:orderables) ? order.orderables.to_a : []
 
-      active_subscription = orderables.find do |o|
+      # Current subscription orderables: have subscription_id and are current (or lack 'current' flag)
+      current_subs = all_orderables.select do |o|
         o.respond_to?(:subscription_id) && o.subscription_id.present? &&
-          ( !o.respond_to?(:current) || o.current )
+          (!o.respond_to?(:current) || o.current)
       end
-      active_subscription ||= orderables.find { |o| o.respond_to?(:subscription_id) && o.subscription_id.present? }
+
+      # Pick a single active subscription (prefer first current_subs)
+      active_subscription = current_subs.first
 
       subscription_label = if active_subscription
                              var_name = active_subscription.variation&.name || "Subscription"
@@ -59,15 +62,15 @@ class ExportPdf < Avo::BaseAction
       address = format_address(order.address)
       fulfillment = order.fulfillment_method || "N/A"
 
-      addl = orderables.reject do |o|
-        o == active_subscription || (o.respond_to?(:subscription_id) && o.subscription_id.present?)
-      end.map { |o| o.variation&.name }.compact.uniq.join(", ")
+      # Add'l variations: include only non-recurring orderables (no subscription_id)
+      addl = all_orderables.select { |o| !(o.respond_to?(:subscription_id) && o.subscription_id.present?) }
+                          .map { |o| o.variation&.name }.compact.uniq.join(", ")
       addl = addl.presence || ""
 
       notes_parts = []
       notes_parts << order.description if order.respond_to?(:description) && order.description.present?
-      if orderables.any?
-        orderable_notes = orderables.map { |o| o.respond_to?(:notes) ? o.notes.to_s.strip : nil }.compact.reject(&:empty?).uniq.join(" | ")
+      if all_orderables.any?
+        orderable_notes = all_orderables.map { |o| o.respond_to?(:notes) ? o.notes.to_s.strip : nil }.compact.reject(&:empty?).uniq.join(" | ")
         notes_parts << orderable_notes if orderable_notes.present?
       end
       notes = notes_parts.join(" — ")
@@ -75,7 +78,7 @@ class ExportPdf < Avo::BaseAction
       data << [name, address, fulfillment, addl, notes]
     end
 
-    # Default proportional column widths (points) — these are just proportions we scale.
+    # Compute column widths to fit page (keeps previous dynamic-scaling approach)
     default_widths = [140.0, 180.0, 80.0, 110.0, 120.0]
     available = pdf.bounds.width.to_f
     total = default_widths.sum
