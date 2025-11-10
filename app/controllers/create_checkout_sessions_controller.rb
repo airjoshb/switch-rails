@@ -246,6 +246,17 @@ class CreateCheckoutSessionsController < ApplicationController
       end
     end
     puts "Created order ##{order.guid} for #{checkout_session.inspect}"
+    # if this checkout session created a subscription, mark recurring orderables
+    if checkout_session.subscription.present?
+      sub_id = checkout_session.subscription
+      # Only update recurring variations (avoid attaching subscription to one-offs)
+      order.orderables.includes(:variation).each do |orderable|
+        if orderable.variation&.recurring?
+          orderable.update(subscription_id: sub_id, current: true)
+        end
+      end
+      Rails.logger.info "create_order: set subscription_id=#{sub_id} on recurring orderables for order #{order.id}"
+    end
   end
   
   def create_payment_method(intent, order)
@@ -382,56 +393,64 @@ class CreateCheckoutSessionsController < ApplicationController
     end
 
     customers.each do |customer|
-      # Try to find an order already tied to this subscription
-      order = CustomerOrder.find_by(subscription_id: stripe_subscription.id)
+      ActiveRecord::Base.transaction do
+        begin
+          # 1) Prefer an order already tied to this subscription
+          order = CustomerOrder.find_by(subscription_id: stripe_subscription.id)
 
-      # If not found, try to find the checkout-created order that contains the matching variation/price
-      if order.nil?
-        order = customer.customer_orders
-                      .joins(orderables: :variation)
-                      .where(variations: { stripe_id: price_id })
-                      .order('customer_orders.created_at DESC')
-                      .distinct
-                      .first
+          # 2) If not found, find the most recent order for this customer that contains the variation/price
+          if order.nil?
+            order_id = customer.customer_orders
+                               .joins(orderables: :variation)
+                               .where(variations: { stripe_id: price_id })
+                               .order('customer_orders.created_at DESC')
+                               .pluck('customer_orders.id')
+                               .first
+            order = CustomerOrder.find_by(id: order_id) if order_id
+          end
+
+          # 3) Fallback to customer's most recent order
+          order ||= customer.customer_orders.order(created_at: :desc).first
+
+          unless order
+            Rails.logger.warn("attach_subscription: no CustomerOrder found for customer #{customer.id} (stripe_customer=#{stripe_customer_id})")
+            next
+          end
+
+          # Ensure the order references the subscription and status
+          order.update!(subscription_id: stripe_subscription.id, subscription_status: stripe_subscription.status)
+          Rails.logger.info("attach_subscription: linked subscription #{stripe_subscription.id} to order #{order.id}")
+
+          # Find variation by price id
+          variation = Variation.find_by(stripe_id: price_id)
+          unless variation
+            Rails.logger.warn("attach_subscription: no Variation found for stripe price #{price_id}")
+            next
+          end
+
+          # Find or build orderable by variation_id (simpler and reliable)
+          orderable = order.orderables.find_or_initialize_by(variation_id: variation.id)
+
+          # Prefer to reuse an existing cart if present, else create one if necessary
+          cart_for_orderable = orderable.cart || order.orderables.first&.cart
+
+          orderable.quantity = quantity
+          orderable.subscription_id = stripe_subscription.id
+          orderable.current = true
+          orderable.cart ||= cart_for_orderable || Cart.create!
+          orderable.save!
+
+          # Ensure only this orderable is marked current
+          order.orderables.where.not(id: orderable.id).update_all(current: false)
+
+          Rails.logger.info("attach_subscription: attached subscription #{stripe_subscription.id} to customer #{customer.id} order #{order.id} orderable #{orderable.id}")
+        rescue => e
+          # Log any non-Stripe errors so webhook processing doesn't silently fail
+          Rails.logger.error("attach_subscription error for customer=#{customer.id} sub=#{stripe_subscription.id}: #{e.class} #{e.message}")
+          Rails.logger.error(e.backtrace.join("\n"))
+          raise
+        end
       end
-
-      # Fallback: most recent order for the customer
-      order ||= customer.customer_orders.order(created_at: :desc).first
-
-      unless order
-        Rails.logger.warn("attach_subscription: no CustomerOrder found for customer #{customer.id}")
-        next
-      end
-
-      # Ensure the order references the subscription and status
-      order.update(subscription_id: stripe_subscription.id, subscription_status: stripe_subscription.status)
-
-      variation = Variation.find_by(stripe_id: price_id)
-      unless variation
-        Rails.logger.warn("attach_subscription: no Variation found for stripe price #{price_id}")
-        next
-      end
-
-      # Find or create the orderable for this variation on this order
-      orderable = order.orderables.joins(:variation).find_by(variations: { stripe_id: price_id })
-
-      if orderable
-        orderable.update(quantity: quantity, subscription_id: stripe_subscription.id, current: true)
-      else
-        cart = Cart.create
-        orderable = order.orderables.create!(
-          variation: variation,
-          quantity: quantity,
-          cart: cart,
-          current: true,
-          subscription_id: stripe_subscription.id
-        )
-      end
-
-      # Optionally ensure only this orderable is marked current
-      order.orderables.where.not(id: orderable.id).update_all(current: false)
-
-      Rails.logger.info "attach_subscription: attached subscription #{stripe_subscription.id} to customer #{customer.id} order #{order.id} orderable #{orderable.id}"
     end
   rescue Stripe::StripeError => e
     Rails.logger.error "attach_subscription Stripe error: #{e.message}"
@@ -439,26 +458,47 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def update_subscription_status(subscription)
     orderable = Orderable.find_by_subscription_id(subscription.id)
+
+    unless orderable
+      Rails.logger.warn("update_subscription_status: no Orderable found for subscription #{subscription.id}")
+      return
+    end
+
     order = orderable.customer_order
-    return unless order.present?
+    unless order
+      Rails.logger.warn("update_subscription_status: Orderable #{orderable.id} has no associated customer_order")
+      return
+    end
+
     stripe_subscription = Stripe::Subscription.retrieve(subscription.id)
-    price = stripe_subscription.items.first.price.id
-    if subscription.pause_collection.present?
-      sub_status = "paused"
-    else
-      sub_status = stripe_subscription.status
-    end
-    unless order.variations.exists?(stripe_id: price)
-      variation = Variation.find_by_stripe_id(price)
-      orderable = order.orderables.create(variation: variation, quantity: stripe_subscription.items.first.quantity, cart: order.orderables.first.cart, current: true, subscription_id: stripe_subscription.id)
-      previous_orders = order.orderables.where.not(orderables: {customer_order_id: orderable.id})
-      for previous_order in previous_orders
-        previous_order.update(current: false)
+    price = stripe_subscription.items.first&.price&.id
+    sub_status = subscription.pause_collection.present? ? "paused" : stripe_subscription.status
+
+    begin
+      # If the order doesn't include the current price, add the variation / orderable
+      unless order.variations.exists?(stripe_id: price)
+        variation = Variation.find_by_stripe_id(price)
+        if variation
+          new_orderable = order.orderables.create(
+            variation: variation,
+            quantity: stripe_subscription.items.first.quantity,
+            cart: order.orderables.first&.cart,
+            current: true,
+            subscription_id: stripe_subscription.id
+          )
+          # mark other orderables non-current
+          order.orderables.where.not(id: new_orderable.id).update_all(current: false) if new_orderable.persisted?
+        else
+          Rails.logger.warn("update_subscription_status: no Variation found for price #{price}")
+        end
       end
+
+      order.update(subscription_status: sub_status)
+      orderable.update(current: true)
+      Rails.logger.info("update_subscription_status: updated order #{order.id} status=#{sub_status} for subscription #{subscription.id}")
+    rescue => e
+      Rails.logger.error("update_subscription_status error: #{e.class} #{e.message}\n#{e.backtrace.join("\n")}")
     end
-    order.update(subscription_status: sub_status)
-    orderable.update(current: true)
-    puts "Updated Subscription"
   end
 
   def cancel_subscription(subscription)
