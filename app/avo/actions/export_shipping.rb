@@ -27,12 +27,18 @@ class ExportShipping < Avo::BaseAction
   def handle(models:, resource:, fields:, **)
     return error("No records selected") if models.blank?
 
+    Rails.logger.info "[ExportShipping] models_count=#{models.size} types=#{models.map { |m| m.class.name }.uniq.join(',')} ids=#{models.map { |m| m.try(:id) }.inspect}"
+
     csv_data = CSV.generate(headers: true) do |csv|
       csv << SHIPPING_HEADERS if fields[:include_headers] != false
 
       models.each do |record|
+        Rails.logger.info "[ExportShipping] processing record=#{record.class.name} id=#{record.try(:id)}"
+
         # Expand record into shippable orders (Box -> customer_boxes -> customer_orders, CustomerOrder -> self)
         orders = extract_orders_from_record(record)
+
+        Rails.logger.info "[ExportShipping] extracted_orders_count=#{orders.size} extracted_orders_ids=#{orders.map { |o| "#{o.class.name}:#{o.try(:id)}" }.inspect}"
 
         orders.each do |order|
           customer = order.customer
@@ -43,17 +49,17 @@ class ExportShipping < Avo::BaseAction
           company = ""
 
           addr1 = safe_string(
-            address_try(address, :street_1) || 
-            address_try(address, :street) || 
-            address_try(address, :line1) || 
+            address_try(address, :street_1) ||
+            address_try(address, :street) ||
+            address_try(address, :line1) ||
             address_try(address, :full_address)
           )
           addr2 = safe_string(address_try(address, :street_2) || address_try(address, :line2))
           city  = safe_string(address_try(address, :city))
           state = safe_string(address_try(address, :state))
           zip   = safe_string(
-            address_try(address, :postal) || 
-            address_try(address, :zipcode) || 
+            address_try(address, :postal) ||
+            address_try(address, :zipcode) ||
             address_try(address, :postal_code)
           )
           country = "USA"
