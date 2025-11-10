@@ -8,6 +8,9 @@ class ExportPdf < Avo::BaseAction
 
     pdf = Prawn::Document.new
 
+    timestamp = (Time.zone&.now || Time.now).strftime("%Y-%m-%d")
+    filename = "#{resource.plural_name.parameterize(separator: '_')}_#{timestamp}.pdf"
+
     # Expand incoming models (CustomerOrder | CustomerBox | Box) into an array of CustomerOrder
     orders = models.flat_map do |m|
       extract_orders_from_record(m)
@@ -20,7 +23,7 @@ class ExportPdf < Avo::BaseAction
       render_detailed_orders(pdf, orders)
     end
 
-    download pdf.render, "customer_orders.pdf"
+    download pdf.render, filename
   end
 
   private

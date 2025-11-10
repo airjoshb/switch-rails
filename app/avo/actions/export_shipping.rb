@@ -49,17 +49,17 @@ class ExportShipping < Avo::BaseAction
           company = ""
 
           addr1 = safe_string(
-            address_try(address, :street_1) ||
-            address_try(address, :street) ||
-            address_try(address, :line1) ||
+            address_try(address, :street_1) || 
+            address_try(address, :street) || 
+            address_try(address, :line1) || 
             address_try(address, :full_address)
           )
           addr2 = safe_string(address_try(address, :street_2) || address_try(address, :line2))
           city  = safe_string(address_try(address, :city))
           state = safe_string(address_try(address, :state))
           zip   = safe_string(
-            address_try(address, :postal) ||
-            address_try(address, :zipcode) ||
+            address_try(address, :postal) || 
+            address_try(address, :zipcode) || 
             address_try(address, :postal_code)
           )
           country = "USA"
@@ -99,7 +99,10 @@ class ExportShipping < Avo::BaseAction
       end
     end
 
-    download csv_data, "#{resource.plural_name.parameterize(separator: '_')}_shipping.csv"
+    timestamp = (Time.zone&.now || Time.now).strftime("%Y-%m-%d")
+    filename = "#{resource.plural_name.parameterize(separator: '_')}_shipping_#{timestamp}.csv"
+
+    download csv_data, filename
   end
 
   private
@@ -108,7 +111,7 @@ class ExportShipping < Avo::BaseAction
     # CustomerOrder: return as-is
     return [record] if record.is_a?(CustomerOrder)
 
-    # CustomerBox: extract its customer_orders (check class name because of STI)
+    # CustomerBox: extract its customer_orders
     if record.class.name == "CustomerBox" && record.respond_to?(:customer_orders)
       return record.customer_orders.to_a
     end
@@ -118,6 +121,11 @@ class ExportShipping < Avo::BaseAction
       return record.customer_boxes.flat_map do |customer_box|
         customer_box.customer_orders.to_a
       end.compact
+    end
+
+    # CustomerOrder: return as-is
+    if record.is_a?(CustomerOrder)
+      return [record]
     end
 
     # Fallback: treat as a single order
