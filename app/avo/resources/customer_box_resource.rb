@@ -5,7 +5,7 @@ class CustomerBoxResource < Avo::BaseResource
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
   # end
   self.model_class = ::CustomerBox
-  
+  action ExportShipping  
   action ExportCsv
 
   field :id, as: :id
