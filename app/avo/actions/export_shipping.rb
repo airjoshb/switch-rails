@@ -105,21 +105,19 @@ class ExportShipping < Avo::BaseAction
   private
 
   def extract_orders_from_record(record)
+    # CustomerOrder: return as-is
+    return [record] if record.is_a?(CustomerOrder)
+
+    # CustomerBox: extract its customer_orders (check class name because of STI)
+    if record.class.name == "CustomerBox" && record.respond_to?(:customer_orders)
+      return record.customer_orders.to_a
+    end
+
     # Box: expand to customer_boxes, then their customer_orders
     if record.is_a?(Box) && record.respond_to?(:customer_boxes)
       return record.customer_boxes.flat_map do |customer_box|
         customer_box.customer_orders.to_a
       end.compact
-    end
-
-    # CustomerBox: extract its customer_orders
-    if record.class.name == "CustomerBox" && record.respond_to?(:customer_orders)
-      return record.customer_orders.to_a
-    end
-
-    # CustomerOrder: return as-is
-    if record.is_a?(CustomerOrder)
-      return [record]
     end
 
     # Fallback: treat as a single order
