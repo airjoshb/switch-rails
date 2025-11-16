@@ -1,33 +1,48 @@
 <section id="gallery">
   <div class="postGrid">
     <div class="postItem mb-5">
-        <%= link_to update_path(@post) do %>
+        <%# top featured post (uses @post) %>
+        <% is_feature_external = @post.url.present? && @post.category&.name&.casecmp('press') == 0 %>
+        <% featured_target = is_feature_external ? @post.url : update_path(@post) %>
+        <% featured_opts = is_feature_external ? { target: "_blank", rel: "noopener noreferrer" } : {} %>
+
+        <%= link_to featured_target, featured_opts do %>
           <% unless @post.image.blank? %>
             <div class="imageContainer">
               <picture><%= image_tag @post.image, alt: @post.title %></picture>
             </div>
           <% end %>
         <% end %>
+
         <div class="flex-start column">
-          <%= link_to update_path(@post) do %><h5 class="p-0"><%= @post.title %></h5><% end %>
+          <%= link_to featured_target, featured_opts do %>
+            <h5 class="p-0"><%= @post.title %></h5>
+          <% end %>
         </div>
     </div>
+
     <div>
       <h3 class="b3 mb-4 uppercase">Latest Updates</h3>
       <% @posts.each do |post| %>
+        <% is_external = post.url.present? && post.category&.name&.casecmp('press') == 0 %>
+        <% link_target = is_external ? post.url : update_path(post) %>
+        <% link_opts = is_external ? { target: "_blank", rel: "noopener noreferrer" } : {} %>
+
         <div class="postItem grid-3070 grid-gap0 row mb-4">
-           <%= link_to update_path(post) do %>
+          <%= link_to link_target, link_opts do %>
             <div class="imageContainer">
               <picture><%= image_tag post.thumbnail, alt: post.title %></picture>
             </div>
           <% end %>
+
           <div class="horizontal">
             <% if post.category.present? %>
               <h3 class="capsule uppercase b3 mb-4">
                 <%= post.category.name %>
               </h3>
             <% end %>
-            <%= link_to update_path(post) do %>
+
+            <%= link_to link_target, link_opts do %>
               <h5 class="p-0"><%= post.title %></h5>
             <% end %>
           </div>
