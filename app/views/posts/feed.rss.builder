@@ -43,15 +43,29 @@ xml.rss version: "2.0" do
         xml.guid update_url(article)
         # Add media file as an enclosure (guard that artifact and media exist)
         artifact = article.artifacts.with_media.first
-        if artifact&.media&.attached? && artifact.media.content_type.start_with?("audio")
-          begin
-            xml.enclosure url: url_for(artifact.media), length: artifact.media.byte_size, type: artifact.media.content_type
-          rescue
-            xml.enclosure url: artifact.media.url, length: artifact.media.byte_size, type: artifact.media.content_type
+        if artifact&.media&.attached? && artifact.media.content_type&.start_with?("audio")
+          blob = artifact.media.blob
+
+          # Try to build an absolute URL for the blob. Prefer rails_blob_url when possible.
+          url = begin
+            Rails.application.routes.url_helpers.rails_blob_url(blob, host: (Rails.application.routes.default_url_options[:host] || request&.host_with_port))
+          rescue => _
+            begin
+              url_for(artifact.media)
+            rescue => _
+              artifact.media.respond_to?(:url) ? artifact.media.url : nil
+            end
           end
-          xml.itunes :duration, artifact.duration if artifact.duration.present?
-          xml.itunes :season, artifact.season if artifact.season.present?
-          xml.itunes :episode, artifact.episode if artifact.episode.present?
+
+          if url.present?
+            length = blob.try(:byte_size) || artifact.media.try(:byte_size) || 0
+            type = blob.try(:content_type) || artifact.media.try(:content_type) || "audio/mpeg"
+            xml.enclosure url: url, length: length, type: type
+          end
+
+          xml.itunes :duration, artifact.duration if artifact.respond_to?(:duration) && artifact.duration.present?
+          xml.itunes :season, artifact.season if artifact.respond_to?(:season) && artifact.season.present?
+          xml.itunes :episode, artifact.episode if artifact.respond_to?(:episode) && artifact.episode.present?
         end
       end
     end
