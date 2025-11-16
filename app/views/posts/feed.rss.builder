@@ -1,7 +1,25 @@
 xml.instruct! :xml, version: "1.0", encoding: "UTF-8"
 
-xml.rss version: "2.0" do
+xml.rss version: "2.0", "xmlns:atom" => "http://www.w3.org/2005/Atom" do
   xml.channel do
+    # Atom self link (some validators require this)
+    begin
+      atom_href = begin
+        feed_url
+      rescue
+        # fallback: construct absolute URL from request if feed_url isn't available
+        if defined?(request) && request.present?
+          "#{request.protocol}#{request.host_with_port}#{feed_path}"
+        else
+          nil
+        end
+      end
+
+      xml['atom'].link(rel: 'self', type: 'application/rss+xml', href: atom_href) if atom_href.present?
+    rescue => _
+      # don't let feed generation fail if URL helpers or request aren't available
+    end
+
     xml.title "Updates from Switch Bakery"
     xml.description "A gluten-free bakery, specializing in bread, cake, and pastries. Latest updates and posts."
     xml.link updates_url
