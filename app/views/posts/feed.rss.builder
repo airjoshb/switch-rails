@@ -11,32 +11,48 @@ xml.rss version: "2.0" do
     xml.generator "Switch Bakery"
 
     # Optional channel image (uncomment and set a logo in app/assets/images if desired)
-    # begin
-    #   xml.image do
-    #     xml.url image_url("site_logo.png")
-    #     xml.title "Switch Bakery"
-    #     xml.link root_url
-    #   end
-    # rescue
-    # end
+    begin
+      xml.image do
+        xml.url image_url("https://switchbakery.com/assets/switch-bakery-gluten-free-bread-70d45051c17a2f94233ee38dff1810f4eafc7930cfa10f75ed87daa7a70b4c5d.png")
+        xml.title "Switch Bakery"
+        xml.link root_url
+      end
+    rescue
+    end
 
     @posts.each do |article|
       xml.item do
-        if article.respond_to?(:image) && article.image&.attached?
-          # url_for / rails_blob_url require route host; url helpers in views should work
+        if article.image.attached?
           begin
-            xml.image_url url_for(article.image)
+            img_url = url_for(article.image) # requires default_url_options[:host] set
           rescue
-            xml.image_url article.image.url if article.image.respond_to?(:url)
+            img_url = article.image.url if article.image.respond_to?(:url)
           end
+          # prepend an <img> to the description so readers show inline image
+          description_html = "<p><img src=\"#{img_url}\" alt=\"#{h(article.title)}\" style=\"max-width:100%;height:auto;\"/></p>#{article.content.to_s}"
+        else
+          description_html = article.content.to_s
         end
+
         xml.title(article.title)
         # Use CDATA for HTML so validators accept embedded tags/entities
-        xml.description { xml.cdata! article.content.to_s }
+        xml.description { xml.cdata! description_html }
         xml.pubDate article.created_at.rfc2822
         # Use absolute URLs; ensure default_url_options[:host] is configured in your env
         xml.link update_url(article)
         xml.guid update_url(article)
+        # Add media file as an enclosure (guard that artifact and media exist)
+        artifact = article.artifacts.with_media.first
+        if artifact&.media&.attached? && artifact.media.content_type.start_with?("audio")
+          begin
+            xml.enclosure url: url_for(artifact.media), length: artifact.media.byte_size, type: artifact.media.content_type
+          rescue
+            xml.enclosure url: artifact.media.url, length: artifact.media.byte_size, type: artifact.media.content_type
+          end
+          xml.itunes :duration, artifact.duration if artifact.duration.present?
+          xml.itunes :season, artifact.season if artifact.season.present?
+          xml.itunes :episode, artifact.episode if artifact.episode.present?
+        end
       end
     end
   end
