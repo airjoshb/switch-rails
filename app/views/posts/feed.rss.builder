@@ -20,6 +20,16 @@ xml.rss version: "2.0" do
     rescue
     end
 
+    sanitize_for_cdata = ->(str) do
+      s = str.to_s
+      # normalize to UTF-8, remove invalid/unknown bytes
+      s = s.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
+      # remove disallowed XML control chars (keep tab/newline/CR)
+      s = s.gsub(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/, '')
+      # split occurrences of ']]>' so CDATA doesn't terminate
+      s.gsub(']]>', ']]]]><![CDATA[>')
+    end
+
     @posts.each do |article|
       xml.item do
         if article.image.attached?
@@ -36,7 +46,7 @@ xml.rss version: "2.0" do
 
         xml.title(article.title)
         # Use CDATA for HTML so validators accept embedded tags/entities
-        xml.description { xml.cdata! description_html }
+        xml.description { xml.cdata! sanitize_for_cdata.call(description_html) }
         xml.pubDate article.created_at.rfc2822
         # Use absolute URLs; ensure default_url_options[:host] is configured in your env
         xml.link update_url(article)
