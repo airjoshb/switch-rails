@@ -18,7 +18,11 @@
 <% end %>
 <section id="updates">
 <div class="bannerContainer">
-  <%= image_tag @post.image.variant(resize_to_limit: [600, 600]), alt: @post.title  if @post.image.attached? %>
+  <% if @post.image.attached? %>
+    <%= image_tag @post.image.variant(resize_to_limit: [2000, 700]),
+                  alt: @post.title,
+                  style: "height:700px; width:auto; display:block; max-width:100%;" %>
+  <% end %>
 </div>
 <section id="post">
   <div class="container">
