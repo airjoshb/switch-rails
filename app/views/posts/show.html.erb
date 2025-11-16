@@ -41,8 +41,8 @@
                 </audio>
               <% end %>
             <% end %>
-            <a href="/posts/podcast_feed.rss" title="Subscribe via RSS"><img src="/assets/social_style_3_rss-512-1.png" alt="RSS Feed" style="height:32px;" /></a>
-            <a href="https://podcasts.apple.com/us/podcast/switch-it-on/id1758650810" title="Subscribe on Apple Podcasts"><img src="/assets/US-UK_Apple_Podcasts_Listen_Badge_RGB_062023.svg" alt="Apple Podcasts" style="height:32px;"/></a>
+            <%= link_to image_tag('social_style_3_rss-512-1.png', alt: "RSS Feed", style: "height:32px;"), "/posts/podcast_feed.rss", title: "Subscribe via RSS" %>
+            <%= link_to image_tag('US-UK_Apple_Podcasts_Listen_Badge_RGB_062023.svg', alt: "Apple Podcasts", style: "height:32px;"), "https://podcasts.apple.com/us/podcast/switch-it-on/id1758650810", title: "Subscribe on Apple Podcasts" %>
           <% end %>
         </div>
         <hr/>
