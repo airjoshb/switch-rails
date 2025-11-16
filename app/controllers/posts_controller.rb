@@ -28,8 +28,8 @@ class PostsController < ApplicationController
     @posts = Post.joins(:category).where(categories: { name: "Podcasts" }).includes(:artifacts)
     respond_to do |format|
       format.rss { render layout: false }                                  # /feed with Accept: application/rss+xml
-      format.xml { render "feed", formats: [:rss], layout: false }         # Accept: application/xml or text/xml -> render RSS template
-      format.any { render "feed", formats: [:rss], layout: false }         # fallback: render RSS if client doesn't specify acceptable mime
+      format.xml { render "podcast_feed", formats: [:rss], layout: false }         # Accept: application/xml or text/xml -> render RSS template
+      format.any { render "podcast_feed", formats: [:rss], layout: false }         # fallback: render RSS if client doesn't specify acceptable mime
     end
   end
 
