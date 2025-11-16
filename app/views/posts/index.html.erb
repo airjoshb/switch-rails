@@ -24,16 +24,25 @@
             <h4 class="date"><%= date.strftime("%B, %Y") %></h4>
             <% posts.reverse.each do |post| %>
               <div class="post flex-row mb-3 items-top">
-                <%= link_to update_path(post) do %>
+                <%# determine whether this post should link externally (Press) %>
+                <% is_press_external = post.url.present? && post.category&.name&.casecmp('press') == 0 %>
+                <% link_target = is_press_external ? post.url : update_path(post) %>
+                <% link_opts = is_press_external ? { target: "_blank", rel: "noopener noreferrer" } : {} %>
+
+                <%= link_to link_target, link_opts do %>
                   <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
                 <% end %>
+
                 <div>
                   <% if post.category.present? %>
                     <h3 class="capsule uppercase b3 mb-4">
                       <%= link_to post.category.name, category_updates_path(category: post.category.slug) %>
                     </h3>
                   <% end %>
-                  <h5><%= post.title %></h5>
+
+                  <h5>
+                    <%= link_to post.title, link_target, link_opts %>
+                  </h5>
                 </div>
               </div>
             <% end %>

@@ -45,6 +45,7 @@
             <%= link_to image_tag('US-UK_Apple_Podcasts_Listen_Badge_RGB_062023.svg', alt: "Apple Podcasts", style: "height:32px;"), "https://podcasts.apple.com/us/podcast/switch-it-on/id1758650810", title: "Subscribe on Apple Podcasts" %>
           <% end %>
         </div>
+        <%= link_to "External Link >>", @post.url if @post.url.present? %>
         <hr/>
         <div class="reading-frame"><%= @post.content %>
           <% if @post.artifacts.any? %>
