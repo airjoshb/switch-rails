@@ -33,7 +33,10 @@ xml.rss version: "2.0",
     xml.itunes :author, "Switch Bakery"
     xml.itunes :type, "episodic"
     xml.itunes :explicit, "clean"
-    xml.itunes :email, "hey@switchbakery.com"
+    xml.itunes :owner do
+      xml.itunes :name, "Switch Bakery"
+      xml.itunes :email, "hey@switchbakery.com"
+    end
     xml.itunes :image, href: image_url("https://res.cloudinary.com/airjoshb/image/upload/v1763271778/switch-bakery/switch-bakery1400x1400bb_bdoabe.jpg")
     xml.itunes :category, text: "Arts" do
       xml.itunes :category, text: "Food"
@@ -76,7 +79,7 @@ xml.rss version: "2.0",
         xml.link update_url(post)
         xml.guid update_url(post)
         xml.itunes :episodeType, "full"
-        xml.itunes :explicit, "false"
+        xml.itunes :explicit, "clean"
 
         # Add media file as an enclosure (guard that artifact and media exist)
         artifact = post.artifacts.with_media.first
