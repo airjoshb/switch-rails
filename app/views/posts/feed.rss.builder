@@ -2,7 +2,7 @@ xml.instruct! :xml, version: "1.0", encoding: "UTF-8"
 
 xml.rss version: "2.0" do
   xml.channel do
-    xml.title "Switch Bakery Updates"
+    xml.title "Updates from Switch Bakery"
     xml.description "A gluten-free bakery, specializing in bread, cake, and pastries. Latest updates and posts."
     xml.link updates_url
     xml.language "en-US"
@@ -14,8 +14,8 @@ xml.rss version: "2.0" do
     begin
       xml.image do
         xml.url image_url("https://switchbakery.com/assets/switch-bakery-gluten-free-bread-70d45051c17a2f94233ee38dff1810f4eafc7930cfa10f75ed87daa7a70b4c5d.png")
-        xml.title "Switch Bakery"
-        xml.link root_url
+        xml.title "Updates from Switch Bakery"
+        xml.link updates_url
       end
     rescue
     end
@@ -33,13 +33,32 @@ xml.rss version: "2.0" do
     @posts.each do |article|
       xml.item do
         if article.image.attached?
+          # Determine a host for absolute URLs: prefer Rails default_url_options, otherwise use request host.
+          host = Rails.application.routes.default_url_options[:host] ||
+                 (defined?(request) && request&.host_with_port)
+
+          img_url = nil
+
           begin
-            img_url = url_for(article.image) # requires default_url_options[:host] set
-          rescue
-            img_url = article.image.url if article.image.respond_to?(:url)
+            # Prefer rails_blob_url to get an absolute URL for ActiveStorage blobs.
+            if article.image.respond_to?(:blob) && article.image.blob.present?
+              img_url = Rails.application.routes.url_helpers.rails_blob_url(article.image, host: host)
+            else
+              img_url = url_for(article.image)
+            end
+          rescue => _
+            # Fallbacks for providers that expose a direct URL (Cloudinary, etc.)
+            img_url = article.image.respond_to?(:url) ? article.image.url : nil
           end
-          # prepend an <img> to the description so readers show inline image
-          description_html = "<p><img src=\"#{img_url}\" alt=\"#{h(article.title)}\" style=\"max-width:100%;height:auto;\"/></p>#{article.content.to_s}"
+
+          # Ensure we have an absolute URL; if still nil or relative, try prepending host (best-effort)
+          if img_url.present? && host.present? && img_url.start_with?('/')
+            img_url = "#{request.protocol}#{host}#{img_url}" rescue "#{host}#{img_url}"
+          end
+
+          # Build description with inline image (use empty src if none to avoid nil)
+          img_src = img_url.presence || ''
+          description_html = "<p><img src=\"#{img_src}\" alt=\"#{h(article.title)}\" style=\"max-width:100%;height:auto;\"/></p>#{article.content.to_s}"
         else
           description_html = article.content.to_s
         end
@@ -72,10 +91,6 @@ xml.rss version: "2.0" do
             type = blob.try(:content_type) || artifact.media.try(:content_type) || "audio/mpeg"
             xml.enclosure url: url, length: length, type: type
           end
-
-          xml.itunes :duration, artifact.duration if artifact.respond_to?(:duration) && artifact.duration.present?
-          xml.itunes :season, artifact.season if artifact.respond_to?(:season) && artifact.season.present?
-          xml.itunes :episode, artifact.episode if artifact.respond_to?(:episode) && artifact.episode.present?
         end
       end
     end
