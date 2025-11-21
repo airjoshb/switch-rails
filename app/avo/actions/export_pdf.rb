@@ -23,6 +23,9 @@ class ExportPdf < Avo::BaseAction
       render_detailed_orders(pdf, orders)
     end
 
+    # Append a summary table grouping variations and totals at the end of the document
+    render_summary(pdf, orders)
+
     download pdf.render, filename
   end
 
@@ -129,24 +132,57 @@ class ExportPdf < Avo::BaseAction
     pdf.font_size 11
 
     orders.each do |order|
-      pdf.text (order.created_at ? order.created_at.strftime("%B %d, %Y %l:%M %p") : "")
-      pdf.text "#{order.customer&.name || 'N/A'}", style: :bold
-      pdf.text format_address(order.address)
-      pdf.text "Fulfillment Method: #{order.fulfillment_method || 'N/A'}"
-      pdf.move_down 5
-
+      # Estimate the vertical space this order will need so we can avoid splitting it across pages.
+      # Build the items table data (same as what we render) so we can measure its height.
+      item_table_data = nil
       if order.respond_to?(:orderables) && order.orderables.any?
-        data = [["Qty", "Item"]]
-        data += order.orderables.map do |o|
+        item_table_data = [["Qty", "Item"]]
+        item_table_data += order.orderables.map do |o|
           variation = o.variation
           name = variation&.name || "N/A"
           notes = (o.respond_to?(:notes) && o.notes) || ""
           unit_qty = variation&.unit_quantity || ""
           qty = (o.respond_to?(:quantity) && o.quantity) || (o.respond_to?(:qty) && o.qty) || "1"
           item_label = unit_qty.present? ? "#{unit_qty} x #{name} #{notes}" : "#{name} #{notes}".strip
-          [ qty, item_label ]
+          [ qty.to_s, item_label ]
         end
-        pdf.table(data, header: false)
+      end
+
+      # Compute estimated heights: date/title, customer name, address, table (if any), plus paddings.
+      line_gap = 6
+      date_text = (order.created_at ? order.created_at.strftime("%B %d, %Y %l:%M %p") : "")
+      header_height = pdf.height_of(date_text, size: 11) + line_gap
+      customer_height = pdf.height_of((order.customer&.name || 'N/A'), style: :bold, size: 11) + line_gap
+      address_height = pdf.height_of(format_address(order.address), size: 11) + line_gap
+
+      table_height = 0
+      if item_table_data
+        # Use make_table to compute height without rendering. Use similar cell style as when rendering.
+        begin
+          tbl = pdf.make_table(item_table_data, cell_style: { size: 10 }, header: false)
+          table_height = tbl.height + 8
+        rescue => _
+          # Fallback estimate if measurement fails
+          table_height = item_table_data.size * 14 + 20
+        end
+      end
+
+      required_space = header_height + customer_height + address_height + table_height + 50
+
+      # Start a new page if there isn't enough room for this order
+      if pdf.cursor < required_space
+        pdf.start_new_page
+      end
+
+      # Now render the order content
+      pdf.text date_text
+      pdf.text "#{order.customer&.name || 'N/A'}", style: :bold
+      pdf.text format_address(order.address)
+      pdf.text "Fulfillment Method: #{order.fulfillment_method || 'N/A'}"
+      pdf.move_down 5
+
+      if item_table_data
+        pdf.table(item_table_data, header: false)
       else
         pdf.text "No orderables."
       end
@@ -206,6 +242,42 @@ class ExportPdf < Avo::BaseAction
       [address[:street] || address["street"], address[:city], address[:state], address[:postal] || address[:zipcode]].compact.join(", ")
     else
       address.to_s
+    end
+  end
+
+  # Render a compact summary table listing each variation and total quantity across all orders.
+  def render_summary(pdf, orders)
+    return if orders.blank?
+
+    # Aggregate counts by variation name
+    totals = Hash.new(0)
+    orders.each do |order|
+      next unless order.respond_to?(:orderables) && order.orderables.any?
+      order.orderables.each do |o|
+        name = o.variation&.name || "Unknown"
+        qty = (o.respond_to?(:quantity) && o.quantity) ||
+              (o.respond_to?(:qty) && o.qty) ||
+              1
+        qty = qty.to_i rescue 1
+        totals[name] += qty
+      end
+    end
+
+    return if totals.empty?
+
+    pdf.start_new_page if pdf.cursor < 120 # ensure room; push summary to its own page when needed
+    pdf.move_down 8
+    pdf.text "Summary of Variations", style: :bold, size: 11
+    pdf.move_down 4
+
+    table_data = [["Variation", "Total Qty"]]
+    totals.sort_by { |_k, v| -v }.each do |name, qty|
+      table_data << [name.to_s, qty.to_s]
+    end
+
+    pdf.table(table_data, header: true, cell_style: { size: 9 }, column_widths: [350, 80]) do
+      row(0).font_style = :bold
+      columns(1).align = :right
     end
   end
 end
