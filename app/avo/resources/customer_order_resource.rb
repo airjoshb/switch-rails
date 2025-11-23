@@ -14,6 +14,7 @@ class CustomerOrderResource < Avo::BaseResource
   action ExportShipping
   action ExportPdf
 
+  filter OrderStatusFilter
   filter SubscriptionFilter
   filter IntervalFilter
   
