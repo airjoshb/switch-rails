@@ -26,7 +26,7 @@ class CreateCheckoutSessionsController < ApplicationController
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     mode = cart.variations.recurring.any? ? "subscription" : "payment"
     customer_creation = "if_required" unless mode == "subscription"
-    shipping = [ {label: 'Scotts Valley @ Cruise Coffee', value: 'cruise'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
+    shipping = [ {label: 'Holiday Pickup @ 1016 Cedar - Mon 22nd', value: 'holiday_pickup_mon'},{label: 'Holiday Pickup @ 1016 Cedar - Tues 23rd', value: 'holiday_pickup_tue'},{label: 'Scotts Valley @ Cruise Coffee', value: 'cruise'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
     if mode == 'payment'
       shipping_rates = [
         {
