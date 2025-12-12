@@ -12,7 +12,7 @@ class Email < ApplicationRecord
       customer_email = self.customer_emails.find_by(customer_id: customer.id)
       next if customer_email&.email_sent?
 
-      CampaignCustomerMailer.customer_email(customer, self).deliver
+      CampaignCustomerMailer.customer_email(customer, self).deliver_later
       self.customer_emails.create(email_sent: true, sent_date: Time.zone.now, customer: customer)
     end
   end
