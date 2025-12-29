@@ -60,16 +60,22 @@
                       </tr>
                     </table>
                     <% if @order.subscription_id.present? %>
-                        <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">You can change your subscription at any time by clicking <a href="https://billing.stripe.com/p/login/4gweXM2aTbJ1aly4gg?prefilled_email=<%= @order.customer.email %>">this link</a></p>
+                        <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">Your subscription will start on our next available production day for subscriptions (typically Tuesday). You can change your subscription at any time by clicking <a href="https://billing.stripe.com/p/login/4gweXM2aTbJ1aly4gg?prefilled_email=<%= @order.customer.email %>">this link</a></p>
                      <% end %>
                     <% if @order.fulfillment_method.nil? %>
                       <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">
-                        Orders are typically delivered to Santa Cruz & Monterey area locations on Monday, Wednesday, and Thursday.
-                        </br> If you have any questions, simply reply to this email.
+                        If you have any questions, simply reply to this email.
                       </p>
                     <% elsif @order.fulfillment_method != "Ship" %>
                       <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">
-                        Your order will be ready for pickup <%= @order.fulfillment_method.titleize %>
+                        Your order will be ready for pickup 
+                        <% if @order.fulfillment_method = "bistro" %>
+                          <%= "at The Bistro - 1016 Cedar St., Santa Cruz" %>
+                        <% elsif @order.fulfillment_method = "wednesday" %>
+                          <%= "at Wednesday Market - Santa Cruz" %>
+                        <% elsif @order.fulfillment_method = "saturday" %>
+                          <%= "at Saturday Market - Santa Cruz" %>
+                        <% end %>
                         </br> If you have any questions, simply reply to this email.
                     <% elsif @order.fulfillment_method == "Ship" %>
                       <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">

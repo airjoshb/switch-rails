@@ -2,38 +2,40 @@
   <%= turbo_frame_tag "cart" do %>
     <div class="content">
       <div class="items">
-        <% unless @cart %>
+        <% unless @cart && @cart.orderables.any? %>
           <h4 class="center">Add something delicious to your cart!</h2>
         <% else %>
-          <% for orderable in @cart.orderables %> 
-            <div class="m-5">
-              <div class="priceContainer">
-                <%= render 'prices', variation: orderable.variation %>
-                <% if orderable.variation.recurring? %>
-                  <% interval = orderable.variation.interval %>
-                  <% count = orderable.variation.interval_count %>
-                  <% freq_label = count == 1 ? interval.singularize.titleize : "#{count} #{interval.pluralize.titleize}" %>
-                  <span class="price">Every <%= freq_label %> @ <%= display_price(orderable.variation.amount) %></span>
-                <% else %>
-                  <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
-                <% end %>
-                <span class= "close" >
-                  <%= form_with(url: cart_remove_path) do |f| %>
-                    <%= f.hidden_field :id, value: @cart.orderables.first.id %>
-                    <%= f.submit "remove" %>
+          <% for orderable in @cart.orderables %>
+            <%= turbo_frame_tag "orderable_#{orderable.id}" do %>
+              <div class="m-5">
+                <div class="priceContainer">
+                  <%= render 'prices', variation: orderable.variation %>
+                  <% if orderable.variation.recurring? %>
+                    <% interval = orderable.variation.interval %>
+                    <% count = orderable.variation.interval_count %>
+                    <% freq_label = count == 1 ? interval.singularize.titleize : "#{count} #{interval.pluralize.titleize}" %>
+                    <span class="price">Every <%= freq_label %> @ <%= display_price(orderable.variation.amount) %></span>
+                  <% else %>
+                    <span class="price"><%= orderable.quantity %> @ <%= display_price(orderable.variation.amount) %></span>
+                  <% end %>
+                  <span class= "close" >
+                    <%= form_with(url: cart_remove_path) do |f| %>
+                      <%= f.hidden_field :id, value: orderable.id %>
+                      <%= f.submit "remove" %>
+                    <% end %> 
+                  </span>
+                </div>
+                  <% if orderable.variation.preferences.any? && orderable.variation.preferences.any?{ |a| a.options.present? } %>
+                    <div id="orderable_<%= orderable.id %>" data-controller="orderables" >
+                      <%= render 'orderables/update_notes', orderable: orderable %>
+                    </div>
                   <% end %> 
-                </span>
               </div>
-                <% if orderable.variation.preferences.any? && orderable.variation.preferences.any?{ |a| a.options.present? } %>
-                  <div id="orderable_<%= orderable.id %>" data-controller="orderables" >
-                    <%= render 'orderables/update_notes', orderable: orderable %>
-                  </div>
-                <% end %> 
-            </div>
+            <% end %>
           <% end %>
         <% end %>
       </div>
-      <%= render "add_ons" unless @add_ons.empty? %>
+      <%= render "add_ons", add_ons: (defined?(add_ons) ? add_ons : @add_ons) unless (defined?(add_ons) ? add_ons : @add_ons).blank? %>
       <hr />
       <div class="orderContainer">
         <div class="orderContent">
@@ -51,7 +53,7 @@
               </div>
             </div>
             <div class="message">
-              Orders placed will be slotted into the next available production day. We typically deliver to Santa Cruz on Monday & Wednesday, and Monterey Monday, Tuesday, or Thursday with a $6 charge. Save the extra dough by selecting to pickup at one of our markets or partners!
+              Orders placed will be slotted into the next available production day. Note, we are no longer delivering in Santa Cruz, so all orders should be marked for pickup or ship.
             </div>
           <% else %>
             <p>Your cart is empty</p>

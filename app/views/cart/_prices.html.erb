@@ -1,4 +1,4 @@
-<% unless variation.product.image.blank? %>
+<% unless variation && variation.product.image.blank? %>
   <div class= "imageContainer" role="presentation" >
     <%= image_tag variation.product.image.variant(resize_to_limit: [75, 75]), alt: variation.product.name %>
   </div>

@@ -26,7 +26,7 @@ class CreateCheckoutSessionsController < ApplicationController
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
     mode = cart.variations.recurring.any? ? "subscription" : "payment"
     customer_creation = "if_required" unless mode == "subscription"
-    shipping = [ {label: 'Holiday Pickup @ 1016 Cedar, Mon 22nd', value: 'holidaypickupmon'},{label: 'Holiday Pickup @ 1016 Cedar, Tues 23rd', value: 'holidaypickuptue'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
+    shipping = [ {label: 'Pickup @ 1016 Cedar', value: 'bistro'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
     if mode == 'payment'
       shipping_rates = [
         {
@@ -53,19 +53,16 @@ class CreateCheckoutSessionsController < ApplicationController
           shipping_rate_data: {
             type: 'fixed_amount',
             fixed_amount: {
-              amount: 500,
+              amount: 600,
               currency: 'usd',
             },
-            display_name: 'Delivery / CA Ship',
+            display_name: 'CA Ship',
             delivery_estimate: {
               minimum: {
                 unit: 'business_day',
-                value: 1,
-              },
-              maximum: {
-                unit: 'business_day',
                 value: 2,
               },
+    
             },
           },
         },
@@ -82,10 +79,7 @@ class CreateCheckoutSessionsController < ApplicationController
                 unit: 'business_day',
                 value: 2,
               },
-              maximum: {
-                unit: 'business_day',
-                value: 3,
-              },
+
             },
           },  
         }
@@ -111,7 +105,7 @@ class CreateCheckoutSessionsController < ApplicationController
       custom_fields: [
         {
           key: 'pickup',
-          label: {type: 'custom', custom: 'Pickup Location'},
+          label: {type: 'custom', custom: 'Pickup Location (required if not shipping)'},
           optional: true,
           type: 'dropdown',
           dropdown: {

@@ -36,12 +36,15 @@ class CartController < ApplicationController
   end
 
   def remove
-    Orderable.find_by(id: params[:id]).destroy
+    orderable = Orderable.find_by(id: params[:id])
+    orderable_id = orderable&.id
+    orderable.destroy if orderable
+    @cart = Cart.find_by(id: session[:cart_id])
 
     respond_to do |format|
       format.html { redirect_to cart_path }
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace('cart', partial: 'cart/prices', locals: {cart: @cart})
+        render 'remove', locals: { orderable_id: orderable_id, cart: @cart, add_ons: Variation.active.add_ons }
       end
     end
   end

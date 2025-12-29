@@ -1,0 +1,6 @@
+<turbo-stream action="remove" target="orderable_<%= orderable_id %>"></turbo-stream>
+<turbo-stream action="replace" target="cart">
+  <template>
+    <%= render partial: 'cart/cart', locals: { cart: cart, add_ons: add_ons } %>
+  </template>
+</turbo-stream>
