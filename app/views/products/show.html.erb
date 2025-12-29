@@ -76,7 +76,7 @@
                       <% methods = [] %>
                       <% methods << ["Ship", "ship"] if variations.any?(&:shippable?) %>
                       <% methods << ["Local Delivery", "delivery"] if variations.any?(&:deliverable?) %>
-                      <% methods << ["Pickup at a Market", "pickup"] if variations.any?(&:pickupable?) %>
+                      <% methods << ["Santa Cruz Pickup", "pickup"] if variations.any?(&:pickupable?) %>
 
                       <label>Delivery Method:</label>
                       <% if methods.size == 1 %>
