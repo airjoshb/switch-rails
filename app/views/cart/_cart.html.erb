@@ -6,7 +6,7 @@
           <h4 class="center">Add something delicious to your cart!</h2>
         <% else %>
           <% for orderable in @cart.orderables %>
-            <%= turbo_frame_tag "orderable_#{orderable.id}" do %>
+            <%= turbo_frame_tag "orderable_#{orderable.id}" do %>
               <div class="m-5">
                 <div class="priceContainer">
                   <%= render 'prices', variation: orderable.variation %>
@@ -25,11 +25,11 @@
                     <% end %> 
                   </span>
                 </div>
-                  <% if orderable.variation.preferences.any? && orderable.variation.preferences.any?{ |a| a.options.present? } %>
-                    <div id="orderable_<%= orderable.id %>" data-controller="orderables" >
-                      <%= render 'orderables/update_notes', orderable: orderable %>
-                    </div>
-                  <% end %> 
+                <% if orderable.variation.preferences.any? && orderable.variation.preferences.any?{ |a| a.options.present? } %>
+                  <div id="orderable_<%= orderable.id %>" data-controller="orderables" >
+                    <%= render 'orderables/update_notes', orderable: orderable %>
+                  </div>
+                <% end %> 
               </div>
             <% end %>
           <% end %>
@@ -40,9 +40,11 @@
       <div class="orderContainer">
         <div class="orderContent">
           <% if @cart && @cart.variations.length > 0 %>
-            <div class="orderDetail">
-              <p class="total">Subotal: <%= formatted_price(@cart.total) %></p>
-            </div>
+            <%= turbo_frame_tag "cart_subtotal" do %>
+              <div class="orderDetail">
+                <p class="total">Subtotal: <%= formatted_price(@cart.total) %></p>
+              </div>
+            <% end %>
             <div class="checkout">
               <div class="">
                 <%= form_with url: checkout_session_path, method: :post, data: {turbo: false}, id: "checkout-form" do |f| %>

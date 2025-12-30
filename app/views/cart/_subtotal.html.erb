@@ -1,0 +1,5 @@
+<%= turbo_frame_tag "cart_subtotal" do %>
+  <div class="orderDetail">
+    <p class="total">Subtotal: <%= formatted_price(@cart.total) %></p>
+  </div>
+<% end %>

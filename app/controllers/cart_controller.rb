@@ -39,12 +39,15 @@ class CartController < ApplicationController
     orderable = Orderable.find_by(id: params[:id])
     orderable_id = orderable&.id
     orderable.destroy if orderable
-    @cart = Cart.find_by(id: session[:cart_id])
+    @cart = Cart.find_by(id: session[:cart_id]) # reload cart if needed
 
     respond_to do |format|
       format.html { redirect_to cart_path }
       format.turbo_stream do
-        render 'remove', locals: { orderable_id: orderable_id, cart: @cart, add_ons: Variation.active.add_ons }
+        render turbo_stream: [
+          turbo_stream.remove("orderable_#{orderable_id}"),
+          turbo_stream.replace("cart_subtotal", partial: "cart/subtotal", locals: { cart: @cart })
+        ]
       end
     end
   end
