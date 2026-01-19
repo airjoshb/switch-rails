@@ -39,7 +39,7 @@ class Customer < ApplicationRecord
 
   def add_to_fan_campaign
     return unless self.fan?
-    campaign = Campaign.find_by(id: 2)
+    campaign = Campaign.find_by(id: 5)
     self.campaigns << campaign if campaign && !self.campaigns.exists?(id: 2)
   end
 end
