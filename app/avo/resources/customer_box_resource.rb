@@ -28,6 +28,9 @@ class CustomerBoxResource < Avo::BaseResource
   field :order_preferences, as: :text do |customer_order|
     customer_order.order_preferences
   end
+  field :fulfillment_method, as: :text do |customer_box|
+    customer_box.customer_orders.first&.fulfillment_method
+  end
   field :email_sent, as: :boolean
   field :email_sent_date, as: :date_time
   # add fields here
