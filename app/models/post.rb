@@ -7,11 +7,12 @@ class Post < ApplicationRecord
   has_many_attached :trix_attachments
   
   has_rich_text :content
+  has_rich_text :excerpt
 
   default_scope  { order(created_at: :desc) }
 
-  def shortened_content
-    self.content.to_plain_text.split('</div>').first.split('<br>').first + '...'
+  def shortened_content(amount)
+    self.content.to_plain_text.split('</div>').first.split('<br>').first.truncate(amount)
   end
 
   def thumbnail

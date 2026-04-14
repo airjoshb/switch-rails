@@ -21,6 +21,7 @@ class PostResource < Avo::BaseResource
   field :url, as: :text
   field :category, as: :belongs_to
   field :content, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
+  field :excerpt, as: :trix
   field :artifacts, as: :has_and_belongs_to_many
   # add fields here
 end
