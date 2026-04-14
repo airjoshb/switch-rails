@@ -10,19 +10,8 @@ class Post < ApplicationRecord
 
   default_scope  { order(created_at: :desc) }
 
-  def shortened_content(amount = nil)
-    fragment = Nokogiri::HTML::DocumentFragment.parse(content.body.to_s)
-    first_block = fragment.css('p, ul, ol, blockquote, h1, h2, h3, h4, h5, h6').find { |node| node.text.squish.present? }
-
-    if first_block.present?
-      return first_block.to_html.html_safe if amount.blank?
-
-      truncated_text = first_block.text.squish.truncate(amount)
-      return "<p>#{ERB::Util.html_escape(truncated_text)}</p>".html_safe
-    end
-
-    fallback_text = content.to_plain_text.to_s.squish
-    amount.present? ? fallback_text.truncate(amount) : fallback_text
+  def shortened_content(amount)
+    self.content.to_plain_text.split('</div>').first.split('<br>').first + '...'
   end
 
   def thumbnail
