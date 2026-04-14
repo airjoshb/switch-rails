@@ -18,7 +18,7 @@
 <% end %>
 <section id="updates">
 <div class="bannerContainer">
-  <% if @post.image.attached? %>
+  <% if @post.image.attached? && @post.image.content_type.in?(["image/png", "image/jpeg", "image/jpg"]) %>
     <%= image_tag @post.image.variant(resize_to_limit: [2000, 650]),
                   alt: @post.title,
                   style: "height:650px; width:auto; display:block; max-width:100%;" %>
@@ -43,6 +43,9 @@
           <% end %>
         </div>
         <%= link_to "External Link >>", @post.url if @post.url.present? %>
+        <% if @post.image.attached? && @post.image.content_type == 'application/pdf' %>
+          <%= link_to "Download PDF >>", @post.image.url, download: true, target: "_blank", rel: "noopener" %>
+        <% end %>
         <hr/>
         <div class="reading-frame"><%= @post.content %>
           <% if @post.artifacts.any? %>
