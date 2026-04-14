@@ -11,7 +11,7 @@ class Post < ApplicationRecord
   default_scope  { order(created_at: :desc) }
 
   def shortened_content(amount)
-    self.content.to_plain_text.split('</div>').first.split('<br>').first + '...'
+    self.content.to_plain_text.split('</div>').first.split('<br>').first
   end
 
   def thumbnail
