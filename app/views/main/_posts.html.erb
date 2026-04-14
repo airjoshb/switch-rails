@@ -5,9 +5,10 @@
         <% is_feature_external = @post.url.present? && @post.category&.name&.casecmp('press') == 0 %>
         <% featured_target = is_feature_external ? @post.url : update_path(@post) %>
         <% featured_opts = is_feature_external ? { target: "_blank", rel: "noopener noreferrer" } : {} %>
+        <% featured_image_is_renderable = @post.image.attached? && @post.image.content_type.in?(["image/png", "image/jpeg", "image/jpg"]) %>
 
-        <%= link_to featured_target, featured_opts do %>
-          <% unless @post.image.blank? %>
+        <% if featured_image_is_renderable %>
+          <%= link_to featured_target, featured_opts do %>
             <div class="imageContainer">
               <picture><%= image_tag @post.image, alt: @post.title %></picture>
             </div>
@@ -27,12 +28,15 @@
         <% is_external = post.url.present? && post.category&.name&.casecmp('press') == 0 %>
         <% link_target = is_external ? post.url : update_path(post) %>
         <% link_opts = is_external ? { target: "_blank", rel: "noopener noreferrer" } : {} %>
+        <% image_is_renderable = post.image.attached? && post.image.content_type.in?(["image/png", "image/jpeg", "image/jpg"]) %>
 
         <div class="postItem grid-3070 grid-gap0 row mb-4">
-          <%= link_to link_target, link_opts do %>
-            <div class="imageContainer">
-              <picture><%= image_tag post.thumbnail, alt: post.title %></picture>
-            </div>
+          <% if image_is_renderable %>
+            <%= link_to link_target, link_opts do %>
+              <div class="imageContainer">
+                <picture><%= image_tag post.thumbnail, alt: post.title %></picture>
+              </div>
+            <% end %>
           <% end %>
 
           <div class="horizontal">
