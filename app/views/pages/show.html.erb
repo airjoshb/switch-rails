@@ -47,16 +47,20 @@
           <div class="postGrid">
             <% @posts.each do |post| %>
               <div class="postItem ">
-                <% unless !post.image.present? %>
+                <% if post.image.present? %>
                   <div class="imageContainer">
-                    <picture><%= image_tag post.medium_image, alt: post.title %></picture>
+                    <% if post.image.content_type == 'application/pdf' %>
+                      <%= link_to 'Download PDF', post.image.url, target: '_blank', rel: 'noopener', download: true %>
+                    <% else %>
+                      <picture><%= image_tag post.medium_image, alt: post.title %></picture>
+                    <% end %>
                   </div>
                 <% end %>
                 <div class="">
                   <%= link_to update_path(post) do %>
                     <h5 class="p-0"><%= post.title %></h5>
                   <% end %>
-                  <p><%= post.shortened_content(500)%></p>
+                  <p><%= post.shortened_content %></p>
                   
                 </div>
               </div>

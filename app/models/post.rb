@@ -10,8 +10,12 @@ class Post < ApplicationRecord
 
   default_scope  { order(created_at: :desc) }
 
-  def shortened_content(amount)
-    self.content.to_plain_text.split('</div>').first.split('<br>').first.truncate(amount)
+  def shortened_content(amount = nil)
+    plain_text = content.to_plain_text.to_s
+    first_paragraph = plain_text.split(/\n\s*\n/).map(&:strip).find(&:present?)
+    excerpt = first_paragraph.presence || plain_text.lines.map(&:strip).find(&:present?).to_s
+
+    amount.present? ? excerpt.truncate(amount) : excerpt
   end
 
   def thumbnail

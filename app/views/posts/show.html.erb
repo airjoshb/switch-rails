@@ -32,15 +32,12 @@
           <%= image_tag 'switch-bakery-gluten-free-bread.png', width: 50, alt: "Gluten Free Bread Delivery Fox on a Bike" %>
           <h1><%= @post.title %></h1>
           <div class="postDate"><%= time_ago_in_words @post.created_at %> ago in <% if @post.category.present? %><%= @post.category.name %><% end %></div>
-          <% if @post.artifacts.with_media.any? %>
-            <% @post.artifacts.with_media.each do |artifact| %>
-              <% if artifact.media.content_type&.start_with?('audio') %>
-                <audio controls="controls" style="width: 100%;">
-                  <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
-                  Your browser does not support the audio element.
-                </audio>
-              <% end %>
-            <% end %>
+          <% audio_artifact = @post.artifacts.with_media.find { |artifact| artifact.media.content_type&.start_with?('audio') } %>
+          <% if audio_artifact %>
+            <audio controls="controls" style="width: 100%;">
+              <source src="<%= audio_artifact.media.url %>" type="<%= audio_artifact.media.content_type %>">
+              Your browser does not support the audio element.
+            </audio>
             <%= link_to image_tag('social_style_3_rss-512-1.png', alt: "RSS Feed", style: "height:32px;"), "/posts/podcast_feed.rss", title: "Subscribe via RSS" %>
             <%= link_to image_tag('US-UK_Apple_Podcasts_Listen_Badge_RGB_062023.svg', alt: "Apple Podcasts", style: "height:32px;"), "https://podcasts.apple.com/us/podcast/switch-it-on/id1758650810", title: "Subscribe on Apple Podcasts" %>
           <% end %>
@@ -56,10 +53,14 @@
                     <%= artifact.embed.html_safe %>
                   <% elsif artifact.media.attached? %>
                     <% if artifact.media.content_type.start_with?('video') %>
-                      <video controls="controls" width="600">
-                        <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
-                        Your browser does not support the video element.
-                      </video>
+                        <video controls="controls" width="600">
+                          <source src="<%= artifact.media.url %>" type="<%= artifact.media.content_type %>">
+                          Your browser does not support the video element.
+                        </video>
+                    <% elsif artifact.media.content_type == 'application/pdf' %>
+                        <a href="<%= artifact.media.url %>" download target="_blank" class="pdf-download">
+                          Download PDF
+                        </a>
                     <% end %>
                   <% end %>
                 <% end %>
