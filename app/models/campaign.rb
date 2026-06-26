@@ -1,6 +1,6 @@
 class Campaign < ApplicationRecord
-  has_and_belongs_to_many :emails
-  has_and_belongs_to_many :customers
+  has_and_belongs_to_many :emails, inverse_of: :campaigns
+  has_and_belongs_to_many :customers, inverse_of: :campaigns
 
   def send_email
     self.emails.last.generate_customer_emails(self)       

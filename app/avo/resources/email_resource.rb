@@ -13,9 +13,9 @@ class EmailResource < Avo::BaseResource
   # Fields generated from the model
   field :date_sent, as: :date_time, sortable: true
   field :subject, as: :text
-  field :campaigns, as: :has_and_belongs_to_many
-  field :customer_emails, as: :has_many
-  field :customers, as: :has_many, through: :customer_emails
+  field :campaigns, as: :has_and_belongs_to_many, hide_on: :forms
+  field :customer_emails, as: :has_many, hide_on: :forms
+  field :customers, as: :has_many, through: :customer_emails, hide_on: :forms
   field :body, as: :trix, attachment_key: :trix_attachments, through: :action_text_rich_texts
 
   # add fields here
