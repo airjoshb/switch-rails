@@ -15,8 +15,7 @@ class Box < ApplicationRecord
   before_create :set_access_token
 
   def generate_customer_boxes
-    subscribers = CustomerOrder.active.processed
-
+    subscribers = CustomerOrder.active
     # First-time subscribers (never had a box)
     first_box_ids = subscribers.where(last_box_date: nil).pluck(:id)
 
