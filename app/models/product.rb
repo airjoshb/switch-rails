@@ -38,13 +38,13 @@ class Product < ApplicationRecord
       Stripe::Product.update(
         self.stripe_id, {
         name: self.name,
-        description: self.description,
+        description: plain_description,
         shippable: self.variations.infinite.any? ? true : false,
       })
     rescue
     stripe_product = Stripe::Product.create({
       name: self.name,
-      description: self.description,
+      description: plain_description,
       shippable: self.variations.infinite.any? ? true : false,
     })
     self.update_columns(stripe_id: stripe_product.id)

@@ -99,10 +99,6 @@ class CreateCheckoutSessionsController < ApplicationController
       phone_number_collection: {
         enabled: true
       },
-      shipping_address_collection: {
-        allowed_countries: ['US'],
-      },
-      shipping_options: shipping_rates,
       consent_collection: {
         promotions: 'auto',
       },
@@ -123,11 +119,17 @@ class CreateCheckoutSessionsController < ApplicationController
     }
 
     if has_pickup_only
+      checkout_params[:billing_address_collection] = 'required'
       checkout_params[:custom_text] = {
         submit: {
           message: "Your order will be available for pickup on the next production day"
         }
       }
+    else
+      checkout_params[:shipping_address_collection] = {
+        allowed_countries: ['US'],
+      }
+      checkout_params[:shipping_options] = shipping_rates
     end
 
     checkout_session = Stripe::Checkout::Session.create(checkout_params)
