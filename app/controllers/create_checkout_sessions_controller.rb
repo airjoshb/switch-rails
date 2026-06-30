@@ -24,10 +24,14 @@ class CreateCheckoutSessionsController < ApplicationController
     # prices = cart.variations.group(:id).pluck('stripe_id, count(stripe_id)')
     adjustable = Hash(enabled: true, minimum: 1, maximum: 10)
     line_items = prices.map{|e| {price:  e.first, quantity: e.last, adjustable_quantity: adjustable} }
-    mode = cart.variations.recurring.any? ? "subscription" : "payment"
+    variations = cart.variations.to_a
+    mode = variations.any?(&:recurring?) ? "subscription" : "payment"
     customer_creation = "if_required" unless mode == "subscription"
     shipping = [ {label: 'Pickup @ 1016 Cedar', value: 'bistro'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
-    if mode == 'payment'
+    subscription_only = variations.present? && variations.all?(&:recurring?)
+    has_pickup_only = variations.any? { |variation| variation.pickupable? && !variation.deliverable? && !variation.shippable? }
+
+    if mode == 'payment' && !subscription_only && !has_pickup_only
       shipping_rates = [
         {
           shipping_rate_data: {
@@ -87,7 +91,7 @@ class CreateCheckoutSessionsController < ApplicationController
     else
       shipping_rates = []
     end
-    checkout_session = Stripe::Checkout::Session.create({
+    checkout_params = {
       line_items: line_items,
       mode: mode,
       customer_creation: customer_creation,
@@ -116,7 +120,17 @@ class CreateCheckoutSessionsController < ApplicationController
       ],
       success_url: cart_success_url,
       cancel_url:  cart_cancel_url,
-    })
+    }
+
+    if has_pickup_only
+      checkout_params[:custom_text] = {
+        submit: {
+          message: "Your order will be available for pickup on the next production day"
+        }
+      }
+    end
+
+    checkout_session = Stripe::Checkout::Session.create(checkout_params)
     order = CustomerOrder.create(stripe_checkout_id: checkout_session.id)
     # Assign bread selection (if any) to the correct orderable's notes
     order.orderables << cart.orderables

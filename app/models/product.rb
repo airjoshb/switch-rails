@@ -33,6 +33,7 @@ class Product < ApplicationRecord
   def product_change
     require 'stripe'
     Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
+    plain_description = description.to_plain_text
     begin
       Stripe::Product.update(
         self.stripe_id, {
