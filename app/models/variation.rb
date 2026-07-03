@@ -56,7 +56,7 @@ class Variation < ApplicationRecord
   end
 
   def pickup_locations
-    [ {label: 'Scotts Valley @ Cruise Coffee', value: 'cruise'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
+    [ {label: '1016 Cedar Street', value: 'bistro'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
   end
 
   def preference_filter(preference)

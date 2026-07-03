@@ -27,7 +27,8 @@ class CreateCheckoutSessionsController < ApplicationController
     variations = cart.variations.to_a
     mode = variations.any?(&:recurring?) ? "subscription" : "payment"
     customer_creation = "if_required" unless mode == "subscription"
-    shipping = [ {label: 'Pickup @ 1016 Cedar', value: 'bistro'},{label: 'Wednesday Market (Santa Cruz)', value: 'wednesday'}, {label: 'Saturday Market (Santa Cruz)', value: 'saturday'} ]
+    pickup_source_variation = variations.find(&:pickupable?) || variations.first
+    shipping = pickup_source_variation&.pickup_locations.to_a
     subscription_only = variations.present? && variations.all?(&:recurring?)
     has_pickup_only = variations.any? { |variation| variation.pickupable? && !variation.deliverable? && !variation.shippable? }
 
@@ -102,21 +103,23 @@ class CreateCheckoutSessionsController < ApplicationController
       consent_collection: {
         promotions: 'auto',
       },
-      custom_fields: [
+      success_url: cart_success_url,
+      cancel_url:  cart_cancel_url,
+    }
+
+    if has_pickup_only
+      checkout_params[:custom_fields] = [
         {
           key: 'pickup',
           label: {type: 'custom', custom: 'Pickup Location (required if not shipping)'},
           optional: true,
           type: 'dropdown',
           dropdown: {
-            options: 
-              shipping
+            options: shipping
           },
         },
-      ],
-      success_url: cart_success_url,
-      cancel_url:  cart_cancel_url,
-    }
+      ]
+    end
 
     if has_pickup_only
       checkout_params[:billing_address_collection] = 'required'
@@ -235,9 +238,15 @@ class CreateCheckoutSessionsController < ApplicationController
   def create_order(checkout_session)
     begin
       order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
-      consent = checkout_session.consent.promotions == "opt_in" ? true : false
+      if order.blank?
+        Rails.logger.error("create_order: no CustomerOrder found for checkout_session=#{checkout_session.id}")
+        return
+      end
+
+      consent = checkout_session&.consent&.promotions == "opt_in"
       shipping_amount = checkout_session.shipping_cost.present? ? checkout_session.shipping_cost.amount_total : 0
-      fulfillment = shipping_amount > 0 ? "Ship" : checkout_session.custom_fields.first.dropdown.value 
+      pickup_value = checkout_session.custom_fields&.first&.dropdown&.value
+      fulfillment = shipping_amount > 0 ? "Ship" : pickup_value.to_s
       if checkout_session.mode == "subscription"
         invoice = Stripe::Invoice.retrieve(checkout_session.invoice)
         intent = Stripe::PaymentIntent.retrieve(invoice.payment_intent) 
@@ -306,12 +315,20 @@ class CreateCheckoutSessionsController < ApplicationController
   end
 
   def create_address(checkout_session, order)
-    address = Address.create(street_1: checkout_session.shipping_details.address.line1,
-      street_2: checkout_session.shipping_details.address.line2, 
-      city: checkout_session.shipping_details.address.city, 
-      state: checkout_session.shipping_details.address.state, 
-      postal: checkout_session.shipping_details.address.postal_code,
-      name: checkout_session.shipping_details.name,
+    address_details = checkout_session.shipping_details&.address || checkout_session.customer_details&.address
+    address_name = checkout_session.shipping_details&.name || checkout_session.customer_details&.name
+
+    if address_details.blank?
+      Rails.logger.warn("create_address: no address present for checkout_session=#{checkout_session.id}")
+      return
+    end
+
+    Address.create(street_1: address_details.line1,
+      street_2: address_details.line2,
+      city: address_details.city,
+      state: address_details.state,
+      postal: address_details.postal_code,
+      name: address_name,
       customer_order: order
     )
     puts "Created Address for #{checkout_session.inspect}"
@@ -522,13 +539,18 @@ class CreateCheckoutSessionsController < ApplicationController
 
   def process_order(checkout_session)
     order = CustomerOrder.find_by_stripe_checkout_id(checkout_session.id)
+    if order.blank?
+      Rails.logger.error("process_order: no CustomerOrder found for checkout_session=#{checkout_session.id}")
+      return
+    end
+
     if order.orderables.trackable.any?
       adjustments = order.orderables.trackable
       adjustments.each do |adjustment|
         adjustment.variation.adjust_count_on_hand(adjustment.quantity)
       end
     end
-    pay_invoice(checkout_session.invoice) if checkout_session.mode == "subscription"
+    pay_invoice(checkout_session.invoice) if checkout_session.mode == "subscription" && checkout_session.invoice.present?
     order.processed!
     puts "Processed ##{order.guid} for #{order.orderables.inspect}"
   end
