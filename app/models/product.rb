@@ -17,7 +17,7 @@ class Product < ApplicationRecord
   default_scope { order(row_order: :asc) }
   scope :active, -> { where(active: true)}
   
-  after_save :product_change, if: :saved_changes?
+  after_commit :sync_stripe_product, on: %i[create update], if: :saved_changes?
 
   
   def available?
@@ -30,25 +30,28 @@ class Product < ApplicationRecord
 
   private
 
-  def product_change
+  def sync_stripe_product
+    return if ENV['STRIPE_SECRET_KEY'].blank?
+
     require 'stripe'
     Stripe.api_key = ENV.fetch('STRIPE_SECRET_KEY')
-    plain_description = description.to_plain_text
-    begin
-      Stripe::Product.update(
-        self.stripe_id, {
-        name: self.name,
-        description: plain_description,
-        shippable: self.variations.infinite.any? ? true : false,
-      })
-    rescue
-    stripe_product = Stripe::Product.create({
-      name: self.name,
-      description: plain_description,
-      shippable: self.variations.infinite.any? ? true : false,
-    })
-    self.update_columns(stripe_id: stripe_product.id)
+    plain_description = description&.to_plain_text.to_s.strip
+    stripe_product_attributes = {
+      name: name,
+      shippable: variations.infinite.exists?
+    }
+    stripe_product_attributes[:description] = plain_description if plain_description.present?
+
+    if stripe_id.present?
+      Stripe::Product.update(stripe_id, stripe_product_attributes)
+    else
+      stripe_product = Stripe::Product.create(stripe_product_attributes)
+      update_column(:stripe_id, stripe_product.id)
     end
+  rescue Stripe::StripeError => e
+    Rails.logger.error("Product #{id} Stripe sync failed: #{e.class} #{e.message}")
+  rescue StandardError => e
+    Rails.logger.error("Product #{id} sync failed: #{e.class} #{e.message}")
   end
 
   # Try building a slug based on the following fields in
