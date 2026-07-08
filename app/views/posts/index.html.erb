@@ -28,9 +28,11 @@
                 <% is_press_external = post.url.present? && post.category&.name&.casecmp('press') == 0 %>
                 <% link_target = is_press_external ? post.url : update_path(post) %>
                 <% link_opts = is_press_external ? { target: "_blank", rel: "noopener noreferrer" } : {} %>
-
-                <%= link_to link_target, link_opts do %>
-                  <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
+                <% image_is_renderable = post.image.attached? && post.image.content_type.in?(["image/png", "image/jpeg", "image/jpg"]) %>
+                <% if image_is_renderable %>
+                  <%= link_to link_target, link_opts do %>
+                    <%= image_tag post.thumbnail, alt: post.title, class: "border mr-4" if post.image.attached? %>
+                  <% end %>
                 <% end %>
 
                 <div>
