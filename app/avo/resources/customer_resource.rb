@@ -20,5 +20,6 @@ class CustomerResource < Avo::BaseResource
   field :invoices, as: :has_many, through: :customer_orders
   field :addresses, as: :has_many, through: :customer_orders
   field :payment_methods, as: :has_many, through: :customer_orders
+  field :fan_comments, as: :has_many
   # add fields here
 end
