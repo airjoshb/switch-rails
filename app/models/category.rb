@@ -10,4 +10,5 @@ class Category < ApplicationRecord
 
   scope :active, -> { where(active: :true) }
   scope :categories, -> { where.not(name: "All")}
+  scope :content, -> { where(content: true) }
 end

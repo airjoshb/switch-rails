@@ -11,6 +11,11 @@ class Post < ApplicationRecord
 
   default_scope  { order(created_at: :desc) }
 
+  scope :content_posts, ->(exclude_slugs: []) do
+    scope = joins(:category).merge(Category.content)
+    exclude_slugs.present? ? scope.where.not(categories: { slug: exclude_slugs }) : scope
+  end
+
   def shortened_content(amount)
     self.content.to_plain_text.split('</div>').first.split('<br>').first.truncate(amount)
   end
