@@ -1,8 +1,8 @@
 class Customer < ApplicationRecord
-  has_many :customer_orders
+  has_many :customer_orders, dependent: :destroy, inverse_of: :customer
   has_and_belongs_to_many :campaigns, inverse_of: :customers
-  has_many :fan_comments
-  has_many :customer_emails
+  has_many :fan_comments, dependent: :destroy
+  has_many :customer_emails, dependent: :destroy, inverse_of: :customer
   has_many :emails, through: :customer_emails
   has_many :customer_boxes, through: :customer_orders, inverse_of: :customer_orders
   has_many :invoices, through: :customer_orders

@@ -1,5 +1,5 @@
 class CustomerOrder < ApplicationRecord
-  belongs_to :customer, optional: true, dependent: :destroy
+  belongs_to :customer, optional: true, inverse_of: :customer_orders
   has_many :orderables, dependent: :destroy
   has_many :invoices, dependent: :destroy
   has_many :variations, through: :orderables

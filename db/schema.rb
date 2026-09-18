@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_16_220902) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_17_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -424,9 +424,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_16_220902) do
   add_foreign_key "campaigns_customers", "customers"
   add_foreign_key "campaigns_emails", "campaigns"
   add_foreign_key "campaigns_emails", "emails"
-  add_foreign_key "customer_emails", "customers"
+  add_foreign_key "customer_emails", "customers", on_delete: :cascade
   add_foreign_key "customer_emails", "emails"
-  add_foreign_key "customer_orders", "customers"
+  add_foreign_key "customer_orders", "customers", on_delete: :cascade
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "emails", "boxes"
   add_foreign_key "fan_comments", "customers"
